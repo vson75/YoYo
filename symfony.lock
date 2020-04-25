@@ -14,6 +14,12 @@
     "doctrine/lexer": {
         "version": "1.2.0"
     },
+    "knplabs/knp-markdown-bundle": {
+        "version": "1.8.1"
+    },
+    "michelf/php-markdown": {
+        "version": "1.9.0"
+    },
     "php": {
         "version": "7.3"
     },
@@ -52,6 +58,9 @@
         "files": [
             "config/packages/security_checker.yaml"
         ]
+    },
+    "symfony/asset": {
+        "version": "v5.0.7"
     },
     "symfony/cache": {
         "version": "v5.0.7"
@@ -152,6 +161,9 @@
     "symfony/polyfill-php73": {
         "version": "v1.15.0"
     },
+    "symfony/profiler-pack": {
+        "version": "v1.0.4"
+    },
     "symfony/routing": {
         "version": "4.2",
         "recipe": {
@@ -168,6 +180,9 @@
     },
     "symfony/service-contracts": {
         "version": "v2.0.1"
+    },
+    "symfony/stopwatch": {
+        "version": "v5.0.7"
     },
     "symfony/translation-contracts": {
         "version": "v2.0.1"
@@ -197,6 +212,20 @@
     },
     "symfony/var-exporter": {
         "version": "v5.0.7"
+    },
+    "symfony/web-profiler-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "6bdfa1a95f6b2e677ab985cd1af2eae35d62e0f6"
+        },
+        "files": [
+            "config/packages/dev/web_profiler.yaml",
+            "config/packages/test/web_profiler.yaml",
+            "config/routes/dev/web_profiler.yaml"
+        ]
     },
     "symfony/yaml": {
         "version": "v5.0.7"
