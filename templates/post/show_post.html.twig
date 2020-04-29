@@ -33,7 +33,7 @@
             <hr>
 
             <!-- Post Content -->
-            <p>{{ questionContent|raw }}</p>
+            <p>{{ postContent|raw }}</p>
 
             <!-- Comments Form -->
             <div class="card my-4">
@@ -49,14 +49,14 @@
             </div>
 
             <!-- Comment with nested comments -->
-            {% for answers in answers %}
+            {% for c in comment %}
 
                 <!-- Single Comment -->
                 <div class="media mb-4">
                     <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
                     <div class="media-body">
                         <h5 class="mt-0">Commenter Name</h5>
-                        {{ answers }}
+                        {{ c }}
                     </div>
                 </div>
             {% endfor %}
@@ -118,11 +118,13 @@
 
     </div>
 
-{% endblock %}
+</div>
 
-{% block javascripts %}
-    {{ parent() }}
+    {% endblock %}
 
-    <script src="{{ asset('js/question_show.js') }}"></script>
-{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+
+        <script src="{{ asset('js/question_show.js') }}"></script>
+    {% endblock %}
 
