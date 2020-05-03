@@ -12,6 +12,9 @@ class CommentController extends AbstractController
 {
     /**
      * @Route("/comments/{id}/vote/{direction<up|down>}", name="comment_vote", methods="POST")
+     * @param $id
+     * @param $direction
+     * @return JsonResponse
      */
     public function commentVote($id, $direction){
 

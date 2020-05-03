@@ -21,7 +21,7 @@ class MarkdownHelper
         $this->Logger = $Logger;
     }
 
-    public function parse(string $source):string
+    public function cacheInfo(string $source):string
     {
         if(stripos($source,'bacon')){
             $this->Logger->info('Here a log for bacon');

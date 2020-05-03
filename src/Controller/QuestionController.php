@@ -17,7 +17,7 @@ class QuestionController extends AbstractController
      * @Route("/")
      */
     public function homepage(){
-        return $this->render('question/homepage.html.twig');
+        return new Response('azeaezazea');
     }
 
     /**
@@ -36,7 +36,7 @@ labore minim pork belly spare ribs cupim short loin in. Elit l'exercitation eius
 turkey shank eu pork belly meatball non cupim.zae
 EOF;
 
-        $questionContent = $markdownHelper->parse($questionContent);
+        $questionContent = $markdownHelper->cacheInfo($questionContent);
 
        // dump($cache);die();
 

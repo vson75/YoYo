@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "knplabs/knp-markdown-bundle": "^1.8",
+        "knplabs/knp-time-bundle": "^1.11",
         "sensio/framework-extra-bundle": "^5.5",
         "sensiolabs/security-checker": "^6.0",
         "symfony/asset": "5.0.*",
@@ -19,6 +20,7 @@
         "symfony/yaml": "5.0.*"
     },
     "require-dev": {
+        "symfony/maker-bundle": "^1.15",
         "symfony/profiler-pack": "^1.0"
     },
     "config": {

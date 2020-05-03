@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}{{ postInfo.title }}{% endblock %}
 
 {% block body %}
 
@@ -12,28 +12,25 @@
         <div class="col-lg-8">
 
             <!-- Title -->
-            <h1 class="mt-4">{{ title }}</h1>
+            <h1 class="mt-4">{{ postInfo.title }}</h1>
 
             <!-- Author -->
-            <p class="lead">
-                by
-                <a href="#">Start Bootstrap</a>
+                <span><i class="fas fa-user"></i> <a href="#">{{ postInfo.author }} </a></span>|
+                <span><i class="far fa-clock"></i></span>
+                <span> {{ postInfo.publishedAt|date('d-m-Y') }}</span> |
+            <span><i class="fas fa-piggy-bank"></i></span><span> Financed by </span>
+            <span class="js-total-participant"><a href="{{ path('add_participant_in_project', {id: postInfo.id}) }}"></a>{{ postInfo.numberParticipant }}</span> personnes
             </p>
 
             <hr>
 
-            <!-- Date/Time -->
-            <p>Posted on January 1, 2019 at 12:00 PM</p>
-
-            <hr>
-
             <!-- Preview Image -->
-            <img class="img-fluid rounded" src="http://placehold.it/900x300" alt="">
+            <img class="img-fluid rounded" src="{{ asset(postInfo.imagePath) }}" alt="">
 
             <hr>
 
             <!-- Post Content -->
-            <p>{{ postContent|raw }}</p>
+            <p>{{ postInfo.content|markdown }}</p>
 
             <!-- Comments Form -->
             <div class="card my-4">
@@ -101,6 +98,9 @@
                                 </ul>
                             </div>
                         </div>
+                        <div class="finance_project">
+                            <button data-direction="finance_project">I will finance this projects</button>
+                        </div>
                     </div>
                 </div>
 
@@ -125,6 +125,6 @@
     {% block javascripts %}
         {{ parent() }}
 
-        <script src="{{ asset('js/question_show.js') }}"></script>
+        <script src="{{ asset('js/post.js') }}"></script>
     {% endblock %}
 
