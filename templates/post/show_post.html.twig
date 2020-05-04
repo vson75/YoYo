@@ -3,7 +3,6 @@
 {% block title %}{{ postInfo.title }}{% endblock %}
 
 {% block body %}
-
 <div class="container">
 
     <div class="row">
@@ -19,8 +18,9 @@
                 <span><i class="far fa-clock"></i></span>
                 <span> {{ postInfo.publishedAt|date('d-m-Y') }}</span> |
             <span><i class="fas fa-piggy-bank"></i></span><span> Financed by </span>
-            <span class="js-total-participant"><a href="{{ path('add_participant_in_project', {id: postInfo.id}) }}"></a>{{ postInfo.numberParticipant }}</span> personnes
+            <span class="js-total-participant">{{ postInfo.numberParticipant }}</span> personnes
             </p>
+            <span id="{{ postInfo.id }}"></span>
 
             <hr>
 
@@ -99,7 +99,9 @@
                             </div>
                         </div>
                         <div class="finance_project">
-                            <button data-direction="finance_project">I will finance this projects</button>
+                            <button data-direction="finance_project">
+                                <a href="{{ path('add_participant_in_project', {slug: postInfo.slug}) }}"></a>
+                                I will finance this projects</button>
                         </div>
                     </div>
                 </div>

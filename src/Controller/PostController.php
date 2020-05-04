@@ -2,7 +2,6 @@
 
 
 namespace App\Controller;
-
 use App\Entity\Post;
 use App\Service\MarkdownHelper;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,14 +21,14 @@ class PostController extends AbstractController
         $repository = $em->getRepository(Post::class);
         $post = $repository->findPostByNewest();
        // dump($post);die;
-        return $this->render('post/homepage.html.twig',[
+        return $this->render('homepage.html.twig',[
                 'post' => $post
             ]
         );
     }
 
     /**
-     * @Route("post/{slug}")
+     * @Route("post/{slug}", name="show_post")
      * @param $slug
      * @param MarkdownHelper $markdownHelper
      * @return Response
@@ -41,7 +40,7 @@ class PostController extends AbstractController
         $repository = $em->getRepository(Post::class);
         $postInfo = array();
         $postInfo = $repository->findOneBy([
-            'id'=> 1
+            'slug'=> $slug
         ]);
         if(!$postInfo){
             throw $this->createNotFoundException('The Post is not exist');
@@ -50,7 +49,7 @@ class PostController extends AbstractController
         $postContentCache = $markdownHelper->cacheInfo($postContentCache);
         //dump($postContent);die;
         //$postContent = $markdownHelper->parse($postContent);
-
+       //dump($postInfo);die;
         return $this->render('post/show_post.html.twig',[
                 'postInfo' => $postInfo,
                 'comment' => $comment
@@ -60,16 +59,22 @@ class PostController extends AbstractController
 
 
     /**
-     * @Route("/participant_project/{id}", name="add_participant_in_project", methods="POST")
+     * @Route("/participant_project/{slug}", name="add_participant_in_project", methods="POST", requirements={"id":"\d+"})
+     * @param EntityManagerInterface $em
+     * @param Post $post
+     * @param LoggerInterface $logger
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function addNumberParticipant(EntityManagerInterface $em, Post $post, LoggerInterface $logger){
 
-       // dump($slug);die;
+       // dump($post);die;
         $post->setNumberParticipant($post->getNumberParticipant() + 1);
         $em->flush();
 
         $logger->info('a new participant has been finance this project');
-        //the key to increase nb Participant = nb_Participant
-        return $this->json(['nb_Participant'=> $post->getNumberParticipant()]);
+        //the key to increase nb Participant = nb_Participant (use this key in post.js)
+        return $this->json(['nb_Participant'=> $post->getNumberParticipant(),
+            'id_post'=>$post->getTitle()]);
     }
+
 }

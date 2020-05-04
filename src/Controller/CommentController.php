@@ -15,6 +15,7 @@ class CommentController extends AbstractController
      * @param $id
      * @param $direction
      * @return JsonResponse
+     * this is just a exemple of code. No impact in our project
      */
     public function commentVote($id, $direction){
 
