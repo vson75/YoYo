@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
+<div class="container"">
 
     <div class="row">
 
@@ -18,18 +18,18 @@
             <h1 class="mt-4">{{ postInfo.title }}</h1>
 
             <!-- Author -->
+            <small>
                 <span><i class="fas fa-user"></i> <a href="#">{{ postInfo.author }} </a></span>|
                 <span><i class="far fa-clock"></i></span>
                 <span> {{ postInfo.publishedAt|date('d-m-Y') }}</span> |
-            <span><i class="fas fa-piggy-bank"></i></span><span> Financed by </span>
-            <span class="js-total-participant">{{ postInfo.numberParticipant }}</span> personnes
-            </p>
-            <span id="{{ postInfo.id }}"></span>
+                <span><i class="fas fa-piggy-bank"></i></span><span> Financed by </span>
+                <span class="js-total-participant">{{ postInfo.numberParticipant }}</span> personnes
+            </small>
 
             <hr>
 
             <!-- Preview Image -->
-            <img class="img-fluid rounded" src="{{ asset(postInfo.imagePath) }}" alt="">
+            <img class="img-fluid rounded img-post" src="{{ asset(postInfo.imagePath) }}" alt="">
 
             <hr>
 
@@ -116,12 +116,14 @@
                 </div>
 
                 <!-- Side Widget -->
+                {% for tag in postInfo.tags %}
                 <div class="card my-4">
-                    <h5 class="card-header">Side Widget</h5>
+                    <h5 class="card-header">Tags</h5>
                     <div class="card-body">
-                        You can put anything you want inside of these side widgets. They are easy to use, and feature the new Bootstrap 4 card containers!
+                        {{ tag.nametag }}
                     </div>
                 </div>
+                {% endfor %}
             </div>
 
 
