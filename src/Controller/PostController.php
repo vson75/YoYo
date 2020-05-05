@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 use App\Entity\Post;
+use App\Repository\CommentRepository;
 use App\Service\MarkdownHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -33,9 +34,7 @@ class PostController extends AbstractController
      * @param MarkdownHelper $markdownHelper
      * @return Response
      */
-    public function show($slug, MarkdownHelper $markdownHelper, EntityManagerInterface $em){
-        $comment = ['answers 1', 'answer 2', 'answer 3','answer 4'];
-
+    public function show($slug, MarkdownHelper $markdownHelper, EntityManagerInterface $em, Post $post){
 
         $repository = $em->getRepository(Post::class);
         $postInfo = array();
@@ -45,6 +44,9 @@ class PostController extends AbstractController
         if(!$postInfo){
             throw $this->createNotFoundException('The Post is not exist');
         }
+        $comment = $postInfo->getComments();
+      // var_dump($comment);die;
+
         $postContentCache = $postInfo->getContent();
         $postContentCache = $markdownHelper->cacheInfo($postContentCache);
         //dump($postContent);die;
@@ -52,7 +54,7 @@ class PostController extends AbstractController
        //dump($postInfo);die;
         return $this->render('post/show_post.html.twig',[
                 'postInfo' => $postInfo,
-                'comment' => $comment
+                'comment'=> $comment,
             ]
         );
     }

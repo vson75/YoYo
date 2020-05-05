@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ postInfo.title }}{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/showPost.css') }}" rel="stylesheet">
+{% endblock %}
 
 {% block body %}
 <div class="container">
@@ -47,15 +51,20 @@
 
             <!-- Comment with nested comments -->
             {% for c in comment %}
-
+                {% if c.isDeleted == false %}
                 <!-- Single Comment -->
                 <div class="media mb-4">
                     <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
                     <div class="media-body">
-                        <h5 class="mt-0">Commenter Name</h5>
-                        {{ c }}
+                        <small class="mt-0">{{ c.authorName }} - {{ c.createdAt|ago }}</small>
+
+                           <small><span class="fa fa-close delete-comment"></span> deleted</small>
+
+                        <br>
+                        {{ c.content }}
                     </div>
                 </div>
+                {% endif %}
             {% endfor %}
 
         </div>
