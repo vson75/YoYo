@@ -121,3 +121,8 @@ fieldset[disabled] .btn-question.active {
   color: #ED7458;
   background-color: #FFFFFF;
 }
+
+.nav-profile-img {
+    width: 50px;
+    border: 1px solid #fff;
+}
