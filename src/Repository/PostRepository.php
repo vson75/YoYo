@@ -46,6 +46,21 @@ class PostRepository extends ServiceEntityRepository
             ->getResult()
             ;
     }
+
+    // the syntax ?sting --> the string can be null
+    public function findAllWithSearch(?string $value){
+        $qb = $this->createQueryBuilder('p');
+
+            if($value){
+                $qb->andWhere('p.title LIKE :val OR p.content LIKE :val')
+                    ->setParameter('val','%'.$value.'%');
+            }
+            return $qb->orderBy('p.publishedAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+
+    }
     // /**
     //  * @return Post[] Returns an array of Post objects
     //  */

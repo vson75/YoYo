@@ -37,6 +37,17 @@ class UserFixture extends Fixture
             $manager->flush();
         }
 
+        for ($i =0;$i<3;$i++){
+            $user = new User();
+            $user->setEmail("admin".$i."@gmail.com");
+            $user->setFirstname($this->faker->firstName);
+            $user->setLastname($this->faker->lastName);
+            $user->setPassword($this->passwordEncoder->encodePassword($user,'123'));
+            $user->setRoles(['ROLE_ADMIN']);
+            $manager->persist($user);
+            $manager->flush();
+        }
+
         $manager->flush();
     }
 }
