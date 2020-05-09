@@ -9,6 +9,8 @@
         "knplabs/knp-markdown-bundle": "^1.8",
         "knplabs/knp-paginator-bundle": "^5.2",
         "knplabs/knp-time-bundle": "^1.11",
+        "knpuniversity/oauth2-client-bundle": "^2.1",
+        "league/oauth2-facebook": "^2.0",
         "sensio/framework-extra-bundle": "^5.5",
         "sensiolabs/security-checker": "^6.0",
         "symfony/asset": "5.0.*",

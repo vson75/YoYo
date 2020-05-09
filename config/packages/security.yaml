@@ -44,4 +44,6 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        # the IS_AUTHENTICATED_FULLY means you are fully authen in this session. In our project, we use IS_AUTHENTICATED_REMEMBERD this means we also check the rememberme session
+        - { path: ^/profil, roles: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }

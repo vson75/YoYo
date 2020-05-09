@@ -19,7 +19,7 @@ class PostAdminController extends AbstractController
 
     /**
      * @IsGranted("ROLE_ADMIN")
-     * @Route("/admin/post", name="post_admin")
+     * @Route("/admin/post", name="app_post_admin")
      */
     public function index(PostRepository $postRepository,Request $request, PaginatorInterface $paginator){
 
