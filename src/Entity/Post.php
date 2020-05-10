@@ -40,15 +40,6 @@ class Post
      */
     private $publishedAt;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $upVote = 0;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $author;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -70,6 +61,12 @@ class Post
      * @ORM\ManyToMany(targetEntity="App\Entity\Tag", inversedBy="posts")
      */
     private $tags;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
 
     public function __construct()
     {
@@ -126,30 +123,6 @@ class Post
     public function setPublishedAt(?\DateTimeInterface $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
-
-        return $this;
-    }
-
-    public function getUpVote(): ?int
-    {
-        return $this->upVote;
-    }
-
-    public function setUpVote(?int $upVote): self
-    {
-        $this->upVote = $upVote;
-
-        return $this;
-    }
-
-    public function getAuthor(): ?string
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(?string $author): self
-    {
-        $this->author = $author;
 
         return $this;
     }
@@ -236,6 +209,18 @@ class Post
         if ($this->tags->contains($tag)) {
             $this->tags->removeElement($tag);
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
