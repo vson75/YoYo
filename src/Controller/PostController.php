@@ -3,16 +3,25 @@
 
 namespace App\Controller;
 use App\Entity\Post;
+use App\Entity\User;
 use App\Repository\CommentRepository;
+use App\Repository\UserRepository;
 use App\Service\MarkdownHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class PostController extends AbstractController
 {
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
 
     /**
      * @Route("/", name="app_homepage")
@@ -45,16 +54,18 @@ class PostController extends AbstractController
             throw $this->createNotFoundException('The Post is not exist');
         }
         $comment = $postInfo->getComments();
+
+        $currentUserLooged = $this->security->getUser();
+
       // var_dump($comment);die;
 
         $postContentCache = $postInfo->getContent();
         $postContentCache = $markdownHelper->cacheInfo($postContentCache);
-        //dump($postContent);die;
-        //$postContent = $markdownHelper->parse($postContent);
-       //dump($postInfo);die;
+
         return $this->render('post/show_post.html.twig',[
                 'postInfo' => $postInfo,
                 'comment'=> $comment,
+                'UserLogged' => $currentUserLooged
             ]
         );
     }

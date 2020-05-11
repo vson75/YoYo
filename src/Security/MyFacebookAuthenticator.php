@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
 use KnpU\OAuth2ClientBundle\Client\Provider\FacebookClient;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use League\OAuth2\Client\Provider\FacebookUser;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,6 +53,8 @@ class MyFacebookAuthenticator extends SocialAuthenticator
         ->fetchUserFromToken($credentials);
 
         $email = $facebookUser->getEmail();
+            $image = $facebookUser->getPictureUrl();
+           // dd($image);
        // dd($facebookUser->getId());
         // 1) have they logged in with Facebook before? Easy!
         $existingUser = $this->em->getRepository(User::class)

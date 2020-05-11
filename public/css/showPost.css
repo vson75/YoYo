@@ -8,3 +8,9 @@
     width: 100%;
     max-width: 1000px;
 }
+
+.edit-post{
+    position: absolute;
+    right: 5%;
+    color: #333333;
+}

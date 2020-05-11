@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="container"">
+<div class="container">
 
     <div class="row">
 
@@ -19,14 +19,17 @@
 
             <!-- Author -->
             <small>
-                <span><i class="fas fa-user"></i> <a href="#"></a></span>|
+                <span><i class="fas fa-user"></i> <a href="#">{{ postInfo.user.firstname }} {{ postInfo.user.lastname }} </a></span>|
                 <span><i class="far fa-clock"></i></span>
                 <span> {{ postInfo.publishedAt|date('d-m-Y') }}</span> |
                 <span><i class="fas fa-piggy-bank"></i></span><span> Financed by </span>
                 <span class="js-total-participant">{{ postInfo.numberParticipant }}</span> personnes
             </small>
-
+            {% if(UserLogged.id == postInfo.user.id) %}
+                <a class="edit-post" href="/" data-toggle="tooltip" data-placement="bottom" title="Edit post"><i class="fas fa-edit"></i></a>
+            {% endif %}
             <hr>
+
 
             <!-- Preview Image -->
             <img class="img-fluid rounded img-post" src="{{ asset(postInfo.imagePath) }}" alt="">
@@ -56,7 +59,7 @@
                 <div class="media mb-4">
                     <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
                     <div class="media-body">
-                        <small class="mt-0">{{ c.authorName }} - {{ c.createdAt|ago }}</small>
+                        <small class="mt-0">{{ c.user.firstname }} {{ c.user.lastname }} - {{ c.createdAt|ago }}</small>
 
                            <small><span class="fa fa-close delete-comment"></span> deleted</small>
 
@@ -137,6 +140,11 @@
 
     {% block javascripts %}
         {{ parent() }}
+        <script>
+            $(document).ready(function(){
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+        </script>
 
         <script src="{{ asset('js/post.js') }}"></script>
     {% endblock %}
