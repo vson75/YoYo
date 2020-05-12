@@ -1,0 +1,23 @@
+# Read the documentation: https://symfony.com/doc/current/bundles/FOSCKEditorBundle/index.html
+
+twig:
+    form_themes:
+        - '@FOSCKEditor/Form/ckeditor_widget.html.twig'
+
+#custom config the toolbar. tuto : https://www.youtube.com/watch?v=CozCg3UNDoM
+
+fos_ck_editor:
+    configs:
+        my_config_1:
+            toolbar: "my_toolbar_1"
+
+    toolbars:
+        configs:
+            my_toolbar_1: ["@colors", "@basicstyles", "@paragraph", "@insert", "@styles"]
+
+        items:
+            colors: ["TextColor","BGColor"]
+            basicstyles: ["Bold", "Italic", "Underline","Strike"]
+            paragraph: ["NumberedList", "BulletedList", "Outdent", "Indent", "Blockquote", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"]
+            insert: ["Table", "HorizontalRule", "Smiley", "SpecialChar"]
+            styles: ["Styles", "Format", "Font", "FontSize"]

@@ -3,6 +3,14 @@ body {
     color: #444;
 }
 
+strong {
+    font-weight: bold;
+}
+p {
+    -webkit-font-smoothing: antialiased;
+}
+
+
 .jumbotron-img {
     background: rgb(237,116,88);
     background: linear-gradient(302deg, rgba(237,116,88,1) 16%, rgba(51,61,81,1) 97%);

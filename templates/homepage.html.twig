@@ -11,7 +11,7 @@
         <header class="jumbotron my-4">
             <h1 class="display-3">A Warm Welcome!</h1>
             <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</p>
-            <a href="#" class="btn btn-primary btn-lg">Call to action!</a>
+            <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-lg">Create a new post !</a>
         </header>
 
         <!-- Page Features -->
@@ -19,7 +19,12 @@
             {% for post in post %}
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card h-100">
-                    <img class="card-img-top" src="{{ asset(post.imagePath) }}" alt="">
+
+                    {% if post.imagePath == 'images/post/' %}
+                        <img class="card-img-top" src="{{ asset('images/post/default_img.jpeg') }}" alt="">
+                    {% else %}
+                            <img class="card-img-top" src="{{ asset(post.imagePath) }}" alt="">
+                        {% endif %}
                     <div class="card-body">
                         <h5 class="card-title text-left">{{ post.title }}</h5>
                         <p class="card-text text-left">{{ post.content }}</p>

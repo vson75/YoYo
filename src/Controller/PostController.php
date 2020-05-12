@@ -4,12 +4,15 @@
 namespace App\Controller;
 use App\Entity\Post;
 use App\Entity\User;
+use App\Form\PostFormType;
 use App\Repository\CommentRepository;
 use App\Repository\UserRepository;
 use App\Service\MarkdownHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
@@ -57,6 +60,7 @@ class PostController extends AbstractController
 
         $currentUserLooged = $this->security->getUser();
 
+       // dd($currentUserLooged);
       // var_dump($comment);die;
 
         $postContentCache = $postInfo->getContent();
@@ -73,6 +77,7 @@ class PostController extends AbstractController
 
     /**
      * @Route("/participant_project/{slug}", name="add_participant_in_project", methods="POST", requirements={"id":"\d+"})
+     * @IsGranted("ROLE_USER")
      * @param EntityManagerInterface $em
      * @param Post $post
      * @param LoggerInterface $logger
@@ -88,6 +93,42 @@ class PostController extends AbstractController
         //the key to increase nb Participant = nb_Participant (use this key in post.js)
         return $this->json(['nb_Participant'=> $post->getNumberParticipant(),
             'id_post'=>$post->getTitle()]);
+    }
+
+    /**
+     * @Route("create_new/post", name="app_post_new")
+     * @IsGranted("ROLE_USER")
+     */
+    public function new(EntityManagerInterface $entityManager, Request $request){
+        $form = $this->createForm(PostFormType::class);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $postData = $form->getData();
+
+            $createNew = new Post();
+            $createNew->setTitle($postData['title']);
+            $createNew->setPublishedAt(new \DateTime('now'));
+            $createNew->setContent($postData['content']);
+            $createNew->setUser($this->getUser());
+
+            $entityManager->persist($createNew);
+            $entityManager->flush();
+
+            $repo = $entityManager->getRepository(Post::class);
+            $newPostCreated = $repo->findOneBy([
+                'title' => $postData['title'],
+            ]);
+            $slug = $newPostCreated->getSlug();
+
+            return $this->redirectToRoute('show_post',[
+                'slug' => $slug
+            ]);
+        }
+
+        return $this->render('post/create_post.html.twig',[
+            'postForm' => $form->createView(),
+        ]);
     }
 
 }

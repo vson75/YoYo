@@ -105,6 +105,18 @@
     "doctrine/reflection": {
         "version": "1.2.1"
     },
+    "friendsofsymfony/ckeditor-bundle": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "8eb1cd0962ded6a6d6e1e5a9b6d3e888f9f94ff6"
+        },
+        "files": [
+            "config/packages/fos_ckeditor.yaml"
+        ]
+    },
     "fzaninotto/faker": {
         "version": "v1.9.1"
     },
@@ -256,6 +268,9 @@
     "symfony/event-dispatcher-contracts": {
         "version": "v2.0.1"
     },
+    "symfony/expression-language": {
+        "version": "v5.0.8"
+    },
     "symfony/filesystem": {
         "version": "v5.0.7"
     },
@@ -273,6 +288,9 @@
         "files": [
             ".env"
         ]
+    },
+    "symfony/form": {
+        "version": "v5.0.8"
     },
     "symfony/framework-bundle": {
         "version": "4.4",
@@ -309,6 +327,9 @@
     "symfony/inflector": {
         "version": "v5.0.8"
     },
+    "symfony/intl": {
+        "version": "v5.0.8"
+    },
     "symfony/maker-bundle": {
         "version": "1.0",
         "recipe": {
@@ -338,8 +359,14 @@
             "config/packages/test/monolog.yaml"
         ]
     },
+    "symfony/options-resolver": {
+        "version": "v5.0.8"
+    },
     "symfony/orm-pack": {
         "version": "v1.0.8"
+    },
+    "symfony/polyfill-intl-icu": {
+        "version": "v1.16.0"
     },
     "symfony/polyfill-intl-idn": {
         "version": "v1.15.0"

@@ -25,14 +25,19 @@
                 <span><i class="fas fa-piggy-bank"></i></span><span> Financed by </span>
                 <span class="js-total-participant">{{ postInfo.numberParticipant }}</span> personnes
             </small>
-            {% if(UserLogged.id == postInfo.user.id) %}
+            {% if UserLogged is null %}
+            {% elseif(UserLogged.id == postInfo.user.id) %}
                 <a class="edit-post" href="/" data-toggle="tooltip" data-placement="bottom" title="Edit post"><i class="fas fa-edit"></i></a>
             {% endif %}
             <hr>
 
 
             <!-- Preview Image -->
-            <img class="img-fluid rounded img-post" src="{{ asset(postInfo.imagePath) }}" alt="">
+            {% if postInfo.imagePath == 'images/post/' %}
+                <img class="img-fluid rounded img-post" src="{{ asset('images/post/default_img.jpeg') }}" alt="">
+            {% else %}
+                <img class="img-fluid rounded img-post" src="{{ asset(postInfo.imagePath) }}" alt="">
+            {% endif %}
 
             <hr>
 
