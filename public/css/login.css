@@ -66,7 +66,8 @@
 
 #logreg-forms .form-signup .social-btn{ width:210px; }
 
-#logreg-forms .form-signup input { margin-bottom: 2px;}
+#logreg-forms .row input { margin-bottom: 10px;}
+
 
 .form-signup .social-login{
     width:210px !important;

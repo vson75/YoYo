@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
@@ -21,14 +22,9 @@ class Post
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="ahaahah")
      */
     private $title;
-
-    /**
-     * @ORM\Column(type="string", length=100, unique=true)
-     * @Gedmo\Slug(fields={"title"})
-     */
-    private $slug;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -68,6 +64,11 @@ class Post
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $uniquekey;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -87,18 +88,6 @@ class Post
     public function setTitle(string $title): self
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): self
-    {
-        $this->slug = $slug;
 
         return $this;
     }
@@ -221,6 +210,18 @@ class Post
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getUniquekey(): ?string
+    {
+        return $this->uniquekey;
+    }
+
+    public function setUniquekey(?string $uniquekey): self
+    {
+        $this->uniquekey = $uniquekey;
 
         return $this;
     }

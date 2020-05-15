@@ -30,7 +30,7 @@
                         <p class="card-text text-left">{{ post.content }}</p>
                     </div>
                     <div class="card-footer">
-                        <a href="{{ path('show_post', {slug: post.slug}) }}" class="btn btn-primary">Find Out More!</a>
+                        <a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}" class="btn btn-primary">Find Out More!</a>
                     </div>
                 </div>
             </div>

@@ -8,13 +8,13 @@ $container.find('button').on('click', function(e) {
 //  alert('1');
     var $link = $(e.currentTarget);
     var $path = window.location.pathname;
-    var $slug = $path.replace("/post/","");
+    var $uniquekey = $path.replace("/post/","");
 
    // alert($slug);
 
     $.ajax({
         cache: false,
-        url: '/participant_project/'+$slug,
+        url: '/participant_project/'+$uniquekey,
         method: 'POST',
         async: false,
     }).then(function(data) {

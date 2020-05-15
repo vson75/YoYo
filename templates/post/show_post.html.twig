@@ -12,7 +12,7 @@
     <div class="row">
 
         <!-- Post Content Column -->
-        <div class="col-lg-8">
+        <div class="col-lg-8" style="margin-bottom: 150px;">
 
             <!-- Title -->
             <h1 class="mt-4">{{ postInfo.title }}</h1>
@@ -27,7 +27,7 @@
             </small>
             {% if UserLogged is null %}
             {% elseif(UserLogged.id == postInfo.user.id) %}
-                <a class="edit-post" href="/" data-toggle="tooltip" data-placement="bottom" title="Edit post"><i class="fas fa-edit"></i></a>
+                <a class="edit-post" href="{{ path('app_post_edit', {id: postInfo.id}) }}" data-toggle="tooltip" data-placement="bottom" title="Edit post"><i class="fas fa-edit"></i></a>
             {% endif %}
             <hr>
 
@@ -117,7 +117,7 @@
                         </div>
                         <div class="finance_project">
                             <button data-direction="finance_project">
-                                <a href="{{ path('add_participant_in_project', {slug: postInfo.slug}) }}"></a>
+                                <a href="{{ path('add_participant_in_project', {uniquekey: postInfo.uniquekey}) }}"></a>
                                 I will finance this projects</button>
                         </div>
                     </div>

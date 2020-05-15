@@ -61,7 +61,15 @@
 </nav>
 
 
-{% block body %}{% endblock %}
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+{% endfor %}
+
+{% block body %}
+
+{% endblock %}
 <footer class="py-5 bg-dark footer">
     <div class="container">
         <p class="m-0 text-center text-white">Copyright &copy; Your Website 2019</p>

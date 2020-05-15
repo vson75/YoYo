@@ -3,6 +3,7 @@
 twig:
     form_themes:
         - '@FOSCKEditor/Form/ckeditor_widget.html.twig'
+        - 'bootstrap_4_layout.html.twig'
 
 #custom config the toolbar. tuto : https://www.youtube.com/watch?v=CozCg3UNDoM
 
@@ -13,7 +14,7 @@ fos_ck_editor:
 
     toolbars:
         configs:
-            my_toolbar_1: ["@colors", "@basicstyles", "@paragraph", "@insert", "@styles"]
+            my_toolbar_1: ["@colors", "@basicstyles", "@paragraph", "@insert", "/","@styles"]
 
         items:
             colors: ["TextColor","BGColor"]

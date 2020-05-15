@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Registration!{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+{% endblock %}
+{# link template : https://bootsnipp.com/snippets/GavAo #}
+{% block body %}
+    <div id="logreg-forms">
+        <div class="row">
+
+            <div class="col-sm-12">
+                {{ form_start(registrationForm) }}
+
+                {{ form_widget(registrationForm.firstname) }}
+                {{ form_widget(registrationForm.lastname) }}
+                {{ form_widget(registrationForm.email) }}
+                {{ form_widget(registrationForm.password.first) }}
+                {{ form_widget(registrationForm.password.second) }}
+
+
+
+                <button class="btn btn-lg btn-primary btn-block" type="submit">
+                    Đăng Ký
+                </button>
+                <a href="{{ path('app_login') }}" id="cancel_signup"><i class="fas fa-angle-left"></i> Quay trở lại</a>
+                {{ form_widget(registrationForm) }}
+                {{ form_end(registrationForm) }}
+
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/login.js') }}"></script>
+{% endblock %}
