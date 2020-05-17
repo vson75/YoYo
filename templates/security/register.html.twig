@@ -9,7 +9,15 @@
 {% endblock %}
 {# link template : https://bootsnipp.com/snippets/GavAo #}
 {% block body %}
+
+    {% for message in app.flashes('notice') %}
+        <div class="container alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
     <div id="logreg-forms">
+
+
         <div class="row">
 
             <div class="col-sm-12">

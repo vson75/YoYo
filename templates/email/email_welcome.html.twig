@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="vn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Chào mừng bạn tới với YoYo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f3f3f3;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        h1 {
+            background-color: #264459;
+            color: #ffffff;
+            padding: 30px 0 50px 0;
+            font-weight: normal;
+        }
+        hr {
+            border: none;
+            border-top: 3px solid #264459;
+            margin: 20px;
+        }
+        .logo{
+            max-width: 50px;
+            max-height: 50px;
+        }
+        .container {
+            background-color: #fefefe;
+            width: 580px;
+            margin: 0 auto;
+        }
+        .bottom {
+            background-color: #efefee;
+        }
+        .block {
+            margin: 0;
+            padding: 10px 20px 20px 20px;
+        }
+        .logo {
+            width: 100%;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #264459;
+            color: #fefefe;
+            border: 1px solid #fff;
+            border-radius: 3px;
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="body">
+    <div class="container">
+        <div class="header text-center">
+            <a href="{{ url('app_homepage') }}">
+                <img src="{{ absolute_url(asset('images/logo.png')) }}" class="logo" alt="SpaceBar Logo">
+            </a>
+        </div>
+        <div class="content">
+            <h1 class="text-center">Xin kính chào</h1>
+            <p class="block">
+                Chào mừng bạn tới với <strong> YoYo </strong>, chúng tôi cảm ơn bạn vì đã
+                đăng ký tài khoản và chúng tôi mong chờ bạn sẽ cùng chúng tôi chung tay đóng
+                góp 1 chút gì đó cho Việt Nam.
+                Bạn có thể tạo 1 dự án nhỏ qua đường dẫn dưới đây.
+            </p>
+            <p class="block text-center">
+                <a href="{{ url('app_post_new') }}" class="btn">Tạo mini project</a>
+            </p>
+            <p class="block">
+                Các bạn có thể vào đây để tìm hiểu thêm về các dự án
+            </p>
+            <p class="block text-center">
+                <a href="{{ url('app_homepage') }}" class="btn">Xem các dự án</a>
+            </p>
+            <p class="block">
+                Nhằm duy trì tính minh bạch của các dự án, chúng tôi sẽ cập nhập thường xuyên
+                các hoạt động mà bạn đã đóng góp.
+            </p>
+        </div>
+        <div class="footer">
+            <p class="block">
+                Thân,<br><br>
+                Yoyo
+            </p>
+            <p class="block bottom text-center">
+                Dự án làm bằng tất cả con ❤️ của nhà sáng lập
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
