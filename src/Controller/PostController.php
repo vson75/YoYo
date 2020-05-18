@@ -149,6 +149,14 @@ class PostController extends AbstractController
     }
 
     /**
+     * @Route("/upload_test", name="test_upload")
+     */
+    public function temporaryUpload(Request $request){
+        dd($request->files->get('image'));
+
+    }
+
+    /**
      * @Route("edit/post/{id}")
      * @IsGranted("ROLE_USER")
      */
