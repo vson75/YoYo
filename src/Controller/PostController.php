@@ -168,10 +168,10 @@ class PostController extends AbstractController
             $postUpdated = $repo->findOneBy([
                 'id' => $id_post,
             ]);
-            $slug = $postUpdated->getSlug();
+            $id = $postUpdated->getId();
 
             return $this->redirectToRoute('show_post',[
-                'slug' => $slug,
+                'id' => $id,
             ]);
         }
 

@@ -36,22 +36,25 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    //User have 5h max to create or reset his password
+    public function findOneForResetCreatePassword($id,$token,$tokencreateAt): array
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT user.id
+                        from user
+                        where user.tokencreate_at is not null and TIMEDIFF(now(), :tokenCreateAt) < "24:00"
+                        and user.id = :id
+                        and user.token not like 0
+                        and user.token = :token';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            'tokenCreateAt' => $tokencreateAt,
+            'id' => $id,
+            'token' => $token
+            ]);
+        return $stmt->fetchAll();
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?User

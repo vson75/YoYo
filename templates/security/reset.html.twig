@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Registration!{% endblock %}
+{% block title %}Select password!{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -10,7 +10,7 @@
 {# link template : https://bootsnipp.com/snippets/GavAo #}
 {% block body %}
 
-    {% for message in app.flashes('notice') %}
+    {% for message in app.flashes('echec') %}
         <div class="container alert alert-danger">
             {{ message }}
         </div>
@@ -21,18 +21,15 @@
         <div class="row">
 
             <div class="col-sm-12">
-                {{ form_start(registrationForm) }}
+                {{ form_start(resetForm) }}
 
-                {{ form_widget(registrationForm.firstname) }}
-                {{ form_widget(registrationForm.lastname) }}
-                {{ form_widget(registrationForm.email) }}
+                {{ form_widget(resetForm.email) }}
 
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
                     Đăng Ký
                 </button>
-                <a href="{{ path('app_login') }}" id="cancel_signup"><i class="fas fa-angle-left"></i> Quay trở lại</a>
-                {{ form_widget(registrationForm) }}
-                {{ form_end(registrationForm) }}
+                {{ form_widget(resetForm) }}
+                {{ form_end(resetForm) }}
 
             </div>
 
@@ -42,5 +39,4 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('js/login.js') }}"></script>
 {% endblock %}

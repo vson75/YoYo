@@ -64,6 +64,16 @@ class User implements UserInterface
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $token;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $tokencreateAt;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -242,6 +252,30 @@ class User implements UserInterface
                 $comment->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getTokencreateAt(): ?\DateTimeInterface
+    {
+        return $this->tokencreateAt;
+    }
+
+    public function setTokencreateAt(?\DateTimeInterface $tokencreateAt): self
+    {
+        $this->tokencreateAt = $tokencreateAt;
 
         return $this;
     }

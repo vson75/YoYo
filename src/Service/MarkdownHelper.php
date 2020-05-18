@@ -23,9 +23,6 @@ class MarkdownHelper
 
     public function cacheInfo(string $source):string
     {
-        if(stripos($source,'bacon')){
-            $this->Logger->info('Here a log for bacon');
-        }
         $item = $this->cache->getItem('markdown_'.md5($source));
 
         // check if the requested item is found in the cache. To check it, we use methode isHit()
