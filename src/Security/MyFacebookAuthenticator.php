@@ -74,7 +74,8 @@ class MyFacebookAuthenticator extends SocialAuthenticator
             // a User object
             //dd($facebookUser->getId());
             $user = new User();
-
+            $user->setFirstname($facebookUser->getFirstName())
+                ->setLastname($facebookUser->getLastName());
             $user->setEmail($facebookUser->getEmail());
             $user->setFacebookId($facebookUser->getId());
             $this->em->persist($user);

@@ -123,7 +123,7 @@ class Post
 //function added manually to give the Image images/post/$filenaname . After go to twig and change call this method
     public function getImagePath()
     {
-        return 'images/post/'.$this->getImageFilename();
+        return 'uploads/post/image/'.$this->getImageFilename();
     }
 
     public function setImageFilename(?string $imageFilename): self

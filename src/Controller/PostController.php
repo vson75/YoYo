@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Form\PostFormType;
 use App\Service\MarkdownHelper;
+use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
+use Gedmo\Sluggable\Util\Urlizer;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -98,13 +100,14 @@ class PostController extends AbstractController
      * @Route("create_new/post", name="app_post_new")
      * @IsGranted("ROLE_USER")
      */
-    public function new(EntityManagerInterface $em, Request $request){
+    public function new(EntityManagerInterface $em, Request $request, UploadService $uploadService){
         $form = $this->createForm(PostFormType::class);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
             //get data in form
             $createNew = $form->getData();
+
             // add date and user = user created
             $createNew->setPublishedAt(new \DateTime('now'));
             $createNew->setUser($this->getUser());
@@ -123,6 +126,13 @@ class PostController extends AbstractController
             }else{
                 $uniquekey =  substr(md5($title.rand(0,10000)),0,10);
                 $createNew->setUniquekey($uniquekey);
+            }
+
+            $uploadedFile = $form['imageFile']->getData();
+
+            if ($uploadedFile) {
+                $newFilename = $uploadService->UploadPostImage($uploadedFile);
+                $createNew->setImageFilename($newFilename);
             }
 
             $em->persist($createNew);
@@ -148,13 +158,6 @@ class PostController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/upload_test", name="test_upload")
-     */
-    public function temporaryUpload(Request $request){
-        dd($request->files->get('image'));
-
-    }
 
     /**
      * @Route("edit/post/{id}")
