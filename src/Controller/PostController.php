@@ -3,7 +3,9 @@
 
 namespace App\Controller;
 use App\Entity\Post;
+use App\Form\CommentFormType;
 use App\Form\PostFormType;
+use App\Service\Mailer;
 use App\Service\MarkdownHelper;
 use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,10 +17,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class PostController extends AbstractController
 {
     private $security;
+    use TargetPathTrait;
 
     public function __construct(Security $security)
     {
@@ -44,10 +48,9 @@ class PostController extends AbstractController
      * @param MarkdownHelper $markdownHelper
      * @return Response
      */
-    public function show($uniquekey, MarkdownHelper $markdownHelper, EntityManagerInterface $em, Post $post){
+    public function show($uniquekey, MarkdownHelper $markdownHelper, EntityManagerInterface $em, Request $request){
 
         $repository = $em->getRepository(Post::class);
-        $postInfo = array();
         $postInfo = $repository->findOneBy([
             'uniquekey'=> $uniquekey
         ]);
@@ -66,11 +69,36 @@ class PostController extends AbstractController
             $postContentCache = $markdownHelper->cacheInfo($postContentCache);
         }
 
+        $this->saveTargetPath($request->getSession(),'main', $request->getUri());
+
+        // comment section
+
+        $form = $this->createForm(CommentFormType::class);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $new_comment = $form->getData();
+            $user = $this->getUser();
+            $new_comment->setUser($user);
+            $new_comment->setPost($postInfo);
+            $new_comment->setCreatedAt(new \DateTime('now'));
+
+            // dd($new_comment);
+            $em->persist($new_comment);
+            $em->flush();
+
+            return $this->redirectToRoute('show_post',[
+                'uniquekey' => $uniquekey,
+            ]);
+        }
+
 
         return $this->render('post/show_post.html.twig',[
                 'postInfo' => $postInfo,
                 'comment'=> $comment,
-                'UserLogged' => $currentUserLooged
+                'commentForm' => $form->createView(),
+                'UserLogged' => $currentUserLooged,
+
             ]
         );
     }
@@ -100,17 +128,19 @@ class PostController extends AbstractController
      * @Route("create_new/post", name="app_post_new")
      * @IsGranted("ROLE_USER")
      */
-    public function new(EntityManagerInterface $em, Request $request, UploadService $uploadService){
+    public function new(EntityManagerInterface $em, Request $request, UploadService $uploadService, Mailer $mailer){
         $form = $this->createForm(PostFormType::class);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
             //get data in form
             $createNew = $form->getData();
+           // dd($createNew);
 
             // add date and user = user created
             $createNew->setPublishedAt(new \DateTime('now'));
-            $createNew->setUser($this->getUser());
+            $user = $this->getUser();
+            $createNew->setUser($user);
 
             //get title and hash md5 for the uniquekey
             $title = $createNew->getTitle();
@@ -140,6 +170,10 @@ class PostController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Cảm ơn bạn đã tạo chủ để này');
+
+            $template='email/thankToCreatePost.html.twig';
+            $subject ="Cam on ban da tao chu de moi";
+            $mailer->sendMailCreateOrFinancePost($user,$createNew,$template,$subject);
             $id_post = $createNew->getId();
             $repo = $em->getRepository(Post::class);
 
@@ -163,14 +197,20 @@ class PostController extends AbstractController
      * @Route("edit/post/{id}")
      * @IsGranted("ROLE_USER")
      */
-    public function edit($id,EntityManagerInterface $em, Request $request, Post $post){
+    public function edit(EntityManagerInterface $em, Request $request, Post $post, UploadService $uploadService){
         $form = $this->createForm(PostFormType::class, $post);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
             $updatePost = $form->getData();
-            //dd($updatePost);
             $id_post = $updatePost->getId();
+
+            $uploadedFile = $form['imageFile']->getData();
+
+            if ($uploadedFile) {
+                $newFilename = $uploadService->UploadPostImage($uploadedFile);
+                $updatePost->setImageFilename($newFilename);
+            }
 
             $em->persist($updatePost);
             $em->flush();
@@ -179,18 +219,38 @@ class PostController extends AbstractController
             $postUpdated = $repo->findOneBy([
                 'id' => $id_post,
             ]);
-            $id = $postUpdated->getId();
+            $key = $postUpdated->getUniquekey();
 
             return $this->redirectToRoute('show_post',[
-                'id' => $id,
+                'uniquekey' => $key,
             ]);
         }
 
-        return $this->render('post/create_post.html.twig',[
+        return $this->render('post/edit_post.html.twig',[
             'postForm' => $form->createView(),
+            'post'=> $post
         ]);
 
     }
 
+    /**
+     * @Route("finance", name="app_finance")
+     */
+    public function financePost(Request $request){
 
+        // Set your secret key. Remember to switch to your live secret key in production!
+// See your keys here: https://dashboard.stripe.com/account/apikeys
+
+        \Stripe\Stripe::setApiKey('sk_test_gxLCkDYIJRoJXx7Ovh4RqBTB00aHGuN3mt');
+
+        $intent = \Stripe\PaymentIntent::create([
+            'amount' => 1599,
+            'currency' => 'eur',
+            // Verify your integration in this guide by including this parameter
+            'metadata' => ['integration_check' => 'accept_a_payment'],
+            'description'=>'tra tien khach di'
+        ]);
+
+        return $this->render('post/finance_post.html.twig');
+    }
 }

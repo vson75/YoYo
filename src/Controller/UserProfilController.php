@@ -35,4 +35,11 @@ class UserProfilController extends AbstractController
             'userInfo' => $userInfo,
         ]);
     }
+
+    /**
+     * @Route("/profil_document")
+     */
+    public function userDocument(){
+
+    }
 }

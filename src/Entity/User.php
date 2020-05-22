@@ -74,10 +74,21 @@ class User implements UserInterface
      */
     private $tokencreateAt;
 
+    /**
+     * @ORM\OneToMany(targetEntity=UserDocument::class, mappedBy="user")
+     */
+    private $userDocuments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="user")
+     */
+    private $post;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->userDocuments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -278,5 +289,44 @@ class User implements UserInterface
         $this->tokencreateAt = $tokencreateAt;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|UserDocument[]
+     */
+    public function getUserDocuments(): Collection
+    {
+        return $this->userDocuments;
+    }
+
+    public function addUserDocument(UserDocument $userDocument): self
+    {
+        if (!$this->userDocuments->contains($userDocument)) {
+            $this->userDocuments[] = $userDocument;
+            $userDocument->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserDocument(UserDocument $userDocument): self
+    {
+        if ($this->userDocuments->contains($userDocument)) {
+            $this->userDocuments->removeElement($userDocument);
+            // set the owning side to null (unless already changed)
+            if ($userDocument->getUser() === $this) {
+                $userDocument->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getPost(): Collection
+    {
+        return $this->post;
     }
 }

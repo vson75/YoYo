@@ -6,3 +6,8 @@ p.card-text{
     -webkit-box-orient: vertical;
     /* border: 1px solid #000000; */
 }
+
+.imgbackground{
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}

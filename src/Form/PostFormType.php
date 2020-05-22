@@ -23,15 +23,9 @@ class PostFormType extends AbstractType
     {
         $builder
             ->add('title',TextType::class, [
-                'help' => 'bạn điền tiêu đề vào đây',
-                'required' => true
+                'required' => true,
+                'label'=> false
             ])
-            ->add('content', CKEditorType::class, array(
-                'config' => array(
-                    'uiColor' => '#ffffff',
-                    'toolbar' => 'my_toolbar_1',
-                ),
-            ))
             ->add('imageFile',FileType::class, [
                 'mapped'=> false,
                 'required'=>false,
@@ -41,6 +35,12 @@ class PostFormType extends AbstractType
                     ])
                 ]
             ])
+            ->add('content', CKEditorType::class, array(
+                'config' => array(
+                    'uiColor' => '#ffffff',
+                    'toolbar' => 'my_toolbar_1',
+                ),
+            ))
         ;
     }
 

@@ -14,12 +14,15 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class MyFacebookAuthenticator extends SocialAuthenticator
 {
         private $clientRegistry;
         private $em;
         private $router;
+
+        use TargetPathTrait;
 
         public function __construct(ClientRegistry $clientRegistry, EntityManagerInterface $em, RouterInterface $router)
     {
@@ -99,9 +102,11 @@ class MyFacebookAuthenticator extends SocialAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
     // change "app_homepage" to some route in your app
-    $targetUrl = $this->router->generate('app_homepage');
+        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
 
-    return new RedirectResponse($targetUrl);
+            return new RedirectResponse($targetPath);
+        }
+        return new RedirectResponse($this->router->generate('app_homepage'));
 
     // or, on success, let the request continue to be handled by the controller
     //return null;

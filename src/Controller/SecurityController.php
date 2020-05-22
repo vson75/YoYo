@@ -85,22 +85,18 @@ class SecurityController extends AbstractController
                 $em->persist($user);
                 $em->flush();
 
-                $this->addFlash('success','Cam on ban da dang ky, chung toi se gui ban EMail de ban hoan tat dang ky cua minh');
+
 
                 $token = $user->getToken();
-                $id = $user->getId();
                 $tokenCreateAt = $user->getTokencreateAt();
                 $template = 'email/password.html.twig';
                 $subject = "Chào ".$user->getFirstname()." tới với YoYo - Tạo mật khẩu mới";
-                $mailer->SendMailPassword($user,$token,$tokenCreateAt,$id,$template,$subject);
+                $mailer->SendMailPassword($user,$token,$tokenCreateAt,$template,$subject);
+
+                $this->addFlash('success','Cam on ban da dang ky, 1 email da duoc gui toi de ban hoan tat dang ky cua minh');
 
                 //method allow to redirect in the page if authentificator sucess
-                return $guardHandler->authenticateUserAndHandleSuccess(
-                    $user,
-                    $request,
-                    $formAuthenticator,
-                    'main'
-                );
+                return $this->redirectToRoute('app_login');
             }
 
         }
@@ -153,12 +149,7 @@ class SecurityController extends AbstractController
                     $this->addFlash('success','mât khâu cua ban da OK ! chào mung ban toi voi YoYo');
 
                 //method allow to redirect in the page if authentificator sucess
-                return $guardHandler->authenticateUserAndHandleSuccess(
-                    $user,
-                    $request,
-                    $formAuthenticator,
-                    'main'
-                );
+                return $this->redirectToRoute('app_login');
 
             }
 
@@ -184,7 +175,7 @@ class SecurityController extends AbstractController
             $user = $form->getData();
             $userEmail = $user->getEmail();
             $repo = $em->getRepository(User::class);
-            $checkEmail = $repo->findOneBy([
+            $checkUserEmail = $repo->findOneBy([
                 'email' => $userEmail
             ]);
 
@@ -192,12 +183,12 @@ class SecurityController extends AbstractController
             if(!empty($checkEmail)){
 
                // dd($checkEmail);
-                $id = $checkEmail->getId();
-                $checkEmail->setToken(hash('haval160,3',$userEmail.rand(0,1000),false));
-                $checkEmail->setTokencreateAt(new \DateTime('now'));
+                //$id = $checkEmail->getId();
+                $checkUserEmail->setToken(hash('haval160,3',$userEmail.rand(0,1000),false));
+                $checkUserEmail->setTokencreateAt(new \DateTime('now'));
                 $em = $this->getDoctrine()->getManager();
                 $em->flush();
-                $token = $checkEmail->getToken();
+                $token = $checkUserEmail->getToken();
 
 
                 $tokenCreateAt = $user->getTokencreateAt();
@@ -206,7 +197,7 @@ class SecurityController extends AbstractController
 
                 $template = 'email/password.html.twig';
                 $subject = "Thay đổi mật khẩu tại YoYo";
-                $mailer->SendMailPassword($checkEmail, $token, $tokenCreateAt,$id,$template,$subject);
+                $mailer->SendMailPassword($checkUserEmail, $token, $tokenCreateAt,$template,$subject);
 
 
                 //method allow to redirect in the page if authentificator sucess

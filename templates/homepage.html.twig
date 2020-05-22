@@ -8,10 +8,12 @@
     <div class="container">
 
         <!-- Jumbotron Header -->
-        <header class="jumbotron my-4">
+        <header class="jumbotron my-4 imgbackground" style="background-image: url('{{ asset('images/nonlavietnam.jpg') }}');">
+
             <h1 class="display-3">A Warm Welcome!</h1>
             <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</p>
             <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-lg">Create a new post !</a>
+
         </header>
 
         <!-- Page Features -->
@@ -22,16 +24,16 @@
 
                     {#if no image#}
                     {% if post.imagePath == 'uploads/post/image/' %}
-                        <img class="card-img-top" src="{{ asset('uploads/post/default_img.jpeg') }}" alt="">
+                        <img class="card-img-top" src="{{ asset('uploads/post/default_img.jpeg') | imagine_filter('card_thumbnail_homepage')}}" alt="">
                     {% else %}
-                            <img class="card-img-top" src="{{ asset(post.imagePath) }}" alt="">
+                            <img class="card-img-top" src="{{ asset(post.imagePath) | imagine_filter('card_thumbnail_homepage')}}" alt="">
                         {% endif %}
                     <div class="card-body">
                         <h5 class="card-title text-left">{{ post.title }}</h5>
-                        <p class="card-text text-left">{{ post.content|raw }}</p>
+                        <p class="card-text text-left">{{ post.content|escape('html') }}</p>
                     </div>
                     <div class="card-footer">
-                        <a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}" class="btn btn-primary">Find Out More!</a>
+                        <a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}" class="btn btn-primary">Xem chi tiết</a>
                     </div>
                 </div>
             </div>

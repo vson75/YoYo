@@ -15,21 +15,15 @@
             </a>
         </div>
         <div class="content">
-            <h1 class="text-center">Xin kính chào</h1>
             <p class="block">
-                Chào mừng bạn tới với <strong> YoYo </strong>, chúng tôi cảm ơn bạn vì đã
-                đăng ký tài khoản và chúng tôi mong chờ bạn sẽ cùng chúng tôi chung tay đóng
-                góp 1 chút gì đó cho Việt Nam.
-                Bạn có thể tạo 1 dự án nhỏ qua đường dẫn dưới đây.
+                Cam on ban da tao du an {{ post_name }} tai YoYo.
+
             </p>
             <p class="block text-center">
-                <a href="{{ url('app_post_new') }}" class="btn">Tạo mini project</a>
+                <a href="{{ url('show_post', {uniquekey: post_uniqueKey}) }}" class="btn">Du an moi cua ban</a>
             </p>
             <p class="block">
                 Các bạn có thể vào đây để tìm hiểu thêm về các dự án
-            </p>
-            <p class="block text-center">
-                <a href="{{ url('app_homepage') }}" class="btn">Xem các dự án</a>
             </p>
             <p class="block">
                 Nhằm duy trì tính minh bạch của các dự án, chúng tôi sẽ cập nhập thường xuyên

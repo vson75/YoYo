@@ -1,0 +1,36 @@
+
+{% block form %}
+
+    {{ form_start(postForm) }}
+
+    {% if postForm.vars.data.imageFilename|default %}
+        <div>
+            <img src="{{ asset(postForm.vars.data.imagePath)|imagine_filter('card_thumbnail_showpost') }}" height="130" width="250" style="display: block;margin-left: auto;margin-right: auto; width: 300px;">
+        </div>
+        <hr>
+    {% endif %}
+
+    {{ form_row(postForm.title, {
+        attr: {
+            'placeholder': 'Tên dự án'
+        }
+    }) }}
+
+    {{ form_row(postForm.content, {
+        label: 'Nội dung chi tiết'
+    }) }}
+
+    <div class="form-group" style="width: 30%;">
+        {{ form_row(postForm.imageFile, {
+            label: 'Ảnh đại diện',
+            attr: {
+                'placeholder': 'Đính kèm ảnh vào đây'
+            }
+        }) }}
+    </div>
+
+
+    {{ form_widget(postForm) }}
+    <button type="submit" class="btn btn-primary">{{ button_text }}</button>
+    {{ form_end(postForm) }}
+{% endblock %}
