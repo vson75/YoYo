@@ -31,10 +31,6 @@
     -webkit-box-shadow: 0 1px 4px rgba(115,115,155,.5);
 }
 
-.post-title{
-    margin: 40px O 30px;
-}
-
 .card {
     -webkit-box-shadow: 0 1px 4px rgba(115,115,155,.5);
     box-shadow: 2px 3px 9px 4px rgba(0,0,0,0.04);
@@ -54,4 +50,56 @@
     max-width: 70%; /* Full width */
     padding: 5px; /* Some padding */
 
+}
+
+#btn-transaction{
+    background: rgba(255,95,103,0.89);
+    border-radius: 3px;
+    font-weight: 400;
+    padding: 5px 8px;
+    display: inline-block;
+    position: static;
+    margin: 0 1rem 1rem;
+    color: white;
+}
+
+#btn-transaction:hover {
+    cursor: pointer;
+    background: rgba(255,75,89,0.89)
+}
+
+body {
+    margin: 1rem;
+    font-family: Helvetica;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
+
+#fb-share-button {
+    background: #3b5998;
+    border-radius: 3px;
+    font-weight: 600;
+    padding: 5px 8px;
+    display: inline-block;
+    position: static;
+    margin: 0 1rem 1rem;
+}
+
+#fb-share-button:hover {
+    cursor: pointer;
+    background: #213A6F
+}
+
+#fb-share-button svg {
+    width: 18px;
+    fill: white;
+    vertical-align: middle;
+    border-radius: 2px
+}
+
+#fb-share-button span {
+    vertical-align: middle;
+    color: white;
+    font-size: 14px;
+    padding: 0 3px
 }

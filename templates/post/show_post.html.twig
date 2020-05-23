@@ -7,14 +7,11 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container post-title">
-        <br>
-        <h1 style="text-align: center"><span>{{ postInfo.title }}</span></h1>
 
-
-    </div>
 <div class="container">
-
+    <div>
+        <h1 style="text-align: center"><span>{{ postInfo.title }}</span></h1>
+    </div>
 
     <div class="row">
 
@@ -65,16 +62,27 @@
         <div class="col-md-4">
 
             <div class="card col-md-3">
-                <h1>John Doe</h1>
-                <p class="title">CEO & Founder, Example</p>
-                <p>Harvard University</p>
-                <div>
-                    <a href="#"><i class="fa fa-dribbble"></i></a>
-                    <a href="#"><i class="fa fa-twitter"></i></a>
-                    <a href="#"><i class="fa fa-linkedin"></i></a>
-                    <a href="#"><i class="fa fa-facebook"></i></a>
+                {% if totalAmount is null %}
+                <p><h1>0 € </h1> <span><small>quyên góp được</small></span></p>
+                {% else %}
+                <p><h1>{{ totalAmount }} € </h1> <span><small>quyên góp được</small></span></p>
+                {% endif %}
+
+                <p> <span><i class="fas fa-user"></i></span> {{ transaction.count }} người tham gia</p>
+                <p><span><i class="far fa-clock"></i></span> <span>con lai X ngày</span></p>
+
+                <div id="btn-transaction">
+                    <span>Quyên góp</span>
+
                 </div>
-                <p><button>Contact</button></p>
+
+                <!-- share button facebook. example here : https://developers.facebook.com/docs/plugins/share-button/  and https://codepen.io/kjkta/pen/rxawKL -->
+                <div id="fb-share-button">
+                    <svg viewBox="0 0 12 12" preserveAspectRatio="xMidYMid meet">
+                        <path class="svg-icon-path" d="M9.1,0.1V2H8C7.6,2,7.3,2.1,7.1,2.3C7,2.4,6.9,2.7,6.9,3v1.4H9L8.8,6.5H6.9V12H4.7V6.5H2.9V4.4h1.8V2.8 c0-0.9,0.3-1.6,0.7-2.1C6,0.2,6.6,0,7.5,0C8.2,0,8.7,0,9.1,0.1z"></path>
+                    </svg>
+                    <span>Chia sẻ qua facebook</span>
+                </div>
             </div>
 
 
@@ -95,8 +103,47 @@
             </ul>
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade show active" id="pills-listParticipant" role="tabpanel" aria-labelledby="pills-listParticipant-tab">
-                    1 - profil
-                </div>
+
+
+                        <div class="col-md-12 row" style="margin: 1rem 0 1rem; padding: 5px;">
+                            <div class="media col-md-4" style="margin: 0.5rem 0 0.5rem">
+                                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+                                <div class="media-body">
+                                    <small class="mt-0">abc</small>
+                                    <br>
+                                    <div  style="white-space: pre-wrap;">10 k</div>
+                                </div>
+                            </div>
+                            <div class="media col-md-4" style="margin: 0.5rem 0 0.5rem">
+                                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+                                <div class="media-body">
+                                    <small class="mt-0">abc </small>
+                                    <br>
+                                    <div  style="white-space: pre-wrap;">10 k</div>
+                                </div>
+                            </div>
+                            <div class="media col-md-4" style="margin: 0.5rem 0 0.5rem">
+                                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+                                <div class="media-body">
+                                    <small class="mt-0">abc </small>
+                                    <br>
+                                    <div  style="white-space: pre-wrap;">10 k</div>
+                                </div>
+                            </div>
+                            <div class="media col-md-4" style="margin: 0.5rem 0 0.5rem">
+                                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+                                <div class="media-body">
+                                    <small class="mt-0">abc </small>
+                                    <br>
+                                    <div  style="white-space: pre-wrap;">10 k</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
                 <div class="tab-pane fade" id="pills-comment" role="tabpanel" aria-labelledby="pills-comment-tab">
 
                     <div style="margin-top: 1.25rem;margin-bottom: 1.25rem;">
@@ -142,6 +189,17 @@
         <script>
             $(document).ready(function(){
                 $('[data-toggle="tooltip"]').tooltip();
+            });
+
+            var fbButton = document.getElementById('fb-share-button');
+            var url = window.location.href;
+
+            fbButton.addEventListener('click', function() {
+                window.open('https://www.facebook.com/sharer/sharer.php?u=' + url,
+                    'facebook-share-dialog',
+                    'width=800,height=600'
+                );
+                return false;
             });
         </script>
 

@@ -3,8 +3,10 @@
 
 namespace App\Controller;
 use App\Entity\Post;
+use App\Entity\Transaction;
 use App\Form\CommentFormType;
 use App\Form\PostFormType;
+use App\Repository\TransactionRepository;
 use App\Service\Mailer;
 use App\Service\MarkdownHelper;
 use App\Service\UploadService;
@@ -48,7 +50,7 @@ class PostController extends AbstractController
      * @param MarkdownHelper $markdownHelper
      * @return Response
      */
-    public function show($uniquekey, MarkdownHelper $markdownHelper, EntityManagerInterface $em, Request $request){
+    public function show($uniquekey, MarkdownHelper $markdownHelper, EntityManagerInterface $em, Request $request, TransactionRepository $transactionRepository){
 
         $repository = $em->getRepository(Post::class);
         $postInfo = $repository->findOneBy([
@@ -58,6 +60,10 @@ class PostController extends AbstractController
             throw $this->createNotFoundException('The Post is not exist');
         }
         $comment = $postInfo->getComments();
+        $transaction = $postInfo->getTransactions();
+
+        $totalAmount = $transactionRepository->getTotalAmountbyPost($postInfo->getId());
+       // dd($totalAmount);
 
         $currentUserLooged = $this->security->getUser();
 
@@ -69,6 +75,7 @@ class PostController extends AbstractController
             $postContentCache = $markdownHelper->cacheInfo($postContentCache);
         }
 
+        // save the old URL to redirecte after login
         $this->saveTargetPath($request->getSession(),'main', $request->getUri());
 
         // comment section
@@ -98,6 +105,8 @@ class PostController extends AbstractController
                 'comment'=> $comment,
                 'commentForm' => $form->createView(),
                 'UserLogged' => $currentUserLooged,
+                'transaction' => $transaction,
+                'totalAmount' => $totalAmount
 
             ]
         );

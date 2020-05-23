@@ -19,6 +19,18 @@ class TransactionRepository extends ServiceEntityRepository
         parent::__construct($registry, Transaction::class);
     }
 
+
+
+    public function getTotalAmountbyPost($val)
+    {
+        return $this->createQueryBuilder('t')
+            ->select('SUM(t.amount)')
+            ->andWhere('t.post = :val')
+            ->setParameter('val', $val)
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
     // /**
     //  * @return Transaction[] Returns an array of Transaction objects
     //  */
