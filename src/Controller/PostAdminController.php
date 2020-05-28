@@ -27,6 +27,7 @@ class PostAdminController extends AbstractController
 
         // get query find_post parameter. like $_GET
         $q = $request->query->get('find_post');
+        $user = $this->getUser();
 
 
         $post = $postRepository->findAllWithSearch($q);
@@ -38,6 +39,7 @@ class PostAdminController extends AbstractController
         return $this->render('post_admin/post_admin.index.html.twig', [
             'pagination' => $pagination,
             //'postInfo'=> $post,
+            'userInfo' => $user
         ]);
     }
 

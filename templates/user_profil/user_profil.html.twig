@@ -10,11 +10,12 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="profile-img">
-                        <img src="" alt=""/>
-                        <div class="file btn btn-lg btn-primary">
-                            Change Photo
-                            <input type="file" name="file"/>
-                        </div>
+                        {% set upload_directory = "uploads/user/icon/#{userInfo.Id}/" %}
+                        {% if  userInfo.imagePath == upload_directory %}
+                            <img src="{{ asset('uploads/user/icon/default_icon.png') }}" alt=""/>
+                        {% else %}
+                        <img src="{{ asset(userInfo.imagePath) }}" alt=""/>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -34,7 +35,7 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/>
+                    <a href="{{ path('app_edit_profil') }}">modify profil</a>
                 </div>
             </div>
             <div class="row">
@@ -71,68 +72,14 @@
                                     <p>{{ userInfo.email }}</p>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>Phone</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>123 456 7890</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>Cu tru tai</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>Phap</p>
-                                </div>
-                            </div>
                         </div>
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label>Experience</label>
+                                    <label>Fonctionnalité này se som duoc chung tôi dua vào su dung. cac ban cho nhe</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>Expert</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>Hourly Rate</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>10$/hr</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>Total Projects</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>230</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>English Level</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>Expert</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>Availability</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>6 months</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label>Your Bio</label><br/>
-                                    <p>Your detail description</p>
+                                    <p></p>
                                 </div>
                             </div>
                         </div>

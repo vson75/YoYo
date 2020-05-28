@@ -1,0 +1,17 @@
+{% extends 'content_base.html.twig' %}
+
+{% block title %}
+    Thay dôi thông tin ca nhân
+{% endblock %}
+
+{% block content_body %}
+
+    {{ form_start(userIcon) }}
+    <div class="form-group" style="width: 100%;">
+        {{ form_row(userIcon.iconFile) }}
+    </div>
+    {{ form_widget(userIcon) }}
+    <button type="submit" class="btn btn-primary">Thay doi anh</button>
+    {{ form_end(userIcon) }}
+
+{% endblock %}

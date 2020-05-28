@@ -30,4 +30,19 @@ class UploadService
 
         return $newFilename;
     }
+
+    public function UploadIconImage(UploadedFile $uploadedFile, $userID): string{
+
+        $destination = $this->uploadsPath.'/user/icon/'.$userID;
+        $origineFilename = pathinfo($uploadedFile->getClientOriginalName(),PATHINFO_FILENAME);
+        $newFilename = Urlizer::urlize($origineFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
+
+        $uploadedFile->move(
+            $destination,
+            $newFilename
+        );
+
+        return $newFilename;
+    }
+
 }

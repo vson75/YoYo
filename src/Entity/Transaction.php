@@ -37,6 +37,11 @@ class Transaction
      */
     private $amount;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $anonymousDonation = 0;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +91,18 @@ class Transaction
     public function setAmount(float $amount): self
     {
         $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getAnonymousDonation(): ?bool
+    {
+        return $this->anonymousDonation;
+    }
+
+    public function setAnonymousDonation(?bool $anonymousDonation): self
+    {
+        $this->anonymousDonation = $anonymousDonation;
 
         return $this;
     }

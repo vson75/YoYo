@@ -31,6 +31,29 @@ class TransactionRepository extends ServiceEntityRepository
             ->getSingleScalarResult()
             ;
     }
+
+    public function getTransactionbyPost($val)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.post = :val')
+            ->andWhere('t.anonymousDonation = 0')
+            ->setParameter('val', $val)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function getAnonymousTransactionbyPost($val)
+    {
+        return $this->createQueryBuilder('t')
+            ->select('SUM(t.amount)')
+            ->andWhere('t.post = :val')
+            ->andWhere('t.anonymousDonation = 1')
+            ->setParameter('val', $val)
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
     // /**
     //  * @return Transaction[] Returns an array of Transaction objects
     //  */

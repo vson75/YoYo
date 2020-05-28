@@ -2,10 +2,8 @@
 
 
 namespace App\Controller;
-use App\Entity\Post;
-use App\Entity\Transaction;
-use App\Form\CommentFormType;
-use App\Form\PostFormType;
+use App\Entity\{Post, Transaction};
+use App\Form\{CommentFormType, PostFormType, PaymentType};
 use App\Repository\TransactionRepository;
 use App\Service\Mailer;
 use App\Service\MarkdownHelper;
@@ -20,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Stripe\{Stripe, PaymentIntent};
 
 class PostController extends AbstractController
 {
@@ -38,9 +37,11 @@ class PostController extends AbstractController
 
         $repository = $em->getRepository(Post::class);
         $post = $repository->findPostByNewest();
+        $userInfo = $this->getUser();
        // dump($post);die;
         return $this->render('homepage.html.twig',[
-                'post' => $post
+                'post' => $post,
+                'userInfo'=> $userInfo
             ]
         );
     }
@@ -56,14 +57,18 @@ class PostController extends AbstractController
         $postInfo = $repository->findOneBy([
             'uniquekey'=> $uniquekey
         ]);
-        if(!$postInfo){
+
+        if (is_null($postInfo)) {
             throw $this->createNotFoundException('The Post is not exist');
         }
-        $comment = $postInfo->getComments();
+        $comment     = $postInfo->getComments();
         $transaction = $postInfo->getTransactions();
 
         $totalAmount = $transactionRepository->getTotalAmountbyPost($postInfo->getId());
-       // dd($totalAmount);
+        $TransactionThisPost = $transactionRepository->getTransactionbyPost($postInfo->getId());
+
+        $TransactionAnonymous = $transactionRepository->getAnonymousTransactionbyPost($postInfo->getId());
+     //  dd($TransactionThisPost);
 
         $currentUserLooged = $this->security->getUser();
 
@@ -99,15 +104,16 @@ class PostController extends AbstractController
             ]);
         }
 
-
         return $this->render('post/show_post.html.twig',[
                 'postInfo' => $postInfo,
                 'comment'=> $comment,
                 'commentForm' => $form->createView(),
-                'UserLogged' => $currentUserLooged,
+                'userInfo' => $currentUserLooged,
                 'transaction' => $transaction,
-                'totalAmount' => $totalAmount
-
+                'totalAmount' => $totalAmount,
+                'TransactionThisPost' => $TransactionThisPost,
+                'TotalAnonymous' => $TransactionAnonymous,
+                'financeForm' => $this->createForm(PaymentType::class)->createView()
             ]
         );
     }
@@ -140,6 +146,7 @@ class PostController extends AbstractController
     public function new(EntityManagerInterface $em, Request $request, UploadService $uploadService, Mailer $mailer){
         $form = $this->createForm(PostFormType::class);
         $form->handleRequest($request);
+        $user = $this->getUser();
 
         if($form->isSubmitted() && $form->isValid()){
             //get data in form
@@ -148,7 +155,6 @@ class PostController extends AbstractController
 
             // add date and user = user created
             $createNew->setPublishedAt(new \DateTime('now'));
-            $user = $this->getUser();
             $createNew->setUser($user);
 
             //get title and hash md5 for the uniquekey
@@ -198,6 +204,7 @@ class PostController extends AbstractController
 
         return $this->render('post/create_post.html.twig',[
             'postForm' => $form->createView(),
+            'userInfo' => $user
         ]);
     }
 
@@ -209,6 +216,7 @@ class PostController extends AbstractController
     public function edit(EntityManagerInterface $em, Request $request, Post $post, UploadService $uploadService){
         $form = $this->createForm(PostFormType::class, $post);
         $form->handleRequest($request);
+        $user = $this->getUser();
 
         if($form->isSubmitted() && $form->isValid()){
             $updatePost = $form->getData();
@@ -237,29 +245,84 @@ class PostController extends AbstractController
 
         return $this->render('post/edit_post.html.twig',[
             'postForm' => $form->createView(),
-            'post'=> $post
+            'post'=> $post,
+            'userInfo' => $user
         ]);
 
     }
 
     /**
-     * @Route("finance", name="app_finance")
+     * @Route("finance/{id}", name="app_finance")
      */
-    public function financePost(Request $request){
+    public function financePost(Post $post, Request $request)
+    {
+        $financeForm = $this->createForm(PaymentType::class);
+        $financeForm->handleRequest($request);
 
+        $user = $this->getUser();
+
+        //dd($financeForm->getData());
+
+        if ($financeForm->isSubmitted() && $financeForm->isValid()) {
+            $amount = $financeForm->getData()['amount'];
+
+            Stripe::setApiKey('sk_test_gxLCkDYIJRoJXx7Ovh4RqBTB00aHGuN3mt');
+            $intent = PaymentIntent::create([
+                'amount'   => $amount*100,
+                'currency' => 'eur',
+                'metadata' => ['integration_check' => 'accept_a_payment']
+            ]);
+        } else {
+            return $this->redirect('show_post', ['uniqueKey' => $post->getUniquekey()]);
+        }
+        
+
+        return $this->render('post/finance_post.html.twig',[
+            'userInfo'      => $user,
+            'clientSecret' => $intent->client_secret,
+            'amount'        => $amount
+        ]);
+    }
+
+    /**
+    public function charge(Request $request){
         // Set your secret key. Remember to switch to your live secret key in production!
-// See your keys here: https://dashboard.stripe.com/account/apikeys
+        // See your keys here: https://dashboard.stripe.com/account/apikeys
+       // require_once('vendor/autoload.php');
 
+        $stripe = new \Stripe\StripeClient('sk_test_gxLCkDYIJRoJXx7Ovh4RqBTB00aHGuN3mt');
+
+        $user = $this->getUser();
         \Stripe\Stripe::setApiKey('sk_test_gxLCkDYIJRoJXx7Ovh4RqBTB00aHGuN3mt');
+       // dd(\Stripe\PaymentIntent::all());
+        // To create a PaymentIntent for confirmation, see our guide at: https://stripe.com/docs/payments/payment-intents/creating-payment-intents#creating-for-automatic
+
+
+
+        $customer = \Stripe\Customer::create([
+            "email" => $user->getEmail()
+            ]
+        );
+
 
         $intent = \Stripe\PaymentIntent::create([
             'amount' => 1599,
             'currency' => 'eur',
             // Verify your integration in this guide by including this parameter
             'metadata' => ['integration_check' => 'accept_a_payment'],
-            'description'=>'tra tien khach di'
+            'payment_method_types' => ['card'],
+            // 'confirm' => true,
+            'description'=>'khach tra tiên',
+
+        ]);
+        dd($intent);
+
+        $this->addFlash('success','cam on ban da tra tien');
+        return $this->render('post/finance_post.html.twig',[
+            'userInfo' => $user,
+            'payementIntent' => $intent
         ]);
 
-        return $this->render('post/finance_post.html.twig');
     }
+     **/
 }

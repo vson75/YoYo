@@ -39,7 +39,14 @@
                 {% if is_granted('ROLE_USER') %}
                 <li class="nav-item dropdown" style="margin-right: 75px;">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img class="nav-profile-img rounded-circle" src="{{ asset('images/tisha.png')}}">
+
+                        {% set upload_directory = "uploads/user/icon/#{userInfo.Id}/" %}
+
+                        {% if  userInfo.imagePath == upload_directory %}
+                            <img class="nav-profile-img rounded-circle" src="{{ asset('uploads/user/icon/default_icon.png') }}">
+                        {% else %}
+                            <img class="nav-profile-img rounded-circle" src="{{ asset(userInfo.imagePath) }}">
+                        {% endif %}
                     </a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="{{ path('app_profil') }}">Profile</a>

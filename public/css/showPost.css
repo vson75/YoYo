@@ -103,3 +103,8 @@ body {
     font-size: 14px;
     padding: 0 3px
 }
+
+.icone-user{
+    max-width: 70px;
+    max-height: 70px;
+}

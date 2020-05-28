@@ -85,6 +85,7 @@ p {
 
 .nav-profile-img {
     width: 35px;
+    height: 35px;
 }
 .dropdown-menu, .dropdown-menu.show {
     right: 0;

@@ -18,20 +18,6 @@
         <!-- Post Content Column -->
         <div class="col-lg-8 showpost">
 
-            <!--
-            <small>
-                <span><i class="fas fa-user"></i> <a href="#">{{ postInfo.user.firstname }} {{ postInfo.user.lastname }} </a></span>|
-                <span><i class="far fa-clock"></i></span>
-                <span> {{ postInfo.publishedAt|date('d-m-Y') }}</span> |
-                <span><i class="fas fa-piggy-bank"></i></span><span> Financed by </span>
-                <span class="js-total-participant">{{ postInfo.numberParticipant }}</span> personnes
-            </small>
-            {% if UserLogged is null %}
-            {% elseif(UserLogged.id == postInfo.user.id) %}
-                <a class="edit-post" href="{{ path('app_post_edit', {id: postInfo.id}) }}" data-toggle="tooltip" data-placement="bottom" title="Edit post"><i class="fas fa-edit"></i></a>
-            {% endif %}
-            <hr>
-             -->
 
             <!-- Preview Image -->
             {% if postInfo.imagePath == 'uploads/post/image/' %}
@@ -71,10 +57,12 @@
                 <p> <span><i class="fas fa-user"></i></span> {{ transaction.count }} người tham gia</p>
                 <p><span><i class="far fa-clock"></i></span> <span>con lai X ngày</span></p>
 
-                <div id="btn-transaction">
+                {{ form_start(financeForm, {action: path('app_finance', {id: postInfo.id}) }) }}
+                {{ form_row(financeForm.amount) }}
+                <button id="btn-transaction" type="submit">
                     <span>Quyên góp</span>
-
-                </div>
+                </button>
+                {{ form_end(financeForm) }}
 
                 <!-- share button facebook. example here : https://developers.facebook.com/docs/plugins/share-button/  and https://codepen.io/kjkta/pen/rxawKL -->
                 <div id="fb-share-button">
@@ -83,6 +71,7 @@
                     </svg>
                     <span>Chia sẻ qua facebook</span>
                 </div>
+
             </div>
 
 
@@ -106,38 +95,27 @@
 
 
                         <div class="col-md-12 row" style="margin: 1rem 0 1rem; padding: 5px;">
+                            {% if TotalAnonymous is not null %}
                             <div class="media col-md-4" style="margin: 0.5rem 0 0.5rem">
-                                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+                                <img class="d-flex mr-3 rounded-circle icone-user" src="{{ asset('uploads/user icon.png') }}"  alt="">
                                 <div class="media-body">
-                                    <small class="mt-0">abc</small>
+                                    <small class="mt-0">Ẩn danh</small>
                                     <br>
-                                    <div  style="white-space: pre-wrap;">10 k</div>
+                                    <div  style="white-space: pre-wrap;">{{ TotalAnonymous }} €</div>
                                 </div>
                             </div>
+                            {% endif %}
+                            {% for transactionpost in TransactionThisPost %}
                             <div class="media col-md-4" style="margin: 0.5rem 0 0.5rem">
-                                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+                                <img class="d-flex mr-3 rounded-circle icone-user" src="http://placehold.it/50x50" alt="">
                                 <div class="media-body">
-                                    <small class="mt-0">abc </small>
+                                    <small class="mt-0">{{ transactionpost.user.firstname }} {{ transactionpost.user.lastname }}</small>
                                     <br>
-                                    <div  style="white-space: pre-wrap;">10 k</div>
+                                    <div  style="white-space: pre-wrap;">{{ transactionpost.amount }} €</div>
                                 </div>
                             </div>
-                            <div class="media col-md-4" style="margin: 0.5rem 0 0.5rem">
-                                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                                <div class="media-body">
-                                    <small class="mt-0">abc </small>
-                                    <br>
-                                    <div  style="white-space: pre-wrap;">10 k</div>
-                                </div>
-                            </div>
-                            <div class="media col-md-4" style="margin: 0.5rem 0 0.5rem">
-                                <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                                <div class="media-body">
-                                    <small class="mt-0">abc </small>
-                                    <br>
-                                    <div  style="white-space: pre-wrap;">10 k</div>
-                                </div>
-                            </div>
+                            {% endfor %}
+
 
                         </div>
 

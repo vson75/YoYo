@@ -89,6 +89,11 @@ class User implements UserInterface
      */
     private $transactions;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $icon;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -363,6 +368,24 @@ class User implements UserInterface
                 $transaction->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIcon(): ?string
+    {
+        return $this->icon;
+    }
+
+    //function added manually to give the Image images/post/$filenaname . After go to twig and change call this method
+    public function getImagePath()
+    {
+        return 'uploads/user/icon/'.$this->getId().'/'.$this->getIcon();
+    }
+
+    public function setIcon(?string $icon): self
+    {
+        $this->icon = $icon;
 
         return $this;
     }
