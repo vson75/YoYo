@@ -252,14 +252,20 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("finance/{id}", name="app_finance")
+     * @Route("finance/{uniquekey}", name="app_finance")
+     * @IsGranted("ROLE_USER")
      */
-    public function financePost(Post $post, Request $request)
+    public function financePost(Post $post, Request $request, EntityManagerInterface $em, $uniquekey)
     {
         $financeForm = $this->createForm(PaymentType::class);
         $financeForm->handleRequest($request);
 
         $user = $this->getUser();
+
+        $repo = $em->getRepository(Post::class);
+        $postInfo = $repo->findOneBy([
+            'uniquekey' => $uniquekey,
+        ]);
 
         //dd($financeForm->getData());
 
@@ -273,56 +279,46 @@ class PostController extends AbstractController
                 'metadata' => ['integration_check' => 'accept_a_payment']
             ]);
         } else {
-            return $this->redirect('show_post', ['uniqueKey' => $post->getUniquekey()]);
+            $this->addFlash('echec', 'Something wrong with your paiement, the valid form is not correct.');
+            return $this->redirectToRoute('show_post', ['uniquekey' => $post->getUniqueKey()]);
         }
         
 
-        return $this->render('post/finance_post.html.twig',[
+        return $this->render('post/funding_payment_post.html.twig',[
             'userInfo'      => $user,
             'clientSecret' => $intent->client_secret,
-            'amount'        => $amount
+            'amount'        => $amount,
+            'postInfo' => $postInfo
         ]);
     }
 
     /**
-    public function charge(Request $request){
-        // Set your secret key. Remember to switch to your live secret key in production!
-        // See your keys here: https://dashboard.stripe.com/account/apikeys
-       // require_once('vendor/autoload.php');
-
-        $stripe = new \Stripe\StripeClient('sk_test_gxLCkDYIJRoJXx7Ovh4RqBTB00aHGuN3mt');
+     * @Route("/funding/{uniquekey}", name="app_payment")
+     * @IsGranted("ROLE_USER")
+     */
+    public function funding($uniquekey, Request $request, EntityManagerInterface $em){
 
         $user = $this->getUser();
-        \Stripe\Stripe::setApiKey('sk_test_gxLCkDYIJRoJXx7Ovh4RqBTB00aHGuN3mt');
-       // dd(\Stripe\PaymentIntent::all());
-        // To create a PaymentIntent for confirmation, see our guide at: https://stripe.com/docs/payments/payment-intents/creating-payment-intents#creating-for-automatic
+        $financeForm = $this->createForm(PaymentType::class);
+        $financeForm->handleRequest($request);
 
-
-
-        $customer = \Stripe\Customer::create([
-            "email" => $user->getEmail()
-            ]
-        );
-
-
-        $intent = \Stripe\PaymentIntent::create([
-            'amount' => 1599,
-            'currency' => 'eur',
-            // Verify your integration in this guide by including this parameter
-            'metadata' => ['integration_check' => 'accept_a_payment'],
-            'payment_method_types' => ['card'],
-            // 'confirm' => true,
-            'description'=>'khach tra tiên',
-
+        $repository = $em->getRepository(Post::class);
+        $postInfo = $repository->findOneBy([
+            'uniquekey'=> $uniquekey
         ]);
-        dd($intent);
 
-        $this->addFlash('success','cam on ban da tra tien');
-        return $this->render('post/finance_post.html.twig',[
+    //dd($postInfo);
+        if (is_null($postInfo)) {
+            throw $this->createNotFoundException('The Post is not exist');
+        }
+
+
+        return $this->render('post/funding_post.html.twig', [
             'userInfo' => $user,
-            'payementIntent' => $intent
+            'financeForm' => $financeForm->createView(),
+            'postInfo' => $postInfo
         ]);
-
     }
-     **/
+
+
 }

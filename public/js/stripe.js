@@ -4,9 +4,22 @@ var stripe = Stripe('pk_test_xpnUKfTJeENGTpG8tdzzpPd800IsDeAKjJ');
 var elements = stripe.elements();
 
 
+
 var style = {
     base: {
-        color: "#32325d",
+        iconColor: '#2F4F4F',
+        color:  'rgba(42,38,38,0.85)',
+        fontWeight: 500,
+        fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
+        fontSize: '17px',
+        fontSmoothing: 'antialiased',
+
+        ':-webkit-autofill': {
+            color: '#25e738',
+        },
+        '::placeholder': {
+            color: 'rgba(42,38,38,0.85)',
+        },
     }
 };
 

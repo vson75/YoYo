@@ -57,12 +57,11 @@
                 <p> <span><i class="fas fa-user"></i></span> {{ transaction.count }} người tham gia</p>
                 <p><span><i class="far fa-clock"></i></span> <span>con lai X ngày</span></p>
 
-                {{ form_start(financeForm, {action: path('app_finance', {id: postInfo.id}) }) }}
-                {{ form_row(financeForm.amount) }}
-                <button id="btn-transaction" type="submit">
+                <div id="btn-transaction" onclick="location.href='{{ path('app_payment', {uniquekey: postInfo.uniquekey}) }}'">
                     <span>Quyên góp</span>
-                </button>
-                {{ form_end(financeForm) }}
+
+                </div>
+
 
                 <!-- share button facebook. example here : https://developers.facebook.com/docs/plugins/share-button/  and https://codepen.io/kjkta/pen/rxawKL -->
                 <div id="fb-share-button">
@@ -179,6 +178,7 @@
                 );
                 return false;
             });
+
         </script>
 
         <script src="{{ asset('js/post.js') }}"></script>

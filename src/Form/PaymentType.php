@@ -14,6 +14,7 @@ class PaymentType extends AbstractType
     {
         $builder
             ->add('amount', MoneyType::class, [
+                'label' => false,
                 'constraints' => [
                     new Constraints\NotBlank
                 ]
