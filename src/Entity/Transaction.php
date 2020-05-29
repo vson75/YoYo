@@ -42,6 +42,11 @@ class Transaction
      */
     private $anonymousDonation = 0;
 
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $clientSecret;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +108,18 @@ class Transaction
     public function setAnonymousDonation(?bool $anonymousDonation): self
     {
         $this->anonymousDonation = $anonymousDonation;
+
+        return $this;
+    }
+
+    public function getClientSecret(): ?string
+    {
+        return $this->clientSecret;
+    }
+
+    public function setClientSecret(string $clientSecret): self
+    {
+        $this->clientSecret = $clientSecret;
 
         return $this;
     }

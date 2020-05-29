@@ -43,7 +43,7 @@ form.addEventListener('submit', function(ev) {
     payment_method: {
       card: card,
       billing_details: {
-        name: 'John Doe'
+        name: userId+' - '+userEmail
       }
     }
   }).then(function(result) {
@@ -58,7 +58,24 @@ form.addEventListener('submit', function(ev) {
         // execution. Set up a webhook or plugin to listen for the
         // payment_intent.succeeded event that handles any business critical
         // post-payment actions.
-        alert('ok');
+
+          var path = window.location.pathname;
+          var redirectURL = path.replace("/finance/","/post/");
+        
+          $.ajax({
+              cache: false,
+              url: '/add_transaction/'+uniquekey+'/'+clientSecret+'/'+amount,
+              method: 'POST',
+              async: false,
+          }).then(function(data) {
+              //  alert(data.nb_Participant);
+              swal.fire("Chuyển khoản thành công", "Cảm ơn bạn đã đóng góp cho dự án này", "success");
+              window.location.href = redirectURL;
+          });
+
+
+
+        //alert('ok');
       }
     }
   });

@@ -254,6 +254,7 @@ class PostController extends AbstractController
     /**
      * @Route("finance/{uniquekey}", name="app_finance")
      * @IsGranted("ROLE_USER")
+     * this function is called to add payment intent
      */
     public function financePost(Post $post, Request $request, EntityManagerInterface $em, $uniquekey)
     {
@@ -261,6 +262,7 @@ class PostController extends AbstractController
         $financeForm->handleRequest($request);
 
         $user = $this->getUser();
+
 
         $repo = $em->getRepository(Post::class);
         $postInfo = $repo->findOneBy([
@@ -276,8 +278,12 @@ class PostController extends AbstractController
             $intent = PaymentIntent::create([
                 'amount'   => $amount*100,
                 'currency' => 'eur',
+                'description' => $postInfo->getId().' - '.$postInfo->getUniquekey(),
                 'metadata' => ['integration_check' => 'accept_a_payment']
             ]);
+
+
+
         } else {
             $this->addFlash('echec', 'Something wrong with your paiement, the valid form is not correct.');
             return $this->redirectToRoute('show_post', ['uniquekey' => $post->getUniqueKey()]);
@@ -318,6 +324,37 @@ class PostController extends AbstractController
             'financeForm' => $financeForm->createView(),
             'postInfo' => $postInfo
         ]);
+    }
+
+
+    /**
+     * @Route("/add_transaction/{uniquekey}/{clientSecret}/{amount}", methods="POST", name="app_add_transaction")
+     */
+    public function addTransactioninDB($uniquekey, $clientSecret, $amount, EntityManagerInterface $em){
+
+        $repo = $em->getRepository(Post::class);
+        $post = $repo->findOneBy([
+           'uniquekey' => $uniquekey
+        ]);
+
+
+        $transaction = new Transaction();
+
+        $transaction->setUser($this->getUser())
+                    ->setPost($post)
+                    ->setAmount($amount)
+                    ->setClientSecret($clientSecret)
+                    ->setTransfertAt(new \DateTime('now'))
+                    ->setAnonymousDonation(false);
+
+        $em->persist($transaction);
+        $em->flush();
+
+        //$this->addFlash('success', 'Cảm ơn bạn đã quyên góp tiền');
+        return $this->json([
+            'transaction' => $transaction
+        ]);
+
     }
 
 

@@ -30,6 +30,7 @@
 
             <div class="col">
                 <p style="text-align: center">Thông tin thẻ tín dụng</p>
+                <!-- action="{{ path('app_add_transaction', {uniquekey: postInfo.uniquekey, clientSecret: clientSecret, amount: amount}) }}" -->
                 <form id="payment-form" method="post">
 
                     <input type="text" placeholder="Họ và tên chủ thẻ" required="">
@@ -45,19 +46,7 @@
                 </form>
             </div>
         </div>
-
-
-
-
-
-
     </div>
-
-
-
-
-
-
 
 
 {% endblock %}
@@ -66,7 +55,14 @@
  {{ parent() }}
     <script>
         var clientSecret = '{{ clientSecret }}';
+        var uniquekey = '{{ postInfo.uniquekey }}';
+        var userId = {{ userInfo.Id }}
+        var userEmail = '{{ userInfo.Email }}';
+        var amount = {{ amount }};
+
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 
     <script src="{{ asset('js/stripe.js') }}">
 

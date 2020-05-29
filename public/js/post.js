@@ -7,14 +7,14 @@ $container.find('button').on('click', function(e) {
   e.preventDefault();
 //  alert('1');
     var $link = $(e.currentTarget);
-    var $path = window.location.pathname;
-    var $uniquekey = $path.replace("/post/","");
+    var path = window.location.pathname;
+    var uniquekey = path.replace("/post/","");
 
    // alert($slug);
 
     $.ajax({
         cache: false,
-        url: '/participant_project/'+$uniquekey,
+        url: '/participant_project/'+uniquekey,
         method: 'POST',
         async: false,
     }).then(function(data) {
