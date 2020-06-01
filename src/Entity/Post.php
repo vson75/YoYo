@@ -74,6 +74,11 @@ class Post
      */
     private $transactions;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $finishAt;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -259,6 +264,18 @@ class Post
                 $transaction->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFinishAt(): ?\DateTimeInterface
+    {
+        return $this->finishAt;
+    }
+
+    public function setFinishAt(?\DateTimeInterface $finishAt): self
+    {
+        $this->finishAt = $finishAt;
 
         return $this;
     }

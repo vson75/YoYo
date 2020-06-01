@@ -64,7 +64,8 @@
                 {% endif %}
 
                 <p> <span><i class="fas fa-user"></i></span> {{ nb_participant }} người tham gia</p>
-                <p><span><i class="far fa-clock"></i></span> <span>con lai X ngày</span></p>
+
+                <p><span><i class="far fa-clock"></i></span> <span>Còn lại {{ datediff }} ngày</span></p>
 
                 <div id="btn-transaction" onclick="location.href='{{ path('app_payment', {uniquekey: postInfo.uniquekey}) }}'">
                     <span>Quyên góp</span>

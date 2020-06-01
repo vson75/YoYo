@@ -24,9 +24,34 @@
 
                     {#if no image#}
                     {% if post.imagePath == 'uploads/post/image/' %}
-                        <img class="card-img-top" src="{{ asset('uploads/post/default_img.jpeg') | imagine_filter('card_thumbnail_homepage')}}" alt="">
+
+                        <div>
+                            <img class="card-img-top" src="{{ asset('uploads/post/default_img.jpeg') | imagine_filter('card_thumbnail_homepage')}}" alt="">
+
+                            {% set finish = post.finishAt %}
+                            {% set now = "now"|date("m/d/Y") %}
+                            {% set diff = date(finish).diff(date(now)) %}
+                            {% set leftDays = diff.days %}
+                            {% if leftDays >10 %}
+                                <div class="dayCountdownWhite rounded">J-{{ leftDays }}</div>
+                            {% else %}
+                                <div class="dayCountdownRed rounded">J-{{ leftDays }}</div>
+                            {% endif %}
+
+                        </div>
+
                     {% else %}
                             <img class="card-img-top" src="{{ asset(post.imagePath) | imagine_filter('card_thumbnail_homepage')}}" alt="">
+
+                        {% set finish = post.finishAt %}
+                        {% set now = "now"|date("m/d/Y") %}
+                        {% set diff = date(finish).diff(date(now)) %}
+                        {% set leftDays = diff.days %}
+                        {% if leftDays >10 %}
+                            <div class="dayCountdownWhite rounded">J-{{ leftDays }}</div>
+                        {% else %}
+                            <div class="dayCountdownRed">J-{{ leftDays }}</div>
+                        {% endif %}
                         {% endif %}
                     <div class="card-body">
                         <h5 class="card-title text-left">{{ post.title }}</h5>

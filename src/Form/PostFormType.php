@@ -10,6 +10,7 @@ use App\Entity\Tag;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,6 +35,12 @@ class PostFormType extends AbstractType
                         'maxSize' => '5M'
                     ])
                 ]
+            ])
+            ->add('finishAt', DateType::class, [
+                'widget' => 'single_text',
+                'required' => false,
+                'label' => 'Hạn chót bạn muốn quyên góp tiền',
+                'help' => 'Nếu bạn chưa có ngày cụ thể, hệ thống sẽ để mặc định là 30 ngày. Bạn có thể chỉnh sửa sau'
             ])
             ->add('content', CKEditorType::class, array(
                 'config' => array(

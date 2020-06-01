@@ -2,6 +2,7 @@
 
 
 namespace App\Controller;
+use Cassandra\Date;
 use App\Entity\{Post, Transaction};
 use App\Form\{CommentFormType, PostFormType, PaymentType};
 use App\Repository\TransactionRepository;
@@ -39,6 +40,8 @@ class PostController extends AbstractController
         $post = $repository->findPostByNewest();
         $userInfo = $this->getUser();
        // dump($post);die;
+       // dd($post->getFinishAt());
+
         return $this->render('homepage.html.twig',[
                 'post' => $post,
                 'userInfo'=> $userInfo
@@ -75,6 +78,11 @@ class PostController extends AbstractController
 
         $currentUserLooged = $this->security->getUser();
 
+        $datediff = date_diff($postInfo->getFinishAt(),new \DateTime('now'));
+        $datediff = $datediff->format('%d');
+
+
+
        // dd($currentUserLooged);
       // var_dump($comment);die;
 
@@ -109,6 +117,7 @@ class PostController extends AbstractController
 
         return $this->render('post/show_post.html.twig',[
                 'postInfo' => $postInfo,
+                'datediff' => $datediff,
                 'comment'=> $comment,
                 'commentForm' => $form->createView(),
                 'userInfo' => $currentUserLooged,
@@ -160,6 +169,13 @@ class PostController extends AbstractController
             $createNew->setPublishedAt(new \DateTime('now'));
             $createNew->setUser($user);
 
+            $finishAt = $form['finishAt']->getData();
+            //dd($finishAt);
+            if(is_null($finishAt)){
+                $finishAt = date_add(new \DateTime('now'),new \DateInterval('P30D'));
+            }
+
+            $createNew->setFinishAt($finishAt);
             //get title and hash md5 for the uniquekey
             $title = $createNew->getTitle();
             $uniquekey =  substr(md5($title),0,10);
