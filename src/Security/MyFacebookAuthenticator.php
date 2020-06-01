@@ -7,6 +7,7 @@ use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
 use KnpU\OAuth2ClientBundle\Client\Provider\FacebookClient;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use League\OAuth2\Client\Provider\FacebookUser;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,19 +17,22 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
+
 class MyFacebookAuthenticator extends SocialAuthenticator
 {
         private $clientRegistry;
         private $em;
         private $router;
+        private $uploadsPath;
 
         use TargetPathTrait;
 
-        public function __construct(ClientRegistry $clientRegistry, EntityManagerInterface $em, RouterInterface $router)
+        public function __construct(ClientRegistry $clientRegistry, EntityManagerInterface $em, RouterInterface $router, string $uploadsPath)
     {
         $this->clientRegistry = $clientRegistry;
         $this->em = $em;
         $this->router = $router;
+        $this->uploadsPath = $uploadsPath;
     }
 
     public function supports(Request $request)
@@ -56,22 +60,13 @@ class MyFacebookAuthenticator extends SocialAuthenticator
         ->fetchUserFromToken($credentials);
 
         $email = $facebookUser->getEmail();
-            $image = $facebookUser->getPictureUrl();
-           // dd($image);
+
        // dd($facebookUser->getId());
         // 1) have they logged in with Facebook before? Easy!
         $existingUser = $this->em->getRepository(User::class)
         ->findOneBy(['facebookId' => $facebookUser->getId()]);
         if ($existingUser) {
         return $existingUser;
-        }
-
-        // 2) do we have a matching user by email?
-        $user = $this->em->getRepository(User::class)
-        ->findOneBy(['email' => $email]);
-
-        if($user){
-            return $user;
         }else{
             // 3) Maybe you just want to "register" them by creating
             // a User object
@@ -81,6 +76,29 @@ class MyFacebookAuthenticator extends SocialAuthenticator
                 ->setLastname($facebookUser->getLastName());
             $user->setEmail($facebookUser->getEmail());
             $user->setFacebookId($facebookUser->getId());
+
+
+
+            $this->em->persist($user);
+            $this->em->flush();
+
+            // get picture facebook content and create directory in user/icon
+            // example: https://symfony.com/doc/current/components/filesystem.html
+
+            $facebookID = $user->getFacebookId();
+            $image = $facebookUser->getPictureUrl();
+            $image = file_get_contents($image);
+
+            $fileSystem = new Filesystem();
+            $fileSystem->dumpFile($this->uploadsPath.'/user/icon/'.$user->getId().'/icon_facebook.png',$image);
+
+            //update user created with his facebook image
+
+            $repo = $this->em->getRepository(User::class);
+            $user = $repo->findOneBy([
+                'facebookId' => $facebookID
+            ]);
+            $user->setIcon('icon_facebook.png');
             $this->em->persist($user);
             $this->em->flush();
 

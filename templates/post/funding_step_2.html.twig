@@ -12,28 +12,27 @@
     <div class="container" style="margin-top: 7%; margin-bottom: 5%; background-color: white">
 
         <div class="row">
-            <div class="col">
+            <div class="col-md-4" style="position:relative; overflow:hidden">
 
                     {% if postInfo.imagePath == 'uploads/post/image/' %}
-                        <div>
-                            <img style="max-height: 100px; max-width: 200px;" class="img-post" src="{{ asset('uploads/post/default_img.jpeg') }}" alt="">
+                        <div class="wrapper">
+                            <img style="position: absolute;"  src="{{ asset('uploads/post/default_img.jpeg') }}" alt="">
                         </div>
-
                     {% else %}
-                        <div>
-                            <img style="max-height: 300px; max-width: 500px;" class="img-fluid rounded img-post" src="{{ asset(postInfo.imagePath) }}" alt="">
+                        <div class="wrapper">
+                            <img style="position: absolute;" src="{{ asset(postInfo.imagePath) }}" alt="">
                         </div>
-
                     {% endif %}
 
             </div>
 
-            <div class="col">
+            <div class="col-md-8">
                 <p style="text-align: center">Thông tin thẻ tín dụng</p>
-                <!-- action="{{ path('app_add_transaction', {uniquekey: postInfo.uniquekey, clientSecret: clientSecret, amount: amount}) }}" -->
                 <form id="payment-form" method="post">
 
                     <input type="text" placeholder="Họ và tên chủ thẻ" required="">
+
+                    <label><input type="checkbox" id="anonymous" value="1" name="anonymous"/> Tôi mong muốn được ẩn danh cho khoản quyên góp này</label>
 
                     <div id="card-element" style="width: 80%; height: 30px; color: black;">
                         <!-- Elements will create input elements here -->
@@ -42,7 +41,9 @@
                     <!-- We'll put the error messages in this element -->
                     <div id="card-errors" role="alert"></div>
 
+
                     <button id="submit" class="btn-transaction">Quyên góp {{ amount }} €</button>
+
                 </form>
             </div>
         </div>
@@ -60,9 +61,13 @@
         var userEmail = '{{ userInfo.Email }}';
         var amount = {{ amount }};
 
+        var anonyme = false;
+        $('#anonymous').click(function() {
+            anonyme = $('#anonymous').prop('checked');
+        });
+        //console.log(anonyme);
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <script src="{{ asset('js/stripe.js') }}">
 

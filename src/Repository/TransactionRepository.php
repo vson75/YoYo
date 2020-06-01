@@ -27,6 +27,8 @@ class TransactionRepository extends ServiceEntityRepository
             ->select('SUM(t.amount)')
             ->andWhere('t.post = :val')
             ->setParameter('val', $val)
+            ->orderBy('t.id','DESC')
+            ->setMaxResults(17)
             ->getQuery()
             ->getSingleScalarResult()
             ;
@@ -41,6 +43,20 @@ class TransactionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
             ;
+
+        /**
+         * SUM(t.amount) as amount
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT t.user_id as user, sum(t.amount) as amount
+        FROM TRANSACTION t
+        WHERE t.post_id = :val
+        GROUP by t.user_id';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+        'val' => $val
+        ]);
+        return $stmt->fetchAll();
+         */
     }
 
     public function getAnonymousTransactionbyPost($val)
@@ -54,6 +70,18 @@ class TransactionRepository extends ServiceEntityRepository
             ->getSingleScalarResult()
             ;
     }
+
+
+    public function getNumberParticipantbyPost($val){
+        return $this->createQueryBuilder('t')
+            ->select('count( distinct t.user)')
+            ->andWhere('t.post = :val')
+            ->setParameter('val', $val)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
     // /**
     //  * @return Transaction[] Returns an array of Transaction objects
     //  */

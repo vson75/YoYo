@@ -47,8 +47,12 @@ form.addEventListener('submit', function(ev) {
       }
     }
   }).then(function(result) {
+
+
     if (result.error) {
       // Show error to your customer (e.g., insufficient funds)
+
+        swal("Chuyển khoản thất bại",result.error.message, "error");
       console.log(result.error.message);
     } else {
       // The payment has been processed!
@@ -61,21 +65,32 @@ form.addEventListener('submit', function(ev) {
 
           var path = window.location.pathname;
           var redirectURL = path.replace("/finance/","/post/");
-        
-          $.ajax({
-              cache: false,
-              url: '/add_transaction/'+uniquekey+'/'+clientSecret+'/'+amount,
-              method: 'POST',
-              async: false,
-          }).then(function(data) {
-              //  alert(data.nb_Participant);
-              swal.fire("Chuyển khoản thành công", "Cảm ơn bạn đã đóng góp cho dự án này", "success");
-              window.location.href = redirectURL;
-          });
+
+          swal(
+              {
+                  title: "Chuyển khoản thành công",
+                  text: "Cảm ơn bạn đã đóng góp cho dự án này!",
+                  icon: "success",
+                  //button: "Aww yiss!",
+              }
+          )
+              .then((value) => {
+                  $.ajax({
+                      cache: false,
+                      url: '/add_transaction/'+uniquekey+'/'+clientSecret+'/'+amount+'/'+anonyme,
+                      method: 'POST',
+                      async: false,
+                  }).then(function(data) {
+                      //  alert(data.nb_Participant);
+
+                      //  swal("Chuyển khoản thành công", "Cảm ơn bạn đã đóng góp cho dự án này", "success");
+
+                  });
+                  window.location.href = redirectURL;
+              });
 
 
 
-        //alert('ok');
       }
     }
   });

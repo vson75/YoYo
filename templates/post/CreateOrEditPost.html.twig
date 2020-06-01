@@ -2,10 +2,10 @@
 {% block form %}
 
     {{ form_start(postForm) }}
-
+    <h1 style="text-align: center;">{{ action_title }}</h1>
     {% if postForm.vars.data.imageFilename|default %}
         <div>
-            <img src="{{ asset(postForm.vars.data.imagePath)|imagine_filter('card_thumbnail_showpost') }}" height="130" width="250" style="display: block;margin-left: auto;margin-right: auto; width: 300px;">
+            <img src="{{ asset(postForm.vars.data.imagePath)|imagine_filter('card_thumbnail_showpost') }}" height="160" width="250" style="display: block;margin-left: auto;margin-right: auto; width: 300px;">
         </div>
         <hr>
     {% endif %}

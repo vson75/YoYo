@@ -42,6 +42,15 @@
             <!-- Post Content -->
             <p>{{ postInfo.content|markdown }}</p>
 
+            <!-- button modify -->
+
+            {% if userInfo == postInfo.user %}
+            <div id="btn-modify" onclick="location.href='{{ path('app_post_edit', {id: postInfo.id}) }}'">
+                <span>
+                    Chỉnh sửa
+                </span>
+            </div>
+            {% endif %}
         </div>
 
         <!-- Sidebar card collect. example: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_profile_card-->
@@ -54,7 +63,7 @@
                 <p><h1>{{ totalAmount }} € </h1> <span><small>quyên góp được</small></span></p>
                 {% endif %}
 
-                <p> <span><i class="fas fa-user"></i></span> {{ transaction.count }} người tham gia</p>
+                <p> <span><i class="fas fa-user"></i></span> {{ nb_participant }} người tham gia</p>
                 <p><span><i class="far fa-clock"></i></span> <span>con lai X ngày</span></p>
 
                 <div id="btn-transaction" onclick="location.href='{{ path('app_payment', {uniquekey: postInfo.uniquekey}) }}'">
@@ -95,16 +104,18 @@
 
                         <div class="col-md-12 row" style="margin: 0.5rem 0 0.5rem; padding: 5px;">
                             {% if TotalAnonymous is not null %}
-                            <div class="media col-md-4" style="margin: 0.5rem 0 0.5rem">
-                                <img class="d-flex mr-3 rounded-circle icone-user" src="{{ asset('uploads/user icon.png') }}"  alt="">
+
+                                <img class="d-flex mr-3 rounded-circle icone-user" style="margin: 0.7rem 0 0.5rem" src="{{ asset('uploads/user icon.png') }}"  alt="">
                                 <div class="media-body">
                                     <small class="mt-0">Ẩn danh</small>
                                     <br>
                                     <div  style="white-space: pre-wrap;">{{ TotalAnonymous }} €</div>
                                 </div>
-                            </div>
+
                             {% endif %}
+
                             {% for transactionpost in TransactionThisPost %}
+
                             <div class="media col-md-4" style="margin: 0.5rem 0 0.5rem">
                                 <img class="d-flex mr-3 rounded-circle icone-user" src="http://placehold.it/50x50" alt="">
                                 <div class="media-body">

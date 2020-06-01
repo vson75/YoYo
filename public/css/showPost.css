@@ -68,6 +68,23 @@
     background: rgba(255,75,89,0.89)
 }
 
+
+#btn-modify{
+    background: rgba(255,95,103,0.89);
+    border-radius: 3px;
+    font-weight: 400;
+    padding: 5px 8px;
+    text-align: center;
+    position: static;
+    margin: 1rem 17rem 1rem;
+    color: white;
+}
+
+#btn-modify:hover {
+    cursor: pointer;
+    background: rgba(255,75,89,0.89)
+}
+
 body {
     margin: 1rem;
     font-family: Helvetica;

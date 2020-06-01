@@ -62,10 +62,13 @@ class PostController extends AbstractController
             throw $this->createNotFoundException('The Post is not exist');
         }
         $comment     = $postInfo->getComments();
-        $transaction = $postInfo->getTransactions();
+      //  $transaction = $postInfo->getTransactions();
+
+        $nb_participant = $transactionRepository->getNumberParticipantbyPost($postInfo->getId());
 
         $totalAmount = $transactionRepository->getTotalAmountbyPost($postInfo->getId());
         $TransactionThisPost = $transactionRepository->getTransactionbyPost($postInfo->getId());
+       // dd($TransactionThisPost);
 
         $TransactionAnonymous = $transactionRepository->getAnonymousTransactionbyPost($postInfo->getId());
      //  dd($TransactionThisPost);
@@ -109,7 +112,7 @@ class PostController extends AbstractController
                 'comment'=> $comment,
                 'commentForm' => $form->createView(),
                 'userInfo' => $currentUserLooged,
-                'transaction' => $transaction,
+                'nb_participant' => $nb_participant,
                 'totalAmount' => $totalAmount,
                 'TransactionThisPost' => $TransactionThisPost,
                 'TotalAnonymous' => $TransactionAnonymous,
@@ -186,9 +189,13 @@ class PostController extends AbstractController
 
             $this->addFlash('success', 'Cảm ơn bạn đã tạo chủ để này');
 
-            $template='email/thankToCreatePost.html.twig';
-            $subject ="Cam on ban da tao chu de moi";
-            $mailer->sendMailCreateOrFinancePost($user,$createNew,$template,$subject);
+            $template='email/EmailCreateOrDonation.html.twig';
+            $subject ="Cảm ơn bạn đã tạo chủ đề mới";
+            $title ="YoYo - Tạo dự án mới";
+            $action = "tạo dự án mới";
+            $caption_link = "Bạn có thể xem dự án mới tạo tại đây: ";
+            $mailer->sendMailCreateOrDonationPost($user,$createNew,$template,$subject,$title,$action, $caption_link);
+
             $id_post = $createNew->getId();
             $repo = $em->getRepository(Post::class);
 
@@ -252,11 +259,39 @@ class PostController extends AbstractController
     }
 
     /**
+     * @Route("/funding/{uniquekey}", name="app_payment")
+     * @IsGranted("ROLE_USER")
+     */
+    public function fundingStep1($uniquekey, Request $request, EntityManagerInterface $em){
+
+        $user = $this->getUser();
+        $financeForm = $this->createForm(PaymentType::class);
+        $financeForm->handleRequest($request);
+
+        $repository = $em->getRepository(Post::class);
+        $postInfo = $repository->findOneBy([
+            'uniquekey'=> $uniquekey
+        ]);
+
+        //dd($postInfo);
+        if (is_null($postInfo)) {
+            throw $this->createNotFoundException('The Post is not exist');
+        }
+
+
+        return $this->render('post/funding_step_1.html.twig', [
+            'userInfo' => $user,
+            'financeForm' => $financeForm->createView(),
+            'postInfo' => $postInfo
+        ]);
+    }
+
+    /**
      * @Route("finance/{uniquekey}", name="app_finance")
      * @IsGranted("ROLE_USER")
      * this function is called to add payment intent
      */
-    public function financePost(Post $post, Request $request, EntityManagerInterface $em, $uniquekey)
+    public function fundingStep2(Post $post, Request $request, EntityManagerInterface $em, $uniquekey)
     {
         $financeForm = $this->createForm(PaymentType::class);
         $financeForm->handleRequest($request);
@@ -290,7 +325,7 @@ class PostController extends AbstractController
         }
         
 
-        return $this->render('post/funding_payment_post.html.twig',[
+        return $this->render('post/funding_step_2.html.twig',[
             'userInfo'      => $user,
             'clientSecret' => $intent->client_secret,
             'amount'        => $amount,
@@ -298,39 +333,11 @@ class PostController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/funding/{uniquekey}", name="app_payment")
-     * @IsGranted("ROLE_USER")
-     */
-    public function funding($uniquekey, Request $request, EntityManagerInterface $em){
-
-        $user = $this->getUser();
-        $financeForm = $this->createForm(PaymentType::class);
-        $financeForm->handleRequest($request);
-
-        $repository = $em->getRepository(Post::class);
-        $postInfo = $repository->findOneBy([
-            'uniquekey'=> $uniquekey
-        ]);
-
-    //dd($postInfo);
-        if (is_null($postInfo)) {
-            throw $this->createNotFoundException('The Post is not exist');
-        }
-
-
-        return $this->render('post/funding_post.html.twig', [
-            'userInfo' => $user,
-            'financeForm' => $financeForm->createView(),
-            'postInfo' => $postInfo
-        ]);
-    }
-
 
     /**
-     * @Route("/add_transaction/{uniquekey}/{clientSecret}/{amount}", methods="POST", name="app_add_transaction")
+     * @Route("/add_transaction/{uniquekey}/{clientSecret}/{amount}/{anonyme}", methods="POST", name="app_add_transaction")
      */
-    public function addTransactioninDB($uniquekey, $clientSecret, $amount, EntityManagerInterface $em){
+    public function addTransactioninDB($uniquekey, $clientSecret, $amount, $anonyme, EntityManagerInterface $em, Mailer $mailer){
 
         $repo = $em->getRepository(Post::class);
         $post = $repo->findOneBy([
@@ -345,10 +352,18 @@ class PostController extends AbstractController
                     ->setAmount($amount)
                     ->setClientSecret($clientSecret)
                     ->setTransfertAt(new \DateTime('now'))
-                    ->setAnonymousDonation(false);
+                    ->setAnonymousDonation($anonyme);
 
         $em->persist($transaction);
         $em->flush();
+
+
+        $template='email/EmailCreateOrDonation.html.twig';
+        $subject ="Cảm ơn bạn đã quyên góp cho dự án ".$post->getTitle();
+        $title ="YoYo - quyên góp dự án";
+        $action = "quyên góp cho dự án: ";
+        $caption_link = "Bạn có thể xem dự án bạn mới quyên góp tại đây: ";
+        $mailer->sendMailCreateOrDonationPost($this->getUser(),$post,$template,$subject,$title,$action, $caption_link);
 
         //$this->addFlash('success', 'Cảm ơn bạn đã quyên góp tiền');
         return $this->json([
