@@ -17,7 +17,7 @@
         </header>
 
         <!-- Page Features -->
-        <div class="row text-center">
+        <div class="row">
             {% for post in post %}
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card h-100">
@@ -33,9 +33,9 @@
                             {% set diff = date(finish).diff(date(now)) %}
                             {% set leftDays = diff.days %}
                             {% if leftDays >10 %}
-                                <div class="dayCountdownWhite rounded">J-{{ leftDays }}</div>
+                                <div class="dayCountdownWhite">J-{{ leftDays }}</div>
                             {% else %}
-                                <div class="dayCountdownRed rounded">J-{{ leftDays }}</div>
+                                <div class="dayCountdownRed">J-{{ leftDays }}</div>
                             {% endif %}
 
                         </div>
@@ -48,16 +48,18 @@
                         {% set diff = date(finish).diff(date(now)) %}
                         {% set leftDays = diff.days %}
                         {% if leftDays >10 %}
-                            <div class="dayCountdownWhite rounded">J-{{ leftDays }}</div>
+                            <div class="dayCountdownWhite">J-{{ leftDays }}</div>
                         {% else %}
                             <div class="dayCountdownRed">J-{{ leftDays }}</div>
                         {% endif %}
                         {% endif %}
                     <div class="card-body">
                         <h5 class="card-title text-left">{{ post.title }}</h5>
-                        <p class="card-text text-left">{{ post.content|escape('html') }}</p>
+
+                        {{ post.content|raw }}
+
                     </div>
-                    <div class="card-footer">
+                    <div class="card-footer text-center">
                         <a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}" class="btn btn-primary">Xem chi tiết</a>
                     </div>
                 </div>
