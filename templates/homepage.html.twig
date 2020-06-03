@@ -10,9 +10,9 @@
         <!-- Jumbotron Header -->
         <header class="jumbotron my-4 imgbackground" style="background-image: url('{{ asset('images/nonlavietnam.jpg') }}');">
 
-            <h1 class="display-3">A Warm Welcome!</h1>
-            <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</p>
-            <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-lg">Create a new post !</a>
+            <h1 class="display-3">{% trans %} A Warm Welcome! {% endtrans %}</h1>
+            <p class="lead">{% trans %} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat. {% endtrans %}</p>
+            <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-lg">{% trans %} Tạo dự án mới {% endtrans %}</a>
 
         </header>
 
@@ -61,7 +61,7 @@
 
                     </div>
                     <div class="card-footer text-center">
-                        <a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}" class="btn btn-primary">Xem chi tiết</a>
+                        <a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}" class="btn btn-primary">{% trans %} Xem chi tiết {% endtrans %}</a>
                     </div>
                 </div>
             </div>

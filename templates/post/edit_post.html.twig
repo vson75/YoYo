@@ -1,14 +1,14 @@
 {% extends 'content_base.html.twig' %}
 
 {% block title %}
-    Chỉnh sửa dự án
+    {% trans %}Chỉnh sửa dự án {% endtrans %}
 {% endblock %}
 
 {% block content_body %}
     {{ include('post/CreateOrEditPost.html.twig', {
-        button_text: 'Sửa đổi',
-        action_title: 'Chỉnh sửa dự án',
-        title_post: 'Chỉnh sửa'})
+        button_text: '{% trans %}Sửa đổi{% endtrans %}',
+        action_title: '{% trans %}Chỉnh sửa dự án{% endtrans %}',
+        title_post: '{% trans %}Chỉnh sửa{% endtrans %}'})
     }}
 
 {% endblock %}

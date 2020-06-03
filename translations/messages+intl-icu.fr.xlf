@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="fr" target-language="fr" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="A5HYag_" resname="A Warm Welcome!">
+        <source>A Warm Welcome!</source>
+        <target>__A Warm Welcome!</target>
+      </trans-unit>
+      <trans-unit id="Vc10ulT" resname="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.">
+        <source>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</source>
+        <target>__Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat.</target>
+      </trans-unit>
+      <trans-unit id="1BgCiEW" resname="Tạo dự án mới">
+        <source>Tạo dự án mới</source>
+        <target>Créer un nouveau projet</target>
+      </trans-unit>
+      <trans-unit id="9viLD1_" resname="Xem chi tiết">
+        <source>Xem chi tiết</source>
+        <target>Voir détail</target>
+      </trans-unit>
+      <trans-unit id="23mWI_z" resname="Giới thiệu về YoYo">
+        <source>Giới thiệu về YoYo</source>
+        <target>Qui sommes nous</target>
+      </trans-unit>
+      <trans-unit id="X033It3" resname="Chúng tôi hoạt động như thế nào ?">
+        <source>Chúng tôi hoạt động như thế nào ?</source>
+        <target>Comment ça marche ?</target>
+      </trans-unit>
+      <trans-unit id="6kR2fiV" resname="Thông tin cá nhân">
+        <source>Thông tin cá nhân</source>
+        <target>Profil</target>
+      </trans-unit>
+      <trans-unit id="cREdBix" resname="Tài liệu cá nhân">
+        <source>Tài liệu cá nhân</source>
+        <target>Mes documents</target>
+      </trans-unit>
+      <trans-unit id="V2gHNoN" resname="Trang quản trị">
+        <source>Trang quản trị</source>
+        <target>Page admin</target>
+      </trans-unit>
+      <trans-unit id="yeD6zWk" resname="Đăng xuất">
+        <source>Đăng xuất</source>
+        <target>Se déconnecter</target>
+      </trans-unit>
+      <trans-unit id="mkAr396" resname="Đăng nhập">
+        <source>Đăng nhập</source>
+        <target>Se connecter</target>
+      </trans-unit>
+      <trans-unit id="yxjGBET" resname="Đăng ký">
+        <source>Đăng ký</source>
+        <target>Registration</target>
+      </trans-unit>
+      <trans-unit id="EXrmBaO" resname="Xin chào">
+        <source>Xin chào</source>
+        <target>Bonjour</target>
+      </trans-unit>
+      <trans-unit id="ZdebB69" resname="Thông tin thẻ tín dụng">
+        <source>Thông tin thẻ tín dụng</source>
+        <target>Information bancaire</target>
+      </trans-unit>
+      <trans-unit id="AMA9tiY" resname="Tôi mong muốn được ẩn danh cho khoản quyên góp này">
+        <source>Tôi mong muốn được ẩn danh cho khoản quyên góp này</source>
+        <target>Je souhaite d'être anonyme pour ce don</target>
+      </trans-unit>
+      <trans-unit id="pCng8Ih" resname="Quyên góp">
+        <source>Quyên góp</source>
+        <target>Je fais un don à ce projet</target>
+      </trans-unit>
+      <trans-unit id="c0UHovB" resname="Tạo bởi:">
+        <source>Tạo bởi:</source>
+        <target>Créer par:</target>
+      </trans-unit>
+      <trans-unit id="enfXYS4" resname="Chỉnh sửa">
+        <source>Chỉnh sửa</source>
+        <target>Modifier</target>
+      </trans-unit>
+      <trans-unit id="VXO2o8T" resname="quyên góp được">
+        <source>quyên góp được</source>
+        <target>collecté</target>
+      </trans-unit>
+      <trans-unit id="Jmv0TNA" resname="người tham gia">
+        <source>người tham gia</source>
+        <target>participants</target>
+      </trans-unit>
+      <trans-unit id="s_2xuj1" resname="Còn lại">
+        <source>Còn lại</source>
+        <target>Restant</target>
+      </trans-unit>
+      <trans-unit id="08VPkSJ" resname="ngày">
+        <source>ngày</source>
+        <target>jour</target>
+      </trans-unit>
+      <trans-unit id="N4Ncb_b" resname="Chia sẻ qua facebook">
+        <source>Chia sẻ qua facebook</source>
+        <target>Partager sur facebook</target>
+      </trans-unit>
+      <trans-unit id="W2RN5dE" resname="Ẩn danh">
+        <source>Ẩn danh</source>
+        <target>Anonyme</target>
+      </trans-unit>
+      <trans-unit id="eD0lXnc" resname="Vui lòng đăng nhập để comment">
+        <source>Vui lòng đăng nhập để comment</source>
+        <target>Merci de se connecter afin de laisser un commentaire</target>
+      </trans-unit>
+      <trans-unit id="D5j0wAU" resname="Đóng góp cho dự án">
+        <source>Đóng góp cho dự án</source>
+        <target>Je fais un don</target>
+      </trans-unit>
+      <trans-unit id="dZpqgue" resname="Hiện tại chưa có ai quyên góp cho dự án này.">
+        <source>Hiện tại chưa có ai quyên góp cho dự án này.</source>
+        <target>Le projet n'a aucun participant</target>
+      </trans-unit>
+      <trans-unit id="NX3Gsna" resname="Hiện tại đã có">
+        <source>Hiện tại đã có</source>
+        <target>Le projet a</target>
+      </trans-unit>
+      <trans-unit id="kJH6WW2" resname="người quyên góp">
+        <source>người quyên góp</source>
+        <target>donateurs</target>
+      </trans-unit>
+      <trans-unit id="IeQcdcd" resname="Số tiền bạn muốn đóng góp">
+        <source>Số tiền bạn muốn đóng góp</source>
+        <target>Le montant que vous souhaitiez donner</target>
+      </trans-unit>
+      <trans-unit id="MkIeK_L" resname="Chỉnh sửa dự án">
+        <source>Chỉnh sửa dự án</source>
+        <target>Modifier le projet</target>
+      </trans-unit>
+      <trans-unit id="Oc8X33j" resname="Đăng ký tài khoản !">
+        <source>Đăng ký tài khoản !</source>
+        <target>Créer un nouveau compte</target>
+      </trans-unit>
+      <trans-unit id="0T.xPiW" resname="Chọn mật khẩu">
+        <source>Chọn mật khẩu</source>
+        <target>Sélectionnez votre mot de passe</target>
+      </trans-unit>
+      <trans-unit id="YtxDJ12" resname="Reset mật khẩu">
+        <source>Reset mật khẩu</source>
+        <target>Mot de passe oublié</target>
+      </trans-unit>
+      <trans-unit id="8ipqdjY" resname="Đăng Ký">
+        <source>Đăng Ký</source>
+        <target>Créer un nouveau compte</target>
+      </trans-unit>
+      <trans-unit id="SS7Fz8h" resname="Đăng nhập bằng Facebook">
+        <source>Đăng nhập bằng Facebook</source>
+        <target>Se connecter par Facebook</target>
+      </trans-unit>
+      <trans-unit id="S9sRVyx" resname="Hoặc">
+        <source>Hoặc</source>
+        <target>OU</target>
+      </trans-unit>
+      <trans-unit id="Pio67jL" resname="Tài khoản Email">
+        <source>Tài khoản Email</source>
+        <target>Adresse email</target>
+      </trans-unit>
+      <trans-unit id="o7nCdf_" resname="Lưu đăng nhập">
+        <source>Lưu đăng nhập</source>
+        <target>Souvenez de moi</target>
+      </trans-unit>
+      <trans-unit id="Y7WvWxV" resname="Quên mật khẩu">
+        <source>Quên mật khẩu</source>
+        <target>Mot de passe oublié</target>
+      </trans-unit>
+      <trans-unit id="CnSTCh9" resname="Đăng ký tài khoản mới">
+        <source>Đăng ký tài khoản mới</source>
+        <target>Créer un nouveau compte</target>
+      </trans-unit>
+      <trans-unit id="K2AXXlj" resname="Thay đổi thông tin cá nhân">
+        <source>Thay đổi thông tin cá nhân</source>
+        <target>Modifier mes Information</target>
+      </trans-unit>
+      <trans-unit id="vc84Ti5" resname="Đổi ảnh đại diện">
+        <source>Đổi ảnh đại diện</source>
+        <target>Changer mon avatar</target>
+      </trans-unit>
+      <trans-unit id="Ny_BAgg" resname="Thông tin cá nhân của bạn">
+        <source>Thông tin cá nhân của bạn</source>
+        <target>Modifier mes information</target>
+      </trans-unit>
+      <trans-unit id="BNKkg_l" resname="Danh sách các dự án bạn đã quyên góp">
+        <source>Danh sách các dự án bạn đã quyên góp</source>
+        <target>La liste des projets que j'ai participé</target>
+      </trans-unit>
+      <trans-unit id="DpmC.Uz" resname="Họ">
+        <source>Họ</source>
+        <target>Nom</target>
+      </trans-unit>
+      <trans-unit id="yLFyWVq" resname="Tên">
+        <source>Tên</source>
+        <target>Prénom</target>
+      </trans-unit>
+      <trans-unit id="8JCNVEB" resname="Admin dự án">
+        <source>Admin dự án</source>
+        <target>Admin du projet</target>
+      </trans-unit>
+      <trans-unit id="TxOdQzA" resname="Dự án">
+        <source>Dự án</source>
+        <target>Projet</target>
+      </trans-unit>
+      <trans-unit id="_._H8rn" resname="Người tạo">
+        <source>Người tạo</source>
+        <target>Créer par</target>
+      </trans-unit>
+      <trans-unit id="4U30gfE" resname="Số người đã quyên góp">
+        <source>Số người đã quyên góp</source>
+        <target>Le nombre de participant</target>
+      </trans-unit>
+      <trans-unit id="u06SUle" resname="Danh sách tham gia">
+        <source>Danh sách tham gia</source>
+        <target>La liste des participants</target>
+      </trans-unit>
+      <trans-unit id="4CdRkEf" resname="Gửi lời động viên">
+        <source>Gửi lời động viên</source>
+        <target>Commentaires</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

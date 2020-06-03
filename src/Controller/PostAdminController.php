@@ -23,7 +23,7 @@ class PostAdminController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      * @Route("/admin/post", name="app_post_admin")
      */
-    public function index(PostRepository $postRepository,Request $request, PaginatorInterface $paginator){
+    public function index(PostRepository $postRepository, PaginatorInterface $paginator, Request $request){
 
         // get query find_post parameter. like $_GET
         $q = $request->query->get('find_post');

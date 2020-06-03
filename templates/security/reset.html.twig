@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Select password!{% endblock %}
+{% block title %}{% trans %} Reset mật khẩu {% endtrans %}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -9,7 +9,7 @@
 {% endblock %}
 {# link template : https://bootsnipp.com/snippets/GavAo #}
 {% block body %}
-
+    <!-- example code to translate flash message: http://zetcode.com/symfony/translation/-->
     {% for message in app.flashes('echec') %}
         <div class="container alert alert-danger">
             {{ message }}
@@ -26,7 +26,7 @@
                 {{ form_widget(resetForm.email) }}
 
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
-                    Đăng Ký
+                    {% trans %}Đăng Ký{% endtrans %}
                 </button>
                 {{ form_widget(resetForm) }}
                 {{ form_end(resetForm) }}

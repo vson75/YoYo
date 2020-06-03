@@ -27,12 +27,12 @@
             </div>
 
             <div class="col-md-8">
-                <p style="text-align: center">Thông tin thẻ tín dụng</p>
+                <p style="text-align: center">{% trans %}Thông tin thẻ tín dụng{% endtrans %}</p>
                 <form id="payment-form" method="post">
 
                     <input type="text" placeholder="Họ và tên chủ thẻ" required="">
 
-                    <label><input type="checkbox" id="anonymous" value="1" name="anonymous"/> Tôi mong muốn được ẩn danh cho khoản quyên góp này</label>
+                    <label><input type="checkbox" id="anonymous" value="1" name="anonymous"/>{% trans %}Tôi mong muốn được ẩn danh cho khoản quyên góp này{% endtrans %}</label>
 
                     <div id="card-element" style="width: 80%; height: 30px; color: black;">
                         <!-- Elements will create input elements here -->
@@ -42,7 +42,7 @@
                     <div id="card-errors" role="alert"></div>
 
 
-                    <button id="submit" class="btn-transaction">Quyên góp {{ amount }} €</button>
+                    <button id="submit" class="btn-transaction">{% trans %}Quyên góp {% endtrans %}{{ amount }} €</button>
 
                 </form>
             </div>

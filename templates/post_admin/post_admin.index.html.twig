@@ -1,6 +1,6 @@
 {% extends 'content_base.html.twig' %}
 
-{% block title %}Manage Post{% endblock %}
+{% block title %}{% trans %}Admin dự án{% endtrans %} {% endblock %}
 
 
 {% block content_body %}
@@ -28,10 +28,10 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Post</th>
-                    <th>Auteur</th>
-                    <th>Nombre participant</th>
-                    <th>Crée</th>
+                    <th>{% trans %}Dự án{% endtrans %}</th>
+                    <th>{% trans %}Người tạo{% endtrans %}</th>
+                    <th>{% trans %}Số người đã quyên góp{% endtrans %}</th>
+                    <th>TEST - custom field after</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -55,7 +55,7 @@
                 {% else %}
                     <tr>
                         <td colspan="4" class="text-center">
-                            No comments found
+                            No comments found - custom translate after
                         </td>
                     </tr>
                 {% endfor %}

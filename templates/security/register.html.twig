@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Registration!{% endblock %}
+{% block title %}{% trans %}Đăng ký tài khoản !{% endtrans %}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -28,7 +28,7 @@
                 {{ form_widget(registrationForm.email) }}
 
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
-                    Đăng Ký
+                    {% trans %}Đăng ký{% endtrans %}
                 </button>
                 <a href="{{ path('app_login') }}" id="cancel_signup"><i class="fas fa-angle-left"></i> Quay trở lại</a>
                 {{ form_widget(registrationForm) }}

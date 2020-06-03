@@ -5,6 +5,7 @@ namespace App\Controller;
 use Cassandra\Date;
 use App\Entity\{Post, PostStatus, Transaction};
 use App\Form\{CommentFormType, PostFormType, PaymentType};
+use App\Repository\PostRepository;
 use App\Repository\TransactionRepository;
 use App\Service\Mailer;
 use App\Service\MarkdownHelper;
@@ -41,6 +42,7 @@ class PostController extends AbstractController
         $userInfo = $this->getUser();
        // dump($post);die;
        // dd($post->getFinishAt());
+      
 
         return $this->render('homepage.html.twig',[
                 'post' => $post,
@@ -164,7 +166,7 @@ class PostController extends AbstractController
             //get data in form
             $createNew = $form->getData();
            // dd($createNew);
-
+            
             // add date and user = user created
             $createNew->setPublishedAt(new \DateTime('now'));
             $createNew->setUser($user);
@@ -259,6 +261,7 @@ class PostController extends AbstractController
                 $newFilename = $uploadService->UploadPostImage($uploadedFile);
                 $updatePost->setImageFilename($newFilename);
             }
+           
 
             $em->persist($updatePost);
             $em->flush();

@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}Your ptofile!{% endblock %}
+{% block title %}{% trans %} Thông tin cá nhân của bạn {% endtrans %}{% endblock %}
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('css/profil.css') }}" rel="stylesheet">
@@ -35,14 +35,13 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <a href="{{ path('app_edit_profil') }}">modify profil</a>
+                    <a href="{{ path('app_edit_profil') }}">{% trans %}Thay đổi thông tin cá nhân{% endtrans %}</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="profile-work">
-                        <p>Tham gia vào X du an</p>
-                        <a href="">Chi tiêt cac du an</a><br/>
+                        <a href="">{% trans %}Danh sách các dự án bạn đã quyên góp{% endtrans %}</a><br/>
                     </div>
                 </div>
                 <div class="col-md-8">
@@ -50,7 +49,7 @@
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label>Ho</label>
+                                    <label>{% trans %}Họ{% endtrans %}</label>
                                 </div>
                                 <div class="col-md-6">
                                     <p>{{ userInfo.lastname }}</p>
@@ -58,7 +57,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label>Tên</label>
+                                    <label>{% trans %}Tên{% endtrans %}</label>
                                 </div>
                                 <div class="col-md-6">
                                     <p>{{ userInfo.firstname }}</p>
@@ -76,7 +75,8 @@
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label>Fonctionnalité này se som duoc chung tôi dua vào su dung. cac ban cho nhe</label>
+                                <p></p>
+                                    <label></label>
                                 </div>
                                 <div class="col-md-6">
                                     <p></p>

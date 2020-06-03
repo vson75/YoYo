@@ -2,4 +2,5 @@ twig:
     default_path: '%kernel.project_dir%/templates'
 
     paths:
+        # '%kernel.project_dir%/templates/post': post
         'public/css': styles

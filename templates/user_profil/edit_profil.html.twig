@@ -1,7 +1,7 @@
 {% extends 'content_base.html.twig' %}
 
 {% block title %}
-    Thay dôi thông tin ca nhân
+    {% trans %} Thay đổi thông tin cá nhân {% endtrans %}
 {% endblock %}
 
 {% block content_body %}
@@ -11,7 +11,7 @@
         {{ form_row(userIcon.iconFile) }}
     </div>
     {{ form_widget(userIcon) }}
-    <button type="submit" class="btn btn-primary">Thay doi anh</button>
+    <button type="submit" class="btn btn-primary">{% trans %} Đổi ảnh đại diện {% endtrans %}</button>
     {{ form_end(userIcon) }}
 
 {% endblock %}
