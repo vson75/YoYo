@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    app.locales: [vn,fr,en]
     paypal_client_id: AZ69DRO-_qZ1uDfd3pR7qm4iADZD3MEuKEGI50CKGRlZ66V5MAMiPNT5eiR_wZurttRdWHyMyPz2K11l
     paypal_secret: ELRWvcq8nAt5sk2LgkV9YFUPc-rT_tqAvWRUCpwxmTavqo5rkWPpduQTgeiCNsmgjFw-_MgGhsRHwPPw
 

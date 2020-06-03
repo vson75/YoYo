@@ -31,7 +31,23 @@
                     <a style="color: #fff;" class="nav-link" href="#">{% trans %}Chúng tôi hoạt động như thế nào ?{% endtrans %}</a>
                 </li>
             </ul>
+
             <ul class="navbar-nav ml-auto">
+
+                <li class="nav-item dropdown" style="margin-right: 75px;">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-globe-asia fa-1.5x"> Langue</i>
+                    </a>
+                    <div class="dropdown-menu">
+                            {% for locale in locales %}
+                                {% if locale != app.request.locale %}
+                                    <a class="dropdown-item" href="{{ path('change_langue', {'locale': locale}) }}">{{ locale }}</a>
+                                {% endif %}
+                            {% endfor %}
+                    </div>
+                </li>
+
+
                 {% if is_granted('ROLE_USER') %}
                 <li class="nav-item dropdown" style="margin-right: 75px;">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

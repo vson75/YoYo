@@ -14,12 +14,12 @@
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
-        <h1 class="h3 mb-3 font-weight-normal" style="text-align: center">{% trans %}Đăng nhập{% endtrans %}</h1>
+        <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> {% trans %}Đăng nhập{% endtrans %}</h1>
         <div class="social-login">
-            <button class="btn facebook-btn social-btn" type="button" onclick="location.href='{{ path('connect_facebook_start') }}'"><span><i class="fab fa-facebook-f"></i>{% trans %}Đăng nhập bằng Facebook{% endtrans %}</span> </button>
+            <button class="btn facebook-btn social-btn" type="button" onclick="location.href='{{ path('connect_facebook_start') }}'"><span><i class="fab fa-facebook-f"></i> {% trans %} Đăng nhập bằng Facebook{% endtrans %}</span> </button>
         </div>
         <p style="text-align:center">{% trans %} Hoặc {% endtrans %} </p>
-        <label for="inputEmail" class="sr-only">{% trans %}Tài khoản Email{% endtrans %}</label>
+        <label for="inputEmail" class="sr-only"> {% trans %} Tài khoản Email{% endtrans %}</label>
         <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" value="{{ last_username }}">
         <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
         <div class="checkbox mb-3">
@@ -27,15 +27,15 @@
                    value="{{ csrf_token('authenticate') }}"
             >
             <label>
-                <input type="checkbox" id="remember_me" name="_remember_me">{% trans %} Lưu đăng nhập{% endtrans %}
+                <input type="checkbox" id="remember_me" name="_remember_me"> {% trans %} Lưu đăng nhập{% endtrans %}
             </label>
         </div>
 
-        <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i> Sign in</button>
-        <a href="{{ path('app_forgot_password') }}" id="forgot_pswd">{% trans %}Quên mật khẩu{% endtrans %}</a>
+        <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i> {% trans %} Đăng nhập {% endtrans %}</button>
+        <a href="{{ path('app_forgot_password') }}" id="forgot_pswd"> {% trans %}Quên mật khẩu{% endtrans %}</a>
         <hr>
         <!-- <p>Don't have an account!</p>  -->
-        <button class="btn btn-primary btn-block" type="button" id="btn-signup" onclick="location.href='{{ path('app_registration') }}'"><i class="fas fa-user-plus"></i>{% trans %}Đăng ký tài khoản mới {% endtrans %}</button>
+        <button class="btn btn-primary btn-block" type="button" id="btn-signup" onclick="location.href='{{ path('app_registration') }}'"><i class="fas fa-user-plus"></i> {% trans %} Đăng ký tài khoản mới {% endtrans %}</button>
     </form>
 </div>
 {% endblock %}
