@@ -3,7 +3,7 @@
 
 namespace App\Controller;
 use Cassandra\Date;
-use App\Entity\{Post, Transaction};
+use App\Entity\{Post, PostStatus, Transaction};
 use App\Form\{CommentFormType, PostFormType, PaymentType};
 use App\Repository\TransactionRepository;
 use App\Service\Mailer;
@@ -175,7 +175,15 @@ class PostController extends AbstractController
                 $finishAt = date_add(new \DateTime('now'),new \DateInterval('P30D'));
             }
 
+            $repo = $em->getRepository(PostStatus::class);
+            $postStep = $repo->findOneBy([
+                'id' => 1
+            ]);
+            $createNew->setStatus($postStep);
+
+
             $createNew->setFinishAt($finishAt);
+          //
             //get title and hash md5 for the uniquekey
             $title = $createNew->getTitle();
             $uniquekey =  substr(md5($title),0,10);

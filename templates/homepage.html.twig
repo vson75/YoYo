@@ -52,7 +52,8 @@
                         {% else %}
                             <div class="dayCountdownRed">J-{{ leftDays }}</div>
                         {% endif %}
-                        {% endif %}
+                    {% endif %}
+                    <div style="background-color: rgba(41,234,218,0.94); text-align: center">{{ post.getStatus.getStep }}</div>
                     <div class="card-body">
                         <h5 class="card-title text-left">{{ post.title }}</h5>
 

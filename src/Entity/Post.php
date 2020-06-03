@@ -79,6 +79,11 @@ class Post
      */
     private $finishAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=PostStatus::class, inversedBy="posts")
+     */
+    private $status;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -276,6 +281,18 @@ class Post
     public function setFinishAt(?\DateTimeInterface $finishAt): self
     {
         $this->finishAt = $finishAt;
+
+        return $this;
+    }
+
+    public function getStatus(): ?PostStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?PostStatus $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
