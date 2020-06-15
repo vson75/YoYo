@@ -1,3 +1,18 @@
+.container{
+    position: relative;
+}
+
+.rounded-custom{
+    /* for chrome and safari*/
+    -webkit-border-top-right-radius: 4px;
+    -webkit-border-top-left-radius: 4px;
+
+    /* for firefox */
+    -moz-border-top-right-radius: 4px;
+    -moz-border-top-left-radius: 4px;
+
+}
+
 
 .img-post{
     height:100%;
@@ -29,6 +44,7 @@
     padding: 1rem 1rem 0rem;
     margin-bottom: 1.25rem;
     -webkit-box-shadow: 0 1px 4px rgba(115,115,155,.5);
+    position: relative;
 }
 
 .card {
@@ -87,6 +103,7 @@
 
 body {
     margin: 1rem;
+    position: relative;
     font-family: Helvetica;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
@@ -124,4 +141,40 @@ body {
 .icone-user{
     max-width: 70px;
     max-height: 70px;
+}
+
+
+
+.custom_progress{
+    position: relative;
+    left: 0;
+    right: 0;
+    top: 0;
+}
+
+.custom_progress .progress {
+    height: 7px;
+    overflow-x: hidden
+    overflow-y: hidden;
+    font-size: 12px;
+    background-color: #FF4F42;
+    border-radius: 0;
+}
+.progress-bar{
+    background-color: yellow; 
+   /* position: relative; */
+}
+
+.progress-count{
+   position: absolute;
+    width: 32px;
+    height: 32px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    color: red;
+    font-size: 10px;
+    background-color: yellow;
+    line-height: 32px;
+    top: -13px;
 }

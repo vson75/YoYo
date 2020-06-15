@@ -1,0 +1,46 @@
+{% apply inline_css(source('@styles/email.css')) %}
+    <!doctype html>
+    <html lang="vn">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Tạm ngừng dự án {{ post_name }}</title>
+    </head>
+    <body>
+    <div class="body">
+        <div class="container">
+            <div class="header text-center">
+                <a href="{{ url('app_homepage') }}">
+                    <img src="{{ absolute_url(asset('images/logo.png')) }}" class="logo" alt="SpaceBar Logo">
+                </a>
+            </div>
+            <div class="content">
+                <h3 class="text-center"></h3>
+                <p class="block">
+                    Chúng tôi xin phép tạm ngưng dự án: {{ post_name }} tại YoYo.
+
+                </p>
+                <div class="block">
+                    Chúng tôi tạm dừng dự án của các bạn dưới các lý do dưới đây:
+                    {{ raison|raw }}
+                </div>
+
+                <p class="block">
+                    Mong bạn hiểu và thông cảm cho chúng tôi. Nếu bạn có thắc mắc có thể
+                    liên hệ trực tiếp với chúng tôi.
+                </p>
+            </div>
+            <div class="footer">
+                <p class="block">
+                    Thân,<br><br>
+                    Yoyo
+                </p>
+                <p class="block bottom text-center">
+                    Dự án của Viet Son NGUYEN
+                </p>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
+{% endapply %}

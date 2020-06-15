@@ -50,7 +50,7 @@ class Mailer
         $this->mailer->send($email);
     }
 
-    public function sendMailAfterDonationPost(User $user, Post $post, $template, $subject){
+    public function sendMailAdminStopOrPublishedPost(User $user, Post $post, $template, $subject,$raison){
         $email = (new TemplatedEmail())
             ->from('YoYo@gmail.com')
             ->to($user->getEmail())
@@ -59,7 +59,8 @@ class Mailer
             ->context([
                 'post_uniqueKey'=> $post->getUniquekey(),
                 'post_name' => $post->getTitle(),
-                'id' => $user->getId()
+                'id' => $user->getId(),
+                'raison' => $raison
             ]);
         $this->mailer->send($email);
     }

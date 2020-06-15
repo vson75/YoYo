@@ -21,17 +21,16 @@
             {% for post in post %}
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card h-100">
-
+                    {% set finish = post.finishAt %}
+                    {% set now = "now"|date("m/d/Y") %}
+                    {% set diff = date(finish).diff(date(now)) %}
+                    {% set leftDays = diff.days - 1 %}
                     {#if no image#}
                     {% if post.imagePath == 'uploads/post/image/' %}
 
                         <div>
                             <img class="card-img-top" src="{{ asset('uploads/post/default_img.jpeg') | imagine_filter('card_thumbnail_homepage')}}" alt="">
-
-                            {% set finish = post.finishAt %}
-                            {% set now = "now"|date("m/d/Y") %}
-                            {% set diff = date(finish).diff(date(now)) %}
-                            {% set leftDays = diff.days %}
+                          
                             {% if leftDays >10 %}
                                 <div class="dayCountdownWhite">J-{{ leftDays }}</div>
                             {% else %}
@@ -42,19 +41,53 @@
 
                     {% else %}
                             <img class="card-img-top" src="{{ asset(post.imagePath) | imagine_filter('card_thumbnail_homepage')}}" alt="">
-
-                        {% set finish = post.finishAt %}
-                        {% set now = "now"|date("m/d/Y") %}
-                        {% set diff = date(finish).diff(date(now)) %}
-                        {% set leftDays = diff.days %}
+                        
+    
                         {% if leftDays >10 %}
                             <div class="dayCountdownWhite">J-{{ leftDays }}</div>
                         {% else %}
                             <div class="dayCountdownRed">J-{{ leftDays }}</div>
                         {% endif %}
                     {% endif %}
-                    <div style="background-color: rgba(41,234,218,0.94); text-align: center">{{ post.getStatus.getStep }}</div>
-                    <div class="card-body">
+
+
+                    {% set percent_advancement = post.getTransactionSum/post.targetAmount*100 %}
+                    {% set  percent_for_css = 93 -  percent_advancement%}
+
+
+
+             
+                    <div class="card-body" style="position: relative;">
+                        <div class="custom_progress" style="top: 0">
+                            <div class="progress">
+
+
+                                {% if post.getTransactionSum == 0 %}
+                                    <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-count" style="right: 92%;">
+                                            0%
+                                        </div>
+                                    </div>
+
+                                {% elseif percent_advancement < 100 %}
+
+                                    <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <span class="progress-count" style="right: {{percent_for_css}}%">
+                                {{percent_advancement|round(0,'floor')}}%
+                            </span>
+                                    </div>
+                                {% else %}
+                                    <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <span class="progress-count" style="right: -1%;">
+                                {{percent_advancement|round(0,'floor')}}%
+                            </span>
+                                    </div>
+                                {% endif %}
+
+
+                            </div>
+                        </div>
+
                         <h5 class="card-title text-left">{{ post.title }}</h5>
 
                         {{ post.content|raw }}

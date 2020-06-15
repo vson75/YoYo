@@ -12,29 +12,31 @@
 
     {{ form_row(postForm.title, {
         attr: {
-            'placeholder': '{‰ trans ‰}Tên dự án {% endtrans %}'
+            'placeholder': 'Tên dự án'
         }
     }) }}
 
     {{ form_row(postForm.content, {
-        label: '{% trans %}Nội dung chi tiết{% endtrans %}'
+        label: 'Nội dung chi tiết'
     }) }}
 
     <div class="form-group" style="width: 30%;">
         {{ form_row(postForm.imageFile, {
-            label: '{% trans %}Ảnh đại diện{% endtrans %}',
+            label: 'Ảnh đại diện',
             attr: {
-                'placeholder': '{% trans %}Đính kèm ảnh vào đây{% endtrans %}'
+                'placeholder': 'Đính kèm ảnh vào đây'
             }
         }) }}
-
         {{ form_row(postForm.finishAt, {
             attr: {
-                'placeholder': '{% trans %}Chọn hạn chót{% endtrans %}'
+                'placeholder': 'Chọn hạn chót'
             }
         }) }}
+        {{ form_row(postForm.targetAmount) }}
 
     </div>
+
+
 
 
     {{ form_widget(postForm) }}

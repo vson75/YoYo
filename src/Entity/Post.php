@@ -84,6 +84,11 @@ class Post
      */
     private $status;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $targetAmount;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -295,5 +300,33 @@ class Post
         $this->status = $status;
 
         return $this;
+    }
+
+    public function getTargetAmount(): ?int
+    {
+        return $this->targetAmount;
+    }
+
+    public function setTargetAmount(?int $targetAmount): self
+    {
+        $this->targetAmount = $targetAmount;
+
+        return $this;
+    }
+
+    public function getTransactionSum(){
+
+            $amount = $this->getTransactions()->getValues();
+         //dd(count($amount));
+            $total =0;
+
+            for ($i=0; $i< count($amount); $i++) {
+               // var_dump($amount[$i]);
+                //var_dump($amount[$i]->getAmount());
+                $total += $amount[$i]->getAmount();
+
+            }
+            return $total;
+
     }
 }

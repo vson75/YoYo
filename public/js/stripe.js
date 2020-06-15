@@ -62,7 +62,17 @@ form.addEventListener('submit', function(ev) {
         // execution. Set up a webhook or plugin to listen for the
         // payment_intent.succeeded event that handles any business critical
         // post-payment actions.
+        $.ajax({
+          cache: false,
+          url: '/add_transaction/'+uniquekey+'/'+clientSecret+'/'+amount+'/'+anonyme,
+          method: 'POST',
+          async: false,
+      }).then(function(data) {
+          //  alert(data.nb_Participant);
 
+          //  swal("Chuyển khoản thành công", "Cảm ơn bạn đã đóng góp cho dự án này", "success");
+
+      });
           var path = window.location.pathname;
           var redirectURL = path.replace("/finance/","/post/");
 
@@ -75,17 +85,6 @@ form.addEventListener('submit', function(ev) {
               }
           )
               .then((value) => {
-                  $.ajax({
-                      cache: false,
-                      url: '/add_transaction/'+uniquekey+'/'+clientSecret+'/'+amount+'/'+anonyme,
-                      method: 'POST',
-                      async: false,
-                  }).then(function(data) {
-                      //  alert(data.nb_Participant);
-
-                      //  swal("Chuyển khoản thành công", "Cảm ơn bạn đã đóng góp cho dự án này", "success");
-
-                  });
                   window.location.href = redirectURL;
               });
 

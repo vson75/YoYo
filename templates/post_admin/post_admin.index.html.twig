@@ -32,13 +32,15 @@
                     <th>{% trans %}Người tạo{% endtrans %}</th>
                     <th>{% trans %}Số người đã quyên góp{% endtrans %}</th>
                     <th>TEST - custom field after</th>
+                    <th>{% trans %} Quá trình {% endtrans %}</th>
+                    <th>{% trans %} Quyết định {% endtrans %}</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for postInfo in pagination %}
                     <tr>
                         <td>
-                            <a href="{{ path('show_post', {'slug': postInfo.slug}) }}">
+                            <a href="{{ path('show_post', {'uniquekey': postInfo.uniqueKey}) }}">
                                 {{ postInfo.title }}
                             </a>
                         </td>
@@ -50,6 +52,16 @@
                         </td>
                         <td>
                             {{ postInfo.publishedAt|date('d-m-Y') }}
+                        </td>
+                        <td>
+                            {{ postInfo.status.step }}
+                        </td>
+                        <td>
+                            <a href="" class="btn btn-primary"><i class="fas fa-check"></i></a>
+                    
+                            <a href="" class="btn btn-danger"> <i class="fas fa-minus-circle"></i></a>
+                            <a href="" class="btn btn-warning"> <i class="fas fa-search"></i></i></a>
+             
                         </td>
                     </tr>
                 {% else %}

@@ -2,7 +2,8 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}{% trans %} Xin chào {% endtrans %} ! {% endblock %}</title>
+
+    <title>{% block title %}{% trans %} Xin chào{% endtrans %} ! {% endblock %}</title>
     {% block stylesheets %}
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Spartan&display=swap">
@@ -16,7 +17,7 @@
 
 <body>
 <!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top mb-5">
+<nav class="navbar navbar-expand-lg fixed-top mb-5" style="background-color: #1d2b36;">
 
         <a class="navbar-brand" href="/">YoYo</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,22 +35,20 @@
 
             <ul class="navbar-nav ml-auto">
 
-                <li class="nav-item dropdown" style="margin-right: 75px;">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-globe-asia fa-1.5x"> Langue</i>
-                    </a>
-                    <div class="dropdown-menu">
+               
                             {% for locale in locales %}
                                 {% if locale != app.request.locale %}
-                                    <a class="dropdown-item" href="{{ path('change_langue', {'locale': locale}) }}">{{ locale }}</a>
+                                <li class="nav-item">
+                                    <a style="color: #fff;" class="nav-link" href="{{ path('change_langue', {'locale': locale}) }}">{{ locale }}</a>
+                                </li>
+        
                                 {% endif %}
                             {% endfor %}
-                    </div>
-                </li>
+   
 
 
                 {% if is_granted('ROLE_USER') %}
-                <li class="nav-item dropdown" style="margin-right: 75px;">
+                <li class="nav-item dropdown dropleft">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
                         {% set upload_directory = "uploads/user/icon/#{userInfo.Id}/" %}

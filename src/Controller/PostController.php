@@ -35,18 +35,21 @@ class PostController extends AbstractController
     /**
      * @Route("/", name="app_homepage")
      */
-    public function homepage(EntityManagerInterface $em){
+    public function homepage(EntityManagerInterface $em, TransactionRepository $transactionRepository){
 
         $repository = $em->getRepository(Post::class);
         $post = $repository->findPostByNewest();
         $userInfo = $this->getUser();
+      
+        
+
        // dump($post);die;
        // dd($post->getFinishAt());
       
 
         return $this->render('homepage.html.twig',[
                 'post' => $post,
-                'userInfo'=> $userInfo
+                'userInfo'=> $userInfo,
             ]
         );
     }
@@ -179,7 +182,7 @@ class PostController extends AbstractController
 
             $repo = $em->getRepository(PostStatus::class);
             $postStep = $repo->findOneBy([
-                'id' => 1
+                'id' => PostStatus::POST_DRAFT
             ]);
             $createNew->setStatus($postStep);
 

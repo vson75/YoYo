@@ -84,8 +84,8 @@ p {
 }
 
 .nav-profile-img {
-    width: 35px;
-    height: 35px;
+    width: 28px;
+    height: 28px;
 }
 .dropdown-menu, .dropdown-menu.show {
     right: 0;
@@ -99,4 +99,5 @@ p {
     text-align: center;
 
 }
+
 

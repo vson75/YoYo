@@ -13,9 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
 class PostStatus
 {
     public const POST_DRAFT = 1;
-    public const POST_COLLECTING = 2;
-    public const POST_TRANSFERT_FUND = 3;
-    public const POST_CLOSE = 4;
+    public const POST_WAITING_INFO = 2;
+    public const POST_COLLECTING = 3;
+    public const POST_TRANSFERT_FUND = 4;
+    public const POST_CLOSE = 5;
+    public const POST_STOP = 6;
 
 
     /**
@@ -28,7 +30,7 @@ class PostStatus
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
      */
-    private $step;
+    private $status;
 
     /**
      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="status")
@@ -45,14 +47,14 @@ class PostStatus
         return $this->id;
     }
 
-    public function getStep(): ?string
+    public function getStatus(): ?string
     {
-        return $this->step;
+        return $this->status;
     }
 
-    public function setStep(?string $step): self
+    public function setStatus(?string $status): self
     {
-        $this->step = $step;
+        $this->status = $status;
 
         return $this;
     }
