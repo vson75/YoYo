@@ -1,13 +1,10 @@
 monolog:
     handlers:
         main:
-            # Another option is to have Monolog rotate the files for you by using the rotating_file handler.
-            # This handler creates a new log file every day and can also remove old files automatically.
-            type: rotating_file
+            type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
             channels: ["!event"]
-            max_files : 3
         # uncomment to get logging in your browser
         # you may have to allow bigger header sizes in your Web server configuration
         #firephp:
@@ -16,12 +13,6 @@ monolog:
         #chromephp:
         #    type: chromephp
         #    level: info
-        markdown_logging:
-            type: rotating_file
-            path: "%kernel.logs_dir%/markdown.log"
-            level: debug
-            channels: ["markdown"]
-            max_files: 3
         console:
             type: console
             process_psr_3_messages: false

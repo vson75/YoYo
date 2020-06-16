@@ -89,7 +89,6 @@ class PostAdminController extends AbstractController
      */
     public function stopPost($uniquekey, EntityManagerInterface $em, Request $request, Mailer $mailer){
 
-
         $form = $this->createForm(StopPostType::class);
         $form->handleRequest($request);
 
@@ -127,9 +126,12 @@ class PostAdminController extends AbstractController
             'userInfo' => $this->getUser()
         ]);
 
+    }
 
-
-
+    /**
+     * @Route("admin/publicPost/{uniquekey}", name="admin_allow_to_public")
+     */
+    public function AllowToPublicPost($uniquekey, EntityManagerInterface $em, Request $request){
 
     }
 

@@ -54,13 +54,13 @@
                             {{ postInfo.publishedAt|date('d-m-Y') }}
                         </td>
                         <td>
-                            {{ postInfo.status.step }}
+                            {{ postInfo.status.status }}
                         </td>
                         <td>
                             <a href="" class="btn btn-primary"><i class="fas fa-check"></i></a>
                     
                             <a href="" class="btn btn-danger"> <i class="fas fa-minus-circle"></i></a>
-                            <a href="" class="btn btn-warning"> <i class="fas fa-search"></i></i></a>
+                            <a href="{{ path('admin_show_post', {uniquekey: postInfo.uniquekey}) }}" class="btn btn-warning"> <i class="fas fa-search"></i></a>
              
                         </td>
                     </tr>
