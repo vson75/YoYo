@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/funding.css') }}" rel="stylesheet">
+
+{% endblock %}
+
+{% block body %}
+
+
+    <div class="container" style="margin-top: 7%; margin-bottom: 1%; background-color: white; width: 60%;">
+
+        <!-- Preview Image -->
+        <H3 style="text-align: center">{% trans %}Dự án{% endtrans %} {{ postInfo.title }}</H3>
+        <hr>
+        <div>
+            {% if postInfo.imagePath == 'uploads/post/image/' %}
+                <div>
+                    <img style="max-height: 100px; max-width: 200px;" class="img-post" src="{{ asset('uploads/post/default_img.jpeg') }}" alt="">
+                </div>
+
+            {% else %}
+                <div>
+                    <img style="max-height: 300px; max-width: 500px;" class="img-fluid rounded img-post" src="{{ asset(postInfo.imagePath) }}" alt="">
+                </div>
+
+            {% endif %}
+            {% if  postInfo.numberParticipant == 0 %}
+                <p style="text-align: center">{% trans %}Hiện tại chưa có ai quyên góp cho dự án này.{% endtrans %}</p>
+            {% else %}
+                <p style="text-align: center">{% trans %}Hiện tại đã có {% endtrans %}{{ postInfo.numberParticipant }} {% trans %}người quyên góp{% endtrans %}</p>
+            {% endif %}
+
+        </div>
+
+
+        <div>
+
+            {{ form_start(postForm) }}
+
+                <div  class="col-50" style="width: 25%; margin-left: 2%">
+                    {{ form_row(postForm.finishAt) }}
+
+                </div>
+                <div class="col-50" style="margin-left: 5%; width: 50%;">
+                    <button class="btn-transaction" type="submit">
+                        <span>{% trans %} Gia hạn cho dự án {% endtrans %}</span>
+                    </button>
+                </div>
+
+
+            {{ form_end(postForm) }}
+
+
+        </div>
+
+
+    </div>
+
+{% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Post;
+use App\Entity\PostStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -40,6 +41,7 @@ class PostRepository extends ServiceEntityRepository
        // dump($queryBuilder);die;
         // use the function publishedAtIsNotNull
          return   $this->publishedAtIsNotNull()
+             ->andWhere('p.status = 3 OR p.status = 4')
             ->orderBy('p.id', 'DESC')
             ->setMaxResults(8)
             ->getQuery()
@@ -59,6 +61,22 @@ class PostRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
             ;
+
+    }
+
+    public function findAllExpiredDate(){
+        $status_collecting = PostStatus::POST_COLLECTING;
+
+        $date_now = new \DateTime("now");
+        $date_now = $date_now->format("yy-m-d");
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.finishAt = :date_now')
+            ->andWhere('p.status = :status')
+            ->setParameter('date_now', $date_now)
+            ->setParameter('status', $status_collecting)
+            ->getQuery()
+            ->getResult()
+        ;
 
     }
     // /**

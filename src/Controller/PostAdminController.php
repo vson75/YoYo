@@ -131,8 +131,34 @@ class PostAdminController extends AbstractController
     /**
      * @Route("admin/publicPost/{uniquekey}", name="admin_allow_to_public")
      */
-    public function AllowToPublicPost($uniquekey, EntityManagerInterface $em, Request $request){
+    public function AllowToPublicPost($uniquekey, EntityManagerInterface $em, Request $request, Mailer $mailer){
+        $repo = $em->getRepository(Post::class);
+        $post = $repo->findOneBy([
+            'uniquekey' => $uniquekey,
+        ]);
+        // dd(PostStatus::POST_STOP);
+        $repo_status = $em->getRepository(PostStatus::class);
+        $status = $repo_status->findOneBy([
+            'id' => PostStatus::POST_COLLECTING
+        ]);
+        $post->setStatus($status);
 
+        $em->flush();
+
+        /**
+
+        $user_post = $post->getUser();
+        $template = 'email/EmailPublicOrStopPost.html.twig';
+        $subject = 'Tạm ngưng dự án của bạn tại YoYo';
+        $mailer->sendMailAdminStopOrPublishedPost($user_post,$post,$template,$subject,$context);
+
+         */
+        // dd(htmlspecialchars_decode($context));
+
+        $this->addFlash('success', 'Post status changed');
+        return $this->redirectToRoute('admin_show_post', [
+            'uniquekey' => $uniquekey
+        ]);
     }
 
 }

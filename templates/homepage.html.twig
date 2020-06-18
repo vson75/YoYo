@@ -52,7 +52,7 @@
 
 
                     {% set percent_advancement = post.getTransactionSum/post.targetAmount*100 %}
-                    {% set  percent_for_css = 93 -  percent_advancement%}
+                    {% set  percent_for_css = 90 -  percent_advancement%}
 
 
 
@@ -64,7 +64,7 @@
 
                                 {% if post.getTransactionSum == 0 %}
                                     <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="progress-count" style="right: 92%;">
+                                        <div class="progress-count" style="right: 90%;">
                                             0%
                                         </div>
                                     </div>

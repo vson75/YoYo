@@ -10,7 +10,7 @@
     </div>
         du an dang o giai doan {{ postInfo.status.status }}
     <div class="btn btn-success"
-    onclick="location.href='{{ path('app_payment', {uniquekey: postInfo.uniquekey}) }}'">
+    onclick="location.href='{{ path('admin_allow_to_public', {uniquekey: postInfo.uniquekey}) }}'">
         <span>{% trans %} Cho phép đăng dự án {% endtrans %}</span>
 
     </div>

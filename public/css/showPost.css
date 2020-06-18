@@ -157,11 +157,11 @@ body {
     overflow-x: hidden
     overflow-y: hidden;
     font-size: 12px;
-    background-color: #FF4F42;
+    background-color: #8d9ca8;
     border-radius: 0;
 }
 .progress-bar{
-    background-color: yellow; 
+    background-color: #4eb49a;
    /* position: relative; */
 }
 
@@ -174,7 +174,7 @@ body {
     border-radius: 50%;
     color: red;
     font-size: 10px;
-    background-color: yellow;
+    background-color: #4eb49a;
     line-height: 32px;
     top: -13px;
 }

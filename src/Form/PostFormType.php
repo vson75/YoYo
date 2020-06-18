@@ -47,7 +47,7 @@ class PostFormType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
                 'label' => 'Hạn chót bạn muốn quyên góp tiền',
-                'help' => 'Nếu bạn chưa có ngày cụ thể, hệ thống sẽ để mặc định là 30 ngày. Bạn có thể chỉnh sửa sau'
+                'help' => 'Nếu bạn chưa có ngày cụ thể, hệ thống sẽ để mặc định là 30 ngày. Bạn có thể gia hạn sau'
             ])
             ->add('targetAmount', MoneyType::class, [
                 'label' => 'Số tiền bạn muốn quyên góp được'

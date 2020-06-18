@@ -2,25 +2,29 @@
 
 namespace App\Form;
 
+use App\Entity\Post;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AdminPublishedPostType extends AbstractType
+class ExtendPostType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('step', NumberType::class)
-
+            ->add('finishAt', DateType::class,[
+                'widget' => 'single_text',
+                'required' => true,
+                'label' => 'Gia hạn dự án'
+            ])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            // Configure your form options here
+            'data_class' => Post::class,
         ]);
     }
 }

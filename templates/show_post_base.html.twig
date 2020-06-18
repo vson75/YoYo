@@ -60,13 +60,13 @@
 
                         <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                             <span class="progress-count" style="right: {{percent_for_css}}%;">
-                                {{percent_advancement|round(1,'floor')}}%
+                                {{percent_advancement|round(0,'floor')}}%
                             </span>
                         </div>
                         {% else %}
                         <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                             <span class="progress-count" style="right: -1%;">
-                                {{percent_advancement|round(1,'floor')}}%
+                                {{percent_advancement|round(0,'floor')}}%
                             </span>
                         </div>
                         {% endif %}

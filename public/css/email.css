@@ -31,6 +31,10 @@ hr {
     margin: 0;
     padding: 10px 20px 20px 20px;
 }
+.block-button {
+    padding: 10px 20px 20px 20px;
+    margin-left: 14%;
+}
 .logo {
     width: 100%;
 }
@@ -41,6 +45,31 @@ hr {
     display: inline-block;
     padding: 10px 20px;
     background-color: #264459;
+    color: #fefefe;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.btn-extend-post {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #74c9a4;
+    color: #fefefe;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+.btn-transfert-fund {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #2566ac;
     color: #fefefe;
     border: 1px solid #fff;
     border-radius: 3px;

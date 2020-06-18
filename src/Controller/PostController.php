@@ -4,7 +4,7 @@
 namespace App\Controller;
 use Cassandra\Date;
 use App\Entity\{Post, PostStatus, Transaction};
-use App\Form\{CommentFormType, PostFormType, PaymentType};
+use App\Form\{CommentFormType, ExtendPostType, PostFormType, PaymentType};
 use App\Repository\PostRepository;
 use App\Repository\TransactionRepository;
 use App\Service\Mailer;
@@ -398,6 +398,45 @@ class PostController extends AbstractController
         //$this->addFlash('success', 'Cảm ơn bạn đã quyên góp tiền');
         return $this->json([
             'transaction' => $transaction
+        ]);
+
+    }
+
+    /**
+     * @Route("/extend_post/{uniquekey}", name="app_extend_post")
+     * @IsGranted("ROLE_USER")
+     */
+    public function extendPost($uniquekey, EntityManagerInterface $em, Request $request, Post $post){
+
+        $repository = $em->getRepository(Post::class);
+        $postInfo = $repository->findOneBy([
+            'uniquekey'=> $uniquekey
+        ]);
+
+        if (is_null($postInfo)){
+            throw $this->createNotFoundException('The Post is not exist');
+        }
+        if($this->getUser() == $postInfo->getUser()){
+            $form = $this->createForm(ExtendPostType::class, $post);
+            $form->handleRequest($request);
+
+            if($form->isSubmitted() && $form->isValid()){
+                $newExpiredDate = $form->getData();
+                $em->persist($newExpiredDate);
+                $em->flush();
+                $this->addFlash("success", "Dự án của bạn đã gia hạn thành công");
+                return $this->redirectToRoute('show_post',['uniquekey'=>$uniquekey]);
+            }
+
+        }else{
+           $this->addFlash('echec', 'Sorry you are not the author of this project, you cant extend this project');
+           return $this->redirectToRoute('app_homepage');
+        }
+
+        return $this->render('post/extend_post.html.twig',[
+            'postForm' => $form->createView(),
+            'postInfo' => $postInfo,
+            'userInfo' => $this->getUser()
         ]);
 
     }

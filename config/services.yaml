@@ -7,6 +7,8 @@ parameters:
     app.locales: [vn,fr,en]
     paypal_client_id: AZ69DRO-_qZ1uDfd3pR7qm4iADZD3MEuKEGI50CKGRlZ66V5MAMiPNT5eiR_wZurttRdWHyMyPz2K11l
     paypal_secret: ELRWvcq8nAt5sk2LgkV9YFUPc-rT_tqAvWRUCpwxmTavqo5rkWPpduQTgeiCNsmgjFw-_MgGhsRHwPPw
+    router.request_context.scheme: '%env(SITE_BASE_SCHEME)%'
+    router.request_context.host: '%env(SITE_BASE_HOST)%'
 
 services:
     # default configuration for services in *this* file

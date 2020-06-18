@@ -77,11 +77,11 @@
     overflow-x: hidden;
     overflow-y: hidden;
     font-size: 7px;
-    background-color: #FF4F42;
+    background-color: #8d9ca8;
     border-radius: 0;
 }
 .progress-bar{
-    background-color: yellow; 
+    background-color: #4eb49a;
    /* position: relative; */
 }
 
@@ -93,7 +93,7 @@
     -moz-border-radius: 50%;
     border-radius: 50%;
     font-size: 7px;
-    background-color: yellow;
+    background-color: #4eb49a;
     line-height: 32px;
     top: -10px;
     color: red
