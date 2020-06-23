@@ -441,5 +441,34 @@ class PostController extends AbstractController
 
     }
 
+    /**
+     * @param EntityManagerInterface $em
+     * @Route("/transfert_fund/post/{uniquekey}", name="app_transfert_fund")
+     */
+    public function transfertFundPost(EntityManagerInterface $em, $uniquekey, Request $request){
+        $repository = $em->getRepository(Post::class);
+        $postInfo = $repository->findOneBy([
+            'uniquekey'=> $uniquekey
+        ]);
+
+        if (is_null($postInfo)){
+            throw $this->createNotFoundException('The Post is not exist');
+        }
+        if($this->getUser() == $postInfo->getUser()){
+            $repo = $em->getRepository(PostStatus::class);
+            $postStep = $repo->findOneBy([
+                'id' => PostStatus::POST_TRANSFERT_FUND
+            ]);
+            $postInfo->setStatus($postStep);
+            $em->persist($postInfo);
+            $em->flush();
+            $this->addFlash("success", "Chúng tôi sẽ bắt đầu quá trình chuyển khoản. Bạn sẽ nhận được các thông tin chi tiết cho mỗi lần chuyển khoản cũng như danh sách đã ủng hộ cho dự án của bạn.");
+            return $this->redirectToRoute('show_post',['uniquekey'=>$uniquekey]);
+        }else{
+            $this->addFlash('echec', 'Sorry you are not the author of this project, you cant decide to transfert fund this project');
+            return $this->redirectToRoute('app_homepage');
+        }
+    }
+
 
 }

@@ -65,19 +65,23 @@ class Mailer
         $this->mailer->send($email);
     }
 
-    public function sendMailAfterExpiredPost(User $user, Post $post){
+    public function sendMailAfterExpiredPost(User $user, Post $post,?string $excelFile){
         $email = (new TemplatedEmail())
             ->from('YoYo@gmail.com')
             ->to($user->getEmail())
             ->subject('Dự án của bạn tại YoYo đã đến hạn chót')
-            ->htmlTemplate('email/EmailExpiredPost.html.twig')
-            ->context([
+            ->htmlTemplate('email/EmailExpiredPost.html.twig');
+            if(!is_null($excelFile)){
+                $email->attachFromPath($excelFile);
+            }
+            $email->context([
                 'post_uniqueKey'=> $post->getUniquekey(),
                 'post_name' => $post->getTitle(),
                 'target_amount' => $post->getTargetAmount(),
                 'collected_amount' => $post->getTransactionSum(),
                 'id' => $user->getId()
             ]);
+
         $this->mailer->send($email);
     }
 
