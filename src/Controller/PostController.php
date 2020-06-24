@@ -78,7 +78,8 @@ class PostController extends AbstractController
         $TransactionThisPost = $transactionRepository->getTransactionbyPost($postInfo->getId());
        // dd($TransactionThisPost);
 
-        $TransactionAnonymous = $transactionRepository->getAnonymousTransactionbyPost($postInfo->getId());
+        $TransactionAnonymous = $postInfo->getTransactionAnonymousSum();
+
      //  dd($TransactionThisPost);
 
         $currentUserLooged = $this->security->getUser();
@@ -381,8 +382,15 @@ class PostController extends AbstractController
                     ->setPost($post)
                     ->setAmount($amount)
                     ->setClientSecret($clientSecret)
-                    ->setTransfertAt(new \DateTime('now'))
-                    ->setAnonymousDonation($anonyme);
+                    ->setTransfertAt(new \DateTime('now'));
+        // $anonyme is consider for a string
+
+        if($anonyme == 'true'){
+            $transaction->setAnonymousDonation(1);
+        }else{
+            $transaction->setAnonymousDonation(0);
+        }
+        //dd($transaction);
 
         $em->persist($transaction);
         $em->flush();

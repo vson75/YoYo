@@ -59,6 +59,16 @@ class TransactionRepository extends ServiceEntityRepository
          */
     }
 
+    public function getNotAnonymousByPost($val){
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.post = :val')
+            ->andWhere('t.anonymousDonation = 0')
+            ->setParameter('val', $val)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     public function getAnonymousTransactionbyPost($val)
     {
         return $this->createQueryBuilder('t')

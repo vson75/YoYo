@@ -66,10 +66,12 @@ class TransfertFundAfterExpiredCommand extends Command
             $amountCollected = $expiredPost->getTransactionSum();
             $targetAmount = $expiredPost->getTargetAmount();
 
+
+            // if Amount collected greater then target amount
             if($targetAmount <= $amountCollected){
 
                 // update status to transfert Fund
-                /**
+
                 $repo = $this->em->getRepository(PostStatus::class);
                 $postStep = $repo->findOneBy([
                     'id' => PostStatus::POST_TRANSFERT_FUND
@@ -78,13 +80,12 @@ class TransfertFundAfterExpiredCommand extends Command
                 $this->em->persist($expiredPost);
                 $this->em->flush();
 
-                 */
-                $arrayTransaction = $this->transactionRepository->findBy([
-                    'post' => $expiredPost->getId()
-                ]);
 
+                //create excel
                 $excelFile = new Spreadsheet();
                 $sheet = $excelFile->getActiveSheet();
+
+                //style of Header and content
                 $styleArrayHeader = [
                     'font' => [
                         'bold' => true,
@@ -110,7 +111,7 @@ class TransfertFundAfterExpiredCommand extends Command
 
                 $styleArrayContent = [
                     'alignment' => [
-                        'horizontal' => Alignment::HORIZONTAL_CENTER
+                        'horizontal' => Alignment::HORIZONTAL_LEFT
                     ],
                     'borders' => [
                         'right' => [
@@ -125,6 +126,8 @@ class TransfertFundAfterExpiredCommand extends Command
                     ]
                 ];
 
+                //put value
+
                 $sheet->setCellValue('A1', 'Summary of donation');
                 $sheet->setCellValue('A2', 'Project: '.$expiredPost->getTitle());
                    // $sheet->getActiveSheet()->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
@@ -133,9 +136,17 @@ class TransfertFundAfterExpiredCommand extends Command
                 $sheet->setCellValue('B4', 'Amount');
                 $sheet->setCellValue('C4', 'Date of transaction');
 
+                $sheet->setCellValue('A5','Anonymous donation');
+                $sheet->setCellValue('B5',$expiredPost->getTransactionAnonymousSum());
+
+                // apply style
                 $sheet->getStyle('A4')->applyFromArray($styleArrayHeader);
                 $sheet->getStyle('B4')->applyFromArray($styleArrayHeader);
                 $sheet->getStyle('C4')->applyFromArray($styleArrayHeader);
+
+                $sheet->getStyle('A5')->applyFromArray($styleArrayContent);
+                $sheet->getStyle('B5')->applyFromArray($styleArrayContent);
+                $sheet->getStyle('C5')->applyFromArray($styleArrayContent);
 
                 $sheet->getStyle('A2')->getAlignment()->setWrapText(true);
 
@@ -145,11 +156,13 @@ class TransfertFundAfterExpiredCommand extends Command
                 $sheet->getColumnDimension('C')->setAutoSize(true);
 
 
+                // find information of not anonymous transaction to Add in excel
+                $arrayTransaction = $this->transactionRepository->getNotAnonymousByPost($expiredPost);
 
 
                 for ($i=0; $i < count($arrayTransaction); $i++) {
-                    $col = $i + 5;
-
+                    $col = $i + 6;
+                    // add data in excel file
                     $donatorInfo = $arrayTransaction[$i]->getUser()->getFirstname().' '.$arrayTransaction[$i]->getUser()->getLastname();
                     $sheet->setCellValue('A'.$col, $donatorInfo);
                     $sheet->setCellValue('B'.$col, $arrayTransaction[$i]->getAmount());
@@ -176,11 +189,9 @@ class TransfertFundAfterExpiredCommand extends Command
 
                 $this->mailer->sendMailAfterExpiredPost($userId,$expiredPost,$fileName);
 
-
-
-
             }else{
-                // $fileName = null;
+                // if we aren't collect our target amount
+                // send mail to organisateur, they can chose to continue or renew their post
                 $this->mailer->sendMailAfterExpiredPost($userId,$expiredPost,null);
              //   $io->success($expiredPost->getId());
 

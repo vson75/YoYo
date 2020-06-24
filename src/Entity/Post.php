@@ -329,4 +329,18 @@ class Post
             return $total;
 
     }
+
+    public function getTransactionAnonymousSum(){
+
+        $amount = $this->getTransactions()->getValues();
+        $total =0;
+
+        for ($i=0; $i< count($amount); $i++) {
+
+            if($amount[$i]->getAnonymousDonation()){
+                $total += $amount[$i]->getAmount();
+            }
+        }
+        return $total;
+    }
 }

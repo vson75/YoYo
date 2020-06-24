@@ -62,9 +62,12 @@ form.addEventListener('submit', function(ev) {
         // execution. Set up a webhook or plugin to listen for the
         // payment_intent.succeeded event that handles any business critical
         // post-payment actions.
+
+         /// console.log(anonyme);
+         console.log(IsNotAnonymous);
         $.ajax({
           cache: false,
-          url: '/add_transaction/'+uniquekey+'/'+clientSecret+'/'+amount+'/'+anonyme,
+          url: '/add_transaction/'+uniquekey+'/'+clientSecret+'/'+amount+'/'+IsNotAnonymous,
           method: 'POST',
           async: false,
       }).then(function(data) {

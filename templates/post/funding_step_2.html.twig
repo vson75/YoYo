@@ -61,11 +61,11 @@
         var userEmail = '{{ userInfo.Email }}';
         var amount = {{ amount }};
 
-        var anonyme = false;
+        var IsNotAnonymous = false;
         $('#anonymous').click(function() {
-            anonyme = $('#anonymous').prop('checked');
+            IsNotAnonymous = $('#anonymous').prop('checked');
         });
-        //console.log(anonyme);
+        console.log(IsNotAnonymous);
     </script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
