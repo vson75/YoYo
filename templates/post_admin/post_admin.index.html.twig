@@ -6,34 +6,48 @@
 {% block content_body %}
     <div class="row">
         <div class="col-sm-12">
-            <h1>Manage post ({{ pagination.getTotalItemCount }})</h1>
+            <h1>{% trans %}Danh sách các dự án {% endtrans %} <small>({{ pagination.getTotalItemCount }} {% trans %} dự án){% endtrans %}</small> </h1>
 
-            <form>
-                <div class="input-group mb-3">
-                    <input type="text"
-                           name="find_post"
-                           class="form-control"
-                           value="{{ app.request.query.get('q') }}"
-                           placeholder="rechercher par titre ou commentaire"
-                    >
-                    <div class="input-group-append">
-                        <button type="submit"
-                                class="btn btn-outline-secondary">
-                            <span class="fa fa-search"></span>
-                        </button>
+
+                {{ form_start(form) }}
+
+                <div class="row">
+                    <div class="col">
+                        {{ form_row(form.PostTitle) }}
                     </div>
+
+                    <div class="col">
+                        {{ form_row(form.status) }}
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <button class="btn btn-lg btn-primary btn-block form-control" type="submit" style="height: 38px;">
+                                {% trans %}Tìm kiếm{% endtrans %}
+                            </button>
+                        </div>
+
+                    </div>
+
                 </div>
-            </form>
+
+
+
+                {{ form_end(form) }}
 
             <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>{% trans %}Dự án{% endtrans %}</th>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <th>{% trans %}Người tạo{% endtrans %}</th>
-                    <th>{% trans %}Số người đã quyên góp{% endtrans %}</th>
-                    <th>TEST - custom field after</th>
+                    {% endif %}
+                    <th>{% trans %}Số tiền đã nhận đã nhận{% endtrans %}</th>
+                    <th>{% trans %}Số tiền kêu gọi{% endtrans %}</th>
+
                     <th>{% trans %} Quá trình {% endtrans %}</th>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <th>{% trans %} Quyết định {% endtrans %}</th>
+                    {% endif %}
                 </tr>
                 </thead>
                 <tbody>
@@ -44,18 +58,37 @@
                                 {{ postInfo.title }}
                             </a>
                         </td>
+                        {% if is_granted('ROLE_ADMIN') %}
                         <td>
                             {{ postInfo.user.firstname }} {{ postInfo.user.lastname }}
                         </td>
-                        <td style="width: 20%;">
-                            {{ postInfo.numberParticipant}}
+                        {% endif %}
+                        <td>
+                            {{ postInfo.getTransactionSum}}
                         </td>
                         <td>
-                            {{ postInfo.publishedAt|date('d-m-Y') }}
+
+                            {{ postInfo.targetAmount }}
                         </td>
+
                         <td>
-                            {{ postInfo.status.status }}
+                            {% set status = postInfo.status.id %}
+
+                            {% if status ==  statusArray['POST_DRAFT'] %}
+                                {% trans %} Bản nháp {% endtrans %}
+                            {% elseif status ==  statusArray['POST_WAITING_INFO'] %}
+                                {% trans %} Bổ sung thông tin {% endtrans %}
+                            {% elseif status ==  statusArray['POST_COLLECTING'] %}
+                                {% trans %} Quyên góp {% endtrans %}
+                            {% elseif status ==  statusArray['POST_TRANSFERT_FUND'] %}
+                                {% trans %} Chuyển khoản {% endtrans %}
+                            {% elseif status ==  statusArray['POST_CLOSE'] %}
+                                {% trans %} Kết thúc {% endtrans %}
+                            {% elseif status ==  statusArray['POST_STOP'] %}
+                                {% trans %} Tạm ngừng {% endtrans %}
+                            {% endif %}
                         </td>
+                        {% if is_granted('ROLE_ADMIN') %}
                         <td>
                             <a href="" class="btn btn-primary"><i class="fas fa-check"></i></a>
                     
@@ -63,11 +96,12 @@
                             <a href="{{ path('admin_show_post', {uniquekey: postInfo.uniquekey}) }}" class="btn btn-warning"> <i class="fas fa-search"></i></a>
              
                         </td>
+                        {% endif %}
                     </tr>
                 {% else %}
                     <tr>
                         <td colspan="4" class="text-center">
-                            No comments found - custom translate after
+                            {% trans %}Không có kết quả tìm kiếm{% endtrans %}
                         </td>
                     </tr>
                 {% endfor %}

@@ -6,7 +6,9 @@ namespace App\Controller;
 
 use App\Entity\Post;
 
+use App\Entity\PostSearch;
 use App\Entity\PostStatus;
+use App\Form\PostSearchType;
 use App\Form\StopPostType;
 use App\Repository\PostRepository;
 use App\Repository\TransactionRepository;
@@ -28,26 +30,36 @@ class PostAdminController extends AbstractController
     /**
      * @Route("/admin/post", name="app_post_admin")
      */
-    public function index(PostRepository $postRepository, PaginatorInterface $paginator, Request $request, TransactionRepository $transactionRepository){
+    public function index(PostRepository $postRepository, PaginatorInterface $paginator, Request $request, EntityManagerInterface $em){
 
         // get query find_post parameter. like $_GET
-        $q = $request->query->get('find_post');
-        $user = $this->getUser();
+        $q = $request->query->get('q');
 
 
-        $post = $postRepository->findAllWithSearch($q);
-       // $amount = $transactionRepository->getAnonymousTransactionbyPost($post);
-      //  dd($amount);
+
+        $search = new PostSearch();
+        $form = $this->createForm(PostSearchType::class, $search);
+        $form->handleRequest($request);
+
+        $repo = $em->getRepository(Post::class);
+        $post = $repo->findAllWithSearch($search);
+       // $postRepository->findAllWithSearch($search);
     
         $pagination = $paginator->paginate(
             $post, /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
             10/*limit per page*/
         );
+
+        // get all content in PostStatus
+        $postStatus = new \ReflectionClass('App\Entity\PostStatus');
+        $statusArray = $postStatus->getConstants();
+
         return $this->render('post_admin/post_admin.index.html.twig', [
             'pagination' => $pagination,
-            //'postInfo'=> $post,
-            'userInfo' => $user
+            'userInfo' => $this->getUser(),
+            'form' => $form->createView(),
+            'statusArray' => $statusArray
         ]);
     }
 

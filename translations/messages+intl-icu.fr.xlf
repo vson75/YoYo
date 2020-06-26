@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="fr" target-language="fr" datatype="plaintext" original="file.ext">
+  <file source-language="vn" target-language="fr" datatype="plaintext" original="file.ext">
     <header>
       <tool tool-id="symfony" tool-name="Symfony"/>
     </header>
@@ -216,6 +216,66 @@
       <trans-unit id="4CdRkEf" resname="Gửi lời động viên">
         <source>Gửi lời động viên</source>
         <target>Commentaires</target>
+      </trans-unit>
+      <trans-unit id="87CtL8G" resname="Dự án của tôi">
+        <source>Dự án của tôi</source>
+        <target>__Dự án của tôi</target>
+      </trans-unit>
+      <trans-unit id="HD6yY6p" resname="Gia hạn cho dự án">
+        <source>Gia hạn cho dự án</source>
+        <target>__Gia hạn cho dự án</target>
+      </trans-unit>
+      <trans-unit id="S7m8kG8" resname="quyên góp được trên">
+        <source>quyên góp được trên</source>
+        <target>__quyên góp được trên</target>
+      </trans-unit>
+      <trans-unit id="9.fka75" resname="Tạm dừng dự án">
+        <source>Tạm dừng dự án</source>
+        <target>__Tạm dừng dự án</target>
+      </trans-unit>
+      <trans-unit id="WObfZVz" resname="Phần dành cho admin">
+        <source>Phần dành cho admin</source>
+        <target>__Phần dành cho admin</target>
+      </trans-unit>
+      <trans-unit id="LytWBfj" resname="Cho phép đăng dự án">
+        <source>Cho phép đăng dự án</source>
+        <target>__Cho phép đăng dự án</target>
+      </trans-unit>
+      <trans-unit id="5pcGfrG" resname="Tạm ngừng dự án">
+        <source>Tạm ngừng dự án</source>
+        <target>__Tạm ngừng dự án</target>
+      </trans-unit>
+      <trans-unit id="1lByZ63" resname="Danh sách các dự án">
+        <source>Danh sách các dự án</source>
+        <target>__Danh sách các dự án</target>
+      </trans-unit>
+      <trans-unit id="5FPkEXu" resname="dự án)">
+        <source>dự án)</source>
+        <target>__dự án)</target>
+      </trans-unit>
+      <trans-unit id="h65DLJ9" resname="Tìm kiếm">
+        <source>Tìm kiếm</source>
+        <target>__Tìm kiếm</target>
+      </trans-unit>
+      <trans-unit id="MM6vwDA" resname="Số tiền đã nhận đã nhận">
+        <source>Số tiền đã nhận đã nhận</source>
+        <target>__Số tiền đã nhận đã nhận</target>
+      </trans-unit>
+      <trans-unit id="O885d5P" resname="Số tiền kêu gọi">
+        <source>Số tiền kêu gọi</source>
+        <target>__Số tiền kêu gọi</target>
+      </trans-unit>
+      <trans-unit id="kGgcDes" resname="Quá trình">
+        <source>Quá trình</source>
+        <target>__Quá trình</target>
+      </trans-unit>
+      <trans-unit id="4cTqqsI" resname="Quyết định">
+        <source>Quyết định</source>
+        <target>__Quyết định</target>
+      </trans-unit>
+      <trans-unit id="uehHEH7" resname="Không có kết quả tìm kiếm">
+        <source>Không có kết quả tìm kiếm</source>
+        <target>__Không có kết quả tìm kiếm</target>
       </trans-unit>
     </body>
   </file>

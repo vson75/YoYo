@@ -26,6 +26,7 @@ class PaymentType extends AbstractType
     {
         $resolver->setDefaults([
             // Configure your form options here
+            'csrf_protection' => true
         ]);
     }
 }

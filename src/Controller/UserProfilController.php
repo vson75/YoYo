@@ -3,10 +3,15 @@
 namespace App\Controller;
 
 
+use App\Entity\Post;
+use App\Entity\PostSearch;
+use App\Entity\PostStatus;
 use App\Entity\User;
+use App\Form\PostSearchType;
 use App\Form\UserProfileFormType;
 use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,6 +80,36 @@ class UserProfilController extends AbstractController
         return $this->render('user_profil/edit_profil.html.twig', [
             'userIcon' => $form->createView(),
             'userInfo' => $user
+        ]);
+    }
+
+    /**
+     * @Route("/my_project", name="app_my_project")
+     */
+    public function myProject(Request $request, EntityManagerInterface $em, PaginatorInterface $paginator){
+
+        $search = new PostSearch();
+        $form = $this->createForm(PostSearchType::class, $search);
+        $form->handleRequest($request);
+
+        $repo = $em->getRepository(Post::class);
+        $post = $repo->findByUserWithPostSearch($this->getUser(),$search);
+
+        $pagination = $paginator->paginate(
+            $post, /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            10/*limit per page*/
+        );
+
+        // get all content in PostStatus
+        $postStatus = new \ReflectionClass('App\Entity\PostStatus');
+        $statusArray = $postStatus->getConstants();
+
+        return $this->render('post_admin/post_admin.index.html.twig',[
+            'userInfo' => $this->getUser(),
+            'pagination' => $pagination,
+            'form' => $form->createView(),
+            'statusArray' => $statusArray
         ]);
     }
 }

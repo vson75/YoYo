@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Post;
+use App\Entity\PostSearch;
 use App\Entity\PostStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -40,8 +41,10 @@ class PostRepository extends ServiceEntityRepository
     {
        // dump($queryBuilder);die;
         // use the function publishedAtIsNotNull
+        $status_Collecting = PostStatus::POST_COLLECTING;
+        $status_transfert_fund = PostStatus::POST_TRANSFERT_FUND;
          return   $this->publishedAtIsNotNull()
-             ->andWhere('p.status = 3 OR p.status = 4')
+             ->andWhere('p.status = '.$status_Collecting.' OR p.status = '.$status_transfert_fund.'')
             ->orderBy('p.id', 'DESC')
             ->setMaxResults(8)
             ->getQuery()
@@ -49,17 +52,47 @@ class PostRepository extends ServiceEntityRepository
             ;
     }
 
-    // the syntax ?sting --> the string can be null
-    public function findAllWithSearch(?string $value){
+    public function findByUserWithPostSearch($user, PostSearch $search)
+    {
+        // dump($queryBuilder);die;
+        // use the function publishedAtIsNotNull
         $qb = $this->createQueryBuilder('p');
+        $qb->andWhere('p.user = :user')
+            ->setParameter('user',$user);
 
-            if($value){
-                $qb->andWhere('p.title LIKE :val OR p.content LIKE :val')
-                    ->setParameter('val','%'.$value.'%');
-            }
-            return $qb->orderBy('p.publishedAt', 'DESC')
+        if($search->getPostTitle()){
+            $qb->andWhere('p.title like :title')
+                ->setParameter('title', '%'.$search->getPostTitle().'%');
+        }
+        if($search->getStatus()){
+            $qb->andWhere('p.status = :status')
+                ->setParameter('status', $search->getStatus());
+        }
+
+        return $qb->orderBy('p.id', 'DESC')
             ->getQuery()
             ->getResult()
+            ;
+
+    }
+
+    // the syntax ?sting --> the string can be null
+    public function findAllWithSearch(PostSearch $search){
+        $qb = $this->createQueryBuilder('p');
+
+
+        if($search->getPostTitle()){
+            $qb->andWhere('p.title like :title')
+                ->setParameter('title', '%'.$search->getPostTitle().'%');
+        }
+        if($search->getStatus()){
+            $qb->andWhere('p.status = :status')
+                ->setParameter('status', $search->getStatus());
+        }
+       // dd($search);
+            return $qb->orderBy('p.id', 'DESC')
+                ->getQuery()
+                ->getResult()
             ;
 
     }
