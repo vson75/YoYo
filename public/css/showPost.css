@@ -154,7 +154,7 @@ body {
 
 .custom_progress .progress {
     height: 7px;
-    overflow-x: hidden
+    overflow-x: hidden;
     overflow-y: hidden;
     font-size: 12px;
     background-color: #8d9ca8;

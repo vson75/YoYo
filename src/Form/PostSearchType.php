@@ -29,11 +29,13 @@ class PostSearchType extends AbstractType
                 'placeholder' => 'Quá trình',
                 'choices' => [
                     'Bản nháp' => PostStatus::POST_DRAFT,
-                    'Bổ sung thông tin' => PostStatus::POST_WAITING_INFO,
+                    'Đã gửi ban quản trị' => PostStatus::POST_SUBMIT_TO_ADMIN,
+                    'thông tin cần bổ sung' => PostStatus::POST_WAITING_INFO,
                     'Quyên góp' => PostStatus::POST_COLLECTING,
                     'Chuyển khoản' => PostStatus::POST_TRANSFERT_FUND,
                     'Kết thúc' => PostStatus::POST_CLOSE,
                     'Tạm ngừng' => PostStatus::POST_STOP
+
                 ]
             ])
         ;

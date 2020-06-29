@@ -120,6 +120,8 @@ class PostController extends AbstractController
                 'uniquekey' => $uniquekey,
             ]);
         }
+        $postStatus = new \ReflectionClass('App\Entity\PostStatus');
+        $statusArray = $postStatus->getConstants();
 
         return $this->render('post/show_post.html.twig',[
                 'postInfo' => $postInfo,
@@ -131,7 +133,8 @@ class PostController extends AbstractController
                 'totalAmount' => $totalAmount,
                 'TransactionThisPost' => $TransactionThisPost,
                 'TotalAnonymous' => $TransactionAnonymous,
-                'financeForm' => $this->createForm(PaymentType::class)->createView()
+                'financeForm' => $this->createForm(PaymentType::class)->createView(),
+                'statusArray' => $statusArray
             ]
         );
     }
@@ -217,7 +220,7 @@ class PostController extends AbstractController
           //  dd($createNew);
             $em->flush();
 
-            $this->addFlash('success', 'Cảm ơn bạn đã tạo chủ để này');
+            $this->addFlash('success', 'Cảm ơn bạn đã tạo chủ để này. Bạn có thể gửi ngay dự án cho chúng tôi để chúng tôi kiểm duyệt');
 
             $template='email/EmailCreateOrDonation.html.twig';
             $subject ="Cảm ơn bạn đã tạo chủ đề mới";
@@ -245,6 +248,59 @@ class PostController extends AbstractController
         ]);
     }
 
+    /**
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @param Post $post
+     * @Route("post_submit/{uniquekey}", name="app_submit_post")
+     */
+    public function submitPostToAdmin($uniquekey,EntityManagerInterface $em, Mailer $mailer){
+        $repository = $em->getRepository(Post::class);
+        $post = $repository->findOneBy([
+            'uniquekey'=> $uniquekey
+        ]);
+
+        $repo = $em->getRepository(PostStatus::class);
+
+        if (is_null($post)) {
+            throw $this->createNotFoundException('The Post is not exist');
+        }
+
+        $draft = $repo->findOneBy([
+            'id' => PostStatus::POST_DRAFT
+        ]);
+        $waitingInfo = $repo->findOneBy([
+            'id' => PostStatus::POST_WAITING_INFO
+        ]);
+
+        if( $post->getStatus() == $draft || $post->getStatus() == $waitingInfo){
+            $submit_admin = $repo->findOneBy([
+                'id' => PostStatus::POST_SUBMIT_TO_ADMIN
+            ]);
+            $postNewStatus = $post->setStatus($submit_admin);
+            $em->persist($postNewStatus);
+            $em->flush();
+
+            $template='email/EmailCreateOrDonation.html.twig';
+            $subject ="Dự án ".$post->getTitle()." đã được gửi tới ban quản trị";
+            $title ="";
+            $action = "gửi ban quản trị dự án: ";
+            $caption_link = "Chúng tôi sẽ nhanh chóng kiểm tra dự án của bạn trước khi cho phép đăng lên trang của chúng tôi ";
+            $mailer->sendMailCreateOrDonationPost($post->getUser(),$post,$template,$subject,$title,$action, $caption_link);
+
+            $this->addFlash('success', 'Dự án của bạn đã được gửi tới ban quản trị. Chúng tôi sẽ kiểm duyệt dự án của bạn trước khi cho phép đăng lên trang của chúng tôi');
+
+        }else{
+
+            $this->addFlash('echec', 'Dự án của bạn không được phép gửi tới chúng tôi');
+
+        }
+
+        return $this->redirectToRoute('show_post', [
+            'uniquekey' => $uniquekey
+        ]);
+
+    }
 
     /**
      * @Route("edit/post/{id}")

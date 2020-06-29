@@ -9,16 +9,22 @@
         {% trans %} Phần dành cho admin {% endtrans %}
     </div>
         du an dang o giai doan {{ postInfo.status.status }}
+    <br>
+    {% if postInfo.status.id == statusArray['POST_SUBMIT_TO_ADMIN'] %}
     <div class="btn btn-success"
-    onclick="location.href='{{ path('admin_allow_to_public', {uniquekey: postInfo.uniquekey}) }}'">
+    onclick="location.href='{{ path('admin_allow_to_collecting', {uniquekey: postInfo.uniquekey}) }}'">
         <span>{% trans %} Cho phép đăng dự án {% endtrans %}</span>
 
     </div>
+    {% endif %}
+    {% if postInfo.status.id == statusArray['POST_SUBMIT_TO_ADMIN'] or statusArray['POST_COLLECTING'] %}
     <br>
+
     <div class="btn btn-danger" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey}) }}'">
         <span>{% trans %} Tạm ngừng dự án {% endtrans %}</span>
     </div>
     <br>
+    {% endif %}
 
 {% endif %}
 {% endblock %}

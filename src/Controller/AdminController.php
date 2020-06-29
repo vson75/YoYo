@@ -1,11 +1,8 @@
 <?php
 
-
 namespace App\Controller;
 
-
 use App\Entity\Post;
-
 use App\Entity\PostSearch;
 use App\Entity\PostStatus;
 use App\Form\PostSearchType;
@@ -20,31 +17,43 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 /**
+ * Class AdminController
+ * @package App\Controller
  * @IsGranted("ROLE_ADMIN")
  */
-class PostAdminController extends AbstractController
+class AdminController extends AbstractController
 {
+    /**
+     * @Route("/admin/overview", name="app_admin_overview")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function index()
+    {
+        return $this->render('admin/overview.html.twig',[
+                'userInfo' => $this->getUser()
+            ]
+        );
+    }
 
     /**
      * @Route("/admin/post", name="app_post_admin")
      */
-    public function index(PostRepository $postRepository, PaginatorInterface $paginator, Request $request, EntityManagerInterface $em){
+    public function adminPost(PostRepository $postRepository, PaginatorInterface $paginator, Request $request, EntityManagerInterface $em){
 
         // get query find_post parameter. like $_GET
         $q = $request->query->get('q');
 
 
-
+@
         $search = new PostSearch();
         $form = $this->createForm(PostSearchType::class, $search);
         $form->handleRequest($request);
 
         $repo = $em->getRepository(Post::class);
         $post = $repo->findAllWithSearch($search);
-       // $postRepository->findAllWithSearch($search);
-    
+        // $postRepository->findAllWithSearch($search);
+
         $pagination = $paginator->paginate(
             $post, /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
@@ -84,6 +93,8 @@ class PostAdminController extends AbstractController
         $datediff = date_diff($postInfo->getFinishAt(),new \DateTime('now'));
         $datediff = $datediff->format('%d');
 
+        $postStatus = new \ReflectionClass('App\Entity\PostStatus');
+        $statusArray = $postStatus->getConstants();
 
         return $this->render('post_admin/show_post.html.twig', [
             'postInfo' => $postInfo,
@@ -92,10 +103,9 @@ class PostAdminController extends AbstractController
             'TransactionThisPost' => $TransactionThisPost,
             'userInfo' => $user,
             'datediff' => $datediff,
+            'statusArray' => $statusArray
         ]);
     }
-
-
     /**
      * @Route("/admin/stopPost/{uniquekey}", name="admin_stop_post")
      */
@@ -141,9 +151,9 @@ class PostAdminController extends AbstractController
     }
 
     /**
-     * @Route("admin/publicPost/{uniquekey}", name="admin_allow_to_public")
+     * @Route("admin/publicPost/{uniquekey}", name="admin_allow_to_collecting")
      */
-    public function AllowToPublicPost($uniquekey, EntityManagerInterface $em, Request $request, Mailer $mailer){
+    public function AllowToCollectingPost($uniquekey, EntityManagerInterface $em, Request $request, Mailer $mailer){
         $repo = $em->getRepository(Post::class);
         $post = $repo->findOneBy([
             'uniquekey' => $uniquekey,
@@ -173,4 +183,13 @@ class PostAdminController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("admin/list_validating_organisation", name="app_list_validate_organisation")
+     */
+    public function listValidateOrganisation(){
+
+        return $this->render('admin/list_waiting_organisation.html.twig',[
+            'userInfo' => $this->getUser()
+        ]);
+    }
 }

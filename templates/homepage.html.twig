@@ -12,8 +12,11 @@
 
             <h1 class="display-3">{% trans %} A Warm Welcome! {% endtrans %}</h1>
             <p class="lead">{% trans %} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat. {% endtrans %}</p>
-            <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-lg">{% trans %} Tạo dự án mới {% endtrans %}</a>
-
+            {% if is_granted('ROLE_ORGANISATION') or is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-lg">{% trans %} Tạo dự án mới {% endtrans %}</a>
+            {% else  %}
+                test
+            {% endif %}
         </header>
 
         <!-- Page Features -->

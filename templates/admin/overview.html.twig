@@ -1,0 +1,30 @@
+{% extends 'content_base.html.twig' %}
+
+{% block title %}
+    {% trans %} Trang quản trị {% endtrans %}
+{% endblock %}
+
+{% block content_body %}
+        <h1 style="text-align: center"> {% trans %} Trang quản trị {% endtrans %}</h1>
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-lg btn-primary btn-block form-control" onclick="location.href='{{ path('app_post_admin') }}'">
+                {% trans %}Danh sách các dự án{% endtrans %}
+            </button>
+        </div>
+
+        <div class="col">
+            <button class="btn btn-lg btn-primary btn-block form-control" onclick="location.href='{{ path('app_homepage') }}'">
+                {% trans %}Danh sách người sử dụng{% endtrans %}
+            </button>
+        </div>
+        <div class="col">
+            <button class="btn btn-lg btn-primary btn-block form-control" onclick="location.href='{{ path('app_list_validate_organisation') }}'">
+                {% trans %}Yêu cầu tạo tổ chức{% endtrans %}
+            </button>
+
+        </div>
+
+    </div>
+
+{% endblock %}

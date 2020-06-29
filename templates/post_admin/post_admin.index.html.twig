@@ -77,7 +77,7 @@
                             {% if status ==  statusArray['POST_DRAFT'] %}
                                 {% trans %} Bản nháp {% endtrans %}
                             {% elseif status ==  statusArray['POST_WAITING_INFO'] %}
-                                {% trans %} Bổ sung thông tin {% endtrans %}
+                                {% trans %}Thông tin cần bổ sung{% endtrans %}
                             {% elseif status ==  statusArray['POST_COLLECTING'] %}
                                 {% trans %} Quyên góp {% endtrans %}
                             {% elseif status ==  statusArray['POST_TRANSFERT_FUND'] %}
@@ -86,6 +86,8 @@
                                 {% trans %} Kết thúc {% endtrans %}
                             {% elseif status ==  statusArray['POST_STOP'] %}
                                 {% trans %} Tạm ngừng {% endtrans %}
+                            {% else %}
+                                {% trans %} Chờ Admin kiểm duyệt{% endtrans %}
                             {% endif %}
                         </td>
                         {% if is_granted('ROLE_ADMIN') %}
