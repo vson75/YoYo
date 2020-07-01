@@ -303,10 +303,10 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("edit/post/{id}")
+     * @Route("edit/post/{uniquekey}")
      * @IsGranted("ROLE_USER")
      */
-    public function edit(EntityManagerInterface $em, Request $request, Post $post, UploadService $uploadService){
+    public function edit($uniquekey,EntityManagerInterface $em, Request $request, Post $post, UploadService $uploadService){
         $form = $this->createForm(PostFormType::class, $post);
         $form->handleRequest($request);
         $user = $this->getUser();
@@ -328,12 +328,12 @@ class PostController extends AbstractController
             $this->addFlash('success', 'Sửa đổi thành công');
             $repo = $em->getRepository(Post::class);
             $postUpdated = $repo->findOneBy([
-                'id' => $id_post,
+                'uniquekey' => $uniquekey,
             ]);
-            $key = $postUpdated->getUniquekey();
+
 
             return $this->redirectToRoute('show_post',[
-                'uniquekey' => $key,
+                'uniquekey' => $uniquekey,
             ]);
         }
 

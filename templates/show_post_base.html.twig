@@ -86,13 +86,6 @@
 
             <!-- button modify -->
 
-            {% if userInfo == postInfo.user %}
-            <div id="btn-modify" onclick="location.href='{{ path('app_post_edit', {id: postInfo.id}) }}'">
-                <span>
-                    {% trans %} Chỉnh sửa {% endtrans %}
-                </span>
-            </div>
-            {% endif %}
         </div>
 
         <!-- Sidebar card collect. example: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_profile_card -->
@@ -110,10 +103,17 @@
                 <p><span><i class="far fa-clock"></i></span> <span>{% trans %}Còn lại {% endtrans %} {{ datediff }} {% trans %} ngày{% endtrans %}</span></p>
 
                 {% if postInfo.status.id == statusArray['POST_DRAFT'] or postInfo.status.id == statusArray['POST_WAITING_INFO'] %}
+                    {% if userInfo == postInfo.user %}
                     <div id="btn-transaction" onclick="location.href='{{ path('app_submit_post', {uniquekey: postInfo.uniquekey}) }}'">
-                        <span>{% trans %}Submit to admin{% endtrans %}</span>
+                        <span>{% trans %} Gửi dự án cho ban quản trị {% endtrans %}</span>
 
                     </div>
+
+                    <div id="btn-modify" onclick="location.href='{{ path('app_post_edit', {uniquekey: postInfo.uniquekey}) }}'">
+                        <span>{% trans %}Chỉnh sửa thông tin dự án {% endtrans %}</span>
+
+                    </div>
+                    {% endif %}
                 {% else %}
 
 

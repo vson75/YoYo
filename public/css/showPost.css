@@ -86,19 +86,19 @@
 
 
 #btn-modify{
-    background: rgba(255,95,103,0.89);
+    background: rgba(73, 116, 222, 0.89);
     border-radius: 3px;
     font-weight: 400;
     padding: 5px 8px;
-    text-align: center;
+    display: inline-block;
     position: static;
-    margin: 1rem 17rem 1rem;
+    margin: 0 1rem 1rem;
     color: white;
 }
 
 #btn-modify:hover {
     cursor: pointer;
-    background: rgba(255,75,89,0.89)
+    background: rgba(17, 74, 160, 0.89)
 }
 
 body {
