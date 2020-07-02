@@ -33,6 +33,12 @@ class UserDocument
      */
     private $originalFilename;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=DocumentType::class, inversedBy="userDocuments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $DocumentType;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -70,6 +76,18 @@ class UserDocument
     public function setOriginalFilename(string $originalFilename): self
     {
         $this->originalFilename = $originalFilename;
+
+        return $this;
+    }
+
+    public function getDocumentType(): ?DocumentType
+    {
+        return $this->DocumentType;
+    }
+
+    public function setDocumentType(?DocumentType $DocumentType): self
+    {
+        $this->DocumentType = $DocumentType;
 
         return $this;
     }

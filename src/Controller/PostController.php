@@ -112,6 +112,8 @@ class PostController extends AbstractController
             $new_comment->setPost($postInfo);
             $new_comment->setCreatedAt(new \DateTime('now'));
 
+
+
             // dd($new_comment);
             $em->persist($new_comment);
             $em->flush();
@@ -313,7 +315,7 @@ class PostController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
             $updatePost = $form->getData();
-            $id_post = $updatePost->getId();
+           // $id_post = $updatePost->getId();
 
             $uploadedFile = $form['imageFile']->getData();
 

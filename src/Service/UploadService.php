@@ -45,4 +45,18 @@ class UploadService
         return $newFilename;
     }
 
+
+    public function UploadUserDocument(UploadedFile $uploadedFile, $userID, $documentType): string {
+        $destination = $this->uploadsPath.'/user/documents/'.$userID;
+        $origineFilename = pathinfo($uploadedFile->getClientOriginalName(),PATHINFO_FILENAME);
+        $newFilename = $documentType.'-'.Urlizer::urlize($origineFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
+
+        $uploadedFile->move(
+            $destination,
+            $newFilename
+        );
+
+        return $newFilename;
+    }
+
 }

@@ -114,7 +114,8 @@
 
                     </div>
                     {% endif %}
-                {% else %}
+
+                {% elseif postInfo.status.id != statusArray['POST_SUBMIT_TO_ADMIN'] %}
 
 
                 <div id="btn-transaction" onclick="location.href='{{ path('app_payment', {uniquekey: postInfo.uniquekey}) }}'">
@@ -130,6 +131,8 @@
                     </svg>
                     <span>{% trans %}Chia sẻ qua facebook{% endtrans %}</span>
                 </div>
+
+
 
                 {% endif %}
                 {% block admin_post %}

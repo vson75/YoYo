@@ -1,5 +1,20 @@
 {% extends 'content_base.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+  <style>
+      .dot {
+          height: 30px;
+          width: 30px;
+          background-color: red;
+          color: white;
 
+          border-radius: 50%;
+          display: inline-block;
+      }
+  </style>
+
+
+{% endblock %}
 {% block title %}
     {% trans %} Trang quản trị {% endtrans %}
 {% endblock %}
@@ -21,6 +36,9 @@
         <div class="col">
             <button class="btn btn-lg btn-primary btn-block form-control" onclick="location.href='{{ path('app_list_validate_organisation') }}'">
                 {% trans %}Yêu cầu tạo tổ chức{% endtrans %}
+                {% if nbWaitingOrganisation != 0 %}
+                <div class="dot">{{ nbWaitingOrganisation }}</div>
+                {% endif %}
             </button>
 
         </div>

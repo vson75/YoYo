@@ -55,6 +55,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $stmt->fetchAll();
     }
 
+    public function NumberWaitingOrganisation(){
+        return $this->createQueryBuilder('u')
+            ->select('count(distinct u.id)')
+            ->andWhere('u.askOrganisation = 1')
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
 
     /*
     public function findOneBySomeField($value): ?User

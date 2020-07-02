@@ -9,6 +9,7 @@ use App\Form\PostSearchType;
 use App\Form\StopPostType;
 use App\Repository\PostRepository;
 use App\Repository\TransactionRepository;
+use App\Repository\UserRepository;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -28,10 +29,12 @@ class AdminController extends AbstractController
      * @Route("/admin/overview", name="app_admin_overview")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function index()
+    public function index(UserRepository $userRepository)
     {
+        $number_waiting_validate_organisation = $userRepository->NumberWaitingOrganisation();
         return $this->render('admin/overview.html.twig',[
-                'userInfo' => $this->getUser()
+                'userInfo' => $this->getUser(),
+                'nbWaitingOrganisation' => $number_waiting_validate_organisation
             ]
         );
     }
@@ -106,6 +109,7 @@ class AdminController extends AbstractController
             'statusArray' => $statusArray
         ]);
     }
+
     /**
      * @Route("/admin/stopPost/{uniquekey}", name="admin_stop_post")
      */
@@ -186,7 +190,7 @@ class AdminController extends AbstractController
     /**
      * @Route("admin/list_validating_organisation", name="app_list_validate_organisation")
      */
-    public function listValidateOrganisation(){
+    public function listAskForOrganisationRole(){
 
         return $this->render('admin/list_waiting_organisation.html.twig',[
             'userInfo' => $this->getUser()

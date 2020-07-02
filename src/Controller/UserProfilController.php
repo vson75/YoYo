@@ -3,15 +3,20 @@
 namespace App\Controller;
 
 
+use App\Entity\DocumentType;
 use App\Entity\Post;
 use App\Entity\PostSearch;
 use App\Entity\PostStatus;
 use App\Entity\User;
+use App\Entity\UserDocument;
+use App\Form\CreateOrganisationType;
 use App\Form\PostSearchType;
 use App\Form\UserProfileFormType;
+use App\Repository\UserRepository;
 use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use PhpParser\Comment\Doc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -116,11 +121,95 @@ class UserProfilController extends AbstractController
     /**
      * @Route("/create_organisation", name="app_create_organisation")
      */
-    public function askForRoleOrganisation(){
+    public function askForRoleOrganisation(Request $request, EntityManagerInterface $em, UploadService $uploadService){
+        $user = $this->getUser();
+      //  dd($user);
+        $form = $this->createForm(CreateOrganisationType::class);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+
+            $repo = $em->getRepository(User::class);
+            $user = $repo->findOneBy([
+                'email' => $user->getUsername()
+            ]);
+            $user->setOrganisationName($form['OrganisationName']->getData());
+            $user->setCity($form['City']->getData());
+            $user->setZipcode($form['ZipCode']->getData());
+            $user->setCountry($form['Country']->getData());
+            $user->setAddress($form['Address']->getData());
+            $user->setPhoneNumber($form['PhoneNumber']->getData());
+            $user->setAskOrganisation(true);
+           // $user->setOrganisationName($form['Country']->getData());
+
+
+            $em->persist($user);
+            $em->flush();
+
+            $documentTypeRepo  = $em->getRepository(DocumentType::class);
+
+            $certificateOrganisation = $form['CertificateOrganisation']->getData();
+            $bankAccountInfo = $form['BankAccountInformation']->getData();
+            $award = $form['Awards']->getData();
+           // dd();
+            if(!is_null($certificateOrganisation)){
+                $userDocument = new UserDocument();
+                $document_type =  $documentTypeRepo->findOneBy([
+                   'id' => DocumentType::Certificate_organisation
+                ]);
+
+                $newFileName = $uploadService->UploadUserDocument($certificateOrganisation,$this->getUser()->getId(),DocumentType::Certificate_organisation);
+                $userDocument->setUser($this->getUser())
+                             ->setFilename($newFileName)
+                             ->setOriginalFilename($certificateOrganisation->getClientOriginalName())
+                             ->setDocumentType($document_type);
+
+                $em->persist($userDocument);
+                $em->flush();
+               // dd($userDocument);
+            }
+            if(!is_null($bankAccountInfo)){
+                $userDocument = new UserDocument();
+                $document_type =  $documentTypeRepo->findOneBy([
+                    'id' => DocumentType::Bank_account_information
+                ]);
+                $newFileName = $uploadService->UploadUserDocument($bankAccountInfo,$this->getUser()->getId(),DocumentType::Bank_account_information);
+
+                $userDocument->setUser($this->getUser())
+                    ->setFilename($newFileName)
+                    ->setOriginalFilename($bankAccountInfo->getClientOriginalName())
+                    ->setDocumentType($document_type);
+                $em->persist($userDocument);
+                $em->flush();
+             //   dd($userDocument);
+            }
+
+            if(!is_null($award)){
+                $userDocument = new UserDocument();
+                $document_type =  $documentTypeRepo->findOneBy([
+                    'id' => DocumentType::Awards_justification
+                ]);
+                $newFileName = $uploadService->UploadUserDocument($award,$this->getUser()->getId(),DocumentType::Awards_justification);
+
+                $userDocument->setUser($this->getUser())
+                    ->setFilename($newFileName)
+                    ->setOriginalFilename($award->getClientOriginalName())
+                    ->setDocumentType($document_type);
+                $em->persist($userDocument);
+                $em->flush();
+                //   dd($userDocument);
+            }
+
+
+           // dd($certificateOrganisation);
+
+            $this->addFlash('success','Yêu cầu tạo tài khoản cho phép đăng dự án của bạn đã gửi tới chúng tôi. Chúng tôi sẽ kiểm tra và gửi phản hồi lại cho bạn trong thời gian 24h');
+            return $this->redirectToRoute('app_homepage');
+        }
 
 
         return $this->render('organisation/create_organisation.html.twig', [
-            'userInfo' => $this->getUser()
+            'userInfo' => $this->getUser(),
+            'form' => $form->createView()
         ]);
     }
 

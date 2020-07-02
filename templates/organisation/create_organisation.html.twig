@@ -6,32 +6,63 @@
 
 {% block content_body %}
             <h1 style="text-align: center">Tạo tài khoản cho phép đăng dự án</h1>
+
+ {{ form_start(form)}}
+   <div>
     <p>
-        {% trans %}
-        Để đăng dự án lên trang của bọn mình, và nhằm đảm bảo tính minh bạch của thông tin, chúng tôi ưu tiên cho các tài khoản dưới danh nghĩa cá nhân hoặc tổ chức được công nhận bời chính phủ.
-        {% endtrans %}
+       {% trans %}
+          Để đăng dự án lên trang của bọn mình, và nhằm đảm bảo tính minh bạch của thông tin, chúng tôi ưu tiên cho các tài khoản dưới danh nghĩa tổ chức được công nhận bời chính phủ.
+       {% endtrans %}
 
     </p>
     <p>
-        {% trans %}
-            Chúng tôi yêu cầu các bạn cung cấp cho chúng tôi các thông tin sau đây:
+       {% trans %}
+          Chúng tôi yêu cầu các bạn cung cấp cho chúng tôi các thông tin sau đây (Lưu ý các file đính kèm không được quá 2M)
         {% endtrans %}
     </p>
-    <li>
-        {% trans %}Chứng minh nhân dân{% endtrans %}
-    </li>
-    <li>
-        {% trans %} Giấy chứng nhận tổ chức từ thiện {% endtrans %}
-    </li>
-    <li>
-        {% trans %}Bằng khen cấp cá nhân hoặc tổ chức dành cho các hoạt động từ thiện đã tham gia{% endtrans %}
-    </li>
-    <li>
-        {% trans %}Thông tin tài khoản ngân hàng{% endtrans %}
-    </li>
-    <li>
-        {% trans %}Số điện thoại liên lạc và địa chỉ{% endtrans %}
-    </li>
+ </div>
 
+    <div>
+        {{ form_row(form.OrganisationName) }}
+        {{ form_row(form.Address) }}
+
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.ZipCode) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.City) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.Country) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.PhoneNumber) }}
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.CertificateOrganisation) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.BankAccountInformation) }}
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col" >
+                {{ form_row(form.Awards) }}
+            </div>
+            <div class="col" >
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Dang ky </button>
+    {{ form_end(form)}}
 {% endblock %}
-

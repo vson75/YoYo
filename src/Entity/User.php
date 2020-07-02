@@ -94,6 +94,46 @@ class User implements UserInterface
      */
     private $icon;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isOrganisation;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $organisationName;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $address;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $zipcode;
+
+    /**
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    private $Country;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $phoneNumber;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $askOrganisation;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $City;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -386,6 +426,102 @@ class User implements UserInterface
     public function setIcon(?string $icon): self
     {
         $this->icon = $icon;
+
+        return $this;
+    }
+
+    public function getIsOrganisation(): ?bool
+    {
+        return $this->isOrganisation;
+    }
+
+    public function setIsOrganisation(?bool $isOrganisation): self
+    {
+        $this->isOrganisation = $isOrganisation;
+
+        return $this;
+    }
+
+    public function getOrganisationName(): ?string
+    {
+        return $this->organisationName;
+    }
+
+    public function setOrganisationName(?string $organisationName): self
+    {
+        $this->organisationName = $organisationName;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): self
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getZipcode(): ?string
+    {
+        return $this->zipcode;
+    }
+
+    public function setZipcode(?string $zipcode): self
+    {
+        $this->zipcode = $zipcode;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->Country;
+    }
+
+    public function setCountry(?string $Country): self
+    {
+        $this->Country = $Country;
+
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(?string $phoneNumber): self
+    {
+        $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
+
+    public function getAskOrganisation(): ?bool
+    {
+        return $this->askOrganisation;
+    }
+
+    public function setAskOrganisation(?bool $askOrganisation): self
+    {
+        $this->askOrganisation = $askOrganisation;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->City;
+    }
+
+    public function setCity(?string $City): self
+    {
+        $this->City = $City;
 
         return $this;
     }
