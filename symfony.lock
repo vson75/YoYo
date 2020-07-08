@@ -165,6 +165,9 @@
             "config/packages/knpu_oauth2_client.yaml"
         ]
     },
+    "league/flysystem": {
+        "version": "1.0.69"
+    },
     "league/oauth2-client": {
         "version": "2.4.1"
     },
@@ -210,6 +213,18 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.2.3"
+    },
+    "oneup/flysystem-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "0eb87bba411c227da027fe5f7c1dc7954b02f242"
+        },
+        "files": [
+            "config/packages/oneup_flysystem.yaml"
+        ]
     },
     "paypal/rest-api-sdk-php": {
         "version": "1.14.0"

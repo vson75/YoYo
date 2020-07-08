@@ -61,6 +61,62 @@ class CreateOrganisationType extends AbstractType
                     ])
                 ]
             ])
+            ->add('Awards1', FileType::class, [
+                'required'=>false,
+                'help' => 'dạng File PDF hoặc hình ảnh',
+                'constraints'=>[
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                            'image/*'
+                        ]
+                    ])
+                ]
+            ])
+            ->add('Awards2', FileType::class, [
+                'required'=>false,
+                'help' => 'dạng File PDF hoặc hình ảnh',
+                'constraints'=>[
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                            'image/*'
+                        ]
+                    ])
+                ]
+            ])
+            ->add('Awards3', FileType::class, [
+                'required'=>false,
+                'help' => 'dạng File PDF hoặc hình ảnh',
+                'constraints'=>[
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                            'image/*'
+                        ]
+                    ])
+                ]
+            ])
+            ->add('Awards4', FileType::class, [
+                'required'=>false,
+                'help' => 'dạng File PDF hoặc hình ảnh',
+                'constraints'=>[
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                            'image/*'
+                        ]
+                    ])
+                ]
+            ])
             ->add('PhoneNumber', TelType::class, [
                 'required'=>false
             ])

@@ -23,7 +23,7 @@
         <div class="col-md-8 col-xs-8 showpost">
 
             <!-- Preview Image -->
-            {% if postInfo.imagePath == 'uploads/post/image/' %}
+            {% if postInfo.imagePath == '/post/image/' %}
                 <div>
                     <img class="img-fluid rounded-custom img-post" src="{{ asset('uploads/post/default_img.jpeg') | imagine_filter('card_thumbnail_showpost') }}" alt="">
                     <div class="authorInfo rounded-custom">
@@ -34,7 +34,7 @@
 
             {% else %}
                 <div>
-                    <img class="img-fluid rounded-custom img-post" src="{{ asset(postInfo.imagePath) | imagine_filter('card_thumbnail_showpost') }}" alt="">
+                    <img class="img-fluid rounded-custom img-post" src="{{ postInfo.imagePath| imagine_filter('card_thumbnail_showpost') }}" alt="">
                     <div class="authorInfo rounded-custom">
                         {% trans %}Tạo bởi: {% endtrans %} {{ postInfo.user.firstname }} {{ postInfo.user.lastname }}
                     </div>

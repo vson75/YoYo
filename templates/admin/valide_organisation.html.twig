@@ -1,0 +1,71 @@
+{% extends 'content_base.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block content_body %}
+    <h1 style="text-align: center">{% trans %} Kiểm duyệt tổ chức {% endtrans %}</h1>
+
+    <table class="table table-striped">
+        <tr>
+            <th>{% trans %}Tên tổ chức:  {% endtrans %}</th>
+            <th>{{ organisationName }}</th>
+        </tr>
+        <tr>
+            <th>{% trans %}Địa chỉ:   {% endtrans %}</th>
+            <th>{{ address }}</th>
+        </tr>
+        <tr>
+            <th>{% trans %}Zipcode :  {% endtrans %}</th>
+            <th>{{ zipCode }}</th>
+        </tr>
+        <tr>
+            <th>{% trans %}Thành phố  {% endtrans %}</th>
+            <th>{{ city }}</th>
+        </tr>
+        <tr>
+            <th>{% trans %}Quốc gia  {% endtrans %}</th>
+            <th>{{ country }}</th>
+        </tr>
+        <tr>
+            <th>{% trans %}Số điện thoại liên lạc {% endtrans %}</th>
+            <th>{{ phone }}</th>
+        </tr>
+
+    </table>
+
+<hr>
+    <h2>{% trans %}Danh sách các tài liệu cần kiểm chứng {% endtrans %}</h2>
+
+    {% for document in userDocumentId %}
+            {% if document is not empty %}
+                <div class="row">
+                    <div class="col">
+                        {{ document.documentType.documentType }}
+                    </div>
+                    <div class="col">
+                        {{ document.originalFilename }}
+                        <span>
+                            <a href="{{ path('app_admin_download_user_document', {
+                                id: document.id
+                            }) }}"><span class="fa fa-download"></span></a>
+                        </span>
+                    </div>
+                </div>
+
+            {% endif %}
+
+    {% endfor %}
+{#
+    {% set url = "/uploads/documents/#{IDUserOrganisation}/#{certificate.Filename}" %}
+    {{ dump(url) }}
+
+    <a href="{{ path('app_admin_download_user_document',{ id: userDocumentId}) }}">
+        <span class="fa fa-download"></span></a>
+    </a>
+#}
+
+
+{% endblock %}
+

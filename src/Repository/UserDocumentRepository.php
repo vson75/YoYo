@@ -19,6 +19,31 @@ class UserDocumentRepository extends ServiceEntityRepository
         parent::__construct($registry, UserDocument::class);
     }
 
+    public function findDocumentByUserIdAndTypeDoc($user,$type){
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.user = :user')
+            ->andWhere('u.DocumentType = :type')
+            ->setParameter('user', $user)
+            ->setParameter('type', $type)
+            ->orderBy('u.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+    public function findAllDocumentByUserId($user,$type){
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.user = :user')
+            ->andWhere('u.DocumentType = :type')
+            ->setParameter('user', $user)
+            ->setParameter('type', $type)
+            ->orderBy('u.id', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return UserDocument[] Returns an array of UserDocument objects
     //  */

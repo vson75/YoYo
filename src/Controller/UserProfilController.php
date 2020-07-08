@@ -13,6 +13,7 @@ use App\Form\CreateOrganisationType;
 use App\Form\PostSearchType;
 use App\Form\UserProfileFormType;
 use App\Repository\UserRepository;
+use App\Service\Mailer;
 use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -69,7 +70,7 @@ class UserProfilController extends AbstractController
 
 
             if ($uploadedFile) {
-                $newFilename = $uploadService->UploadIconImage($uploadedFile, $user->getID());
+                $newFilename = $uploadService->UploadIconImage($uploadedFile, $user->getID(),$user->getIcon());
                 $user->setIcon($newFilename);
               //dd($user);
                 $em->persist($user);
@@ -121,7 +122,7 @@ class UserProfilController extends AbstractController
     /**
      * @Route("/create_organisation", name="app_create_organisation")
      */
-    public function askForRoleOrganisation(Request $request, EntityManagerInterface $em, UploadService $uploadService){
+    public function askForRoleOrganisation(Request $request, EntityManagerInterface $em, UploadService $uploadService, Mailer $mailer){
         $user = $this->getUser();
       //  dd($user);
         $form = $this->createForm(CreateOrganisationType::class);
@@ -152,55 +153,23 @@ class UserProfilController extends AbstractController
             $award = $form['Awards']->getData();
            // dd();
             if(!is_null($certificateOrganisation)){
-                $userDocument = new UserDocument();
-                $document_type =  $documentTypeRepo->findOneBy([
-                   'id' => DocumentType::Certificate_organisation
-                ]);
-
-                $newFileName = $uploadService->UploadUserDocument($certificateOrganisation,$this->getUser()->getId(),DocumentType::Certificate_organisation);
-                $userDocument->setUser($this->getUser())
-                             ->setFilename($newFileName)
-                             ->setOriginalFilename($certificateOrganisation->getClientOriginalName())
-                             ->setDocumentType($document_type);
-
-                $em->persist($userDocument);
-                $em->flush();
-               // dd($userDocument);
+                $uploadService->UploadUserDocumentByType(DocumentType::Certificate_organisation,$certificateOrganisation, $this->getUser());
+              //  dd($uploadService);
             }
             if(!is_null($bankAccountInfo)){
-                $userDocument = new UserDocument();
-                $document_type =  $documentTypeRepo->findOneBy([
-                    'id' => DocumentType::Bank_account_information
-                ]);
-                $newFileName = $uploadService->UploadUserDocument($bankAccountInfo,$this->getUser()->getId(),DocumentType::Bank_account_information);
-
-                $userDocument->setUser($this->getUser())
-                    ->setFilename($newFileName)
-                    ->setOriginalFilename($bankAccountInfo->getClientOriginalName())
-                    ->setDocumentType($document_type);
-                $em->persist($userDocument);
-                $em->flush();
-             //   dd($userDocument);
+                $uploadService->UploadUserDocumentByType(DocumentType::Bank_account_information,$bankAccountInfo, $this->getUser());
+                //  dd($uploadService);
             }
 
             if(!is_null($award)){
-                $userDocument = new UserDocument();
-                $document_type =  $documentTypeRepo->findOneBy([
-                    'id' => DocumentType::Awards_justification
-                ]);
-                $newFileName = $uploadService->UploadUserDocument($award,$this->getUser()->getId(),DocumentType::Awards_justification);
-
-                $userDocument->setUser($this->getUser())
-                    ->setFilename($newFileName)
-                    ->setOriginalFilename($award->getClientOriginalName())
-                    ->setDocumentType($document_type);
-                $em->persist($userDocument);
-                $em->flush();
+                $uploadService->UploadUserDocumentByType(DocumentType::Awards_justification,$award, $this->getUser());
+                //  dd($uploadService);
                 //   dd($userDocument);
             }
 
 
            // dd($certificateOrganisation);
+            $mailer->sendMailAlertToAdminWhenCreatingOrganisation();
 
             $this->addFlash('success','Yêu cầu tạo tài khoản cho phép đăng dự án của bạn đã gửi tới chúng tôi. Chúng tôi sẽ kiểm tra và gửi phản hồi lại cho bạn trong thời gian 24h');
             return $this->redirectToRoute('app_homepage');
@@ -212,5 +181,7 @@ class UserProfilController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+
 
 }

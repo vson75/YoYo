@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserDocumentRepository;
+use App\Service\UploadService;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,8 +37,19 @@ class UserDocument
     /**
      * @ORM\ManyToOne(targetEntity=DocumentType::class, inversedBy="userDocuments")
      * @ORM\JoinColumn(nullable=false)
+     *
      */
     private $DocumentType;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $depositDate;
+
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $mimeType;
 
     public function getId(): ?int
     {
@@ -90,5 +102,35 @@ class UserDocument
         $this->DocumentType = $DocumentType;
 
         return $this;
+    }
+
+    public function getDepositDate(): ?\DateTimeInterface
+    {
+        return $this->depositDate;
+    }
+
+    public function setDepositDate(?\DateTimeInterface $depositDate): self
+    {
+        $this->depositDate = $depositDate;
+
+        return $this;
+    }
+
+    public function getMimeType(): ?string
+    {
+        return $this->mimeType;
+    }
+
+    public function setMimeType(?string $mimeType): self
+    {
+        $this->mimeType = $mimeType;
+
+        return $this;
+    }
+
+
+    public function getDocumentUserPath(): string
+    {
+        return UploadService::User_document.$this->getUser()->getId().'/'.$this->getFilename();
     }
 }

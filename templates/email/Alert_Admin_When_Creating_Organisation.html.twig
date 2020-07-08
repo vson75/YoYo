@@ -1,0 +1,40 @@
+{% apply inline_css(source('@styles/email.css')) %}
+    <!doctype html>
+    <html lang="vn">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title></title>
+    </head>
+    <body>
+    <div class="body">
+        <div class="container">
+            <div class="header text-center">
+                <a href="{{ url('app_homepage') }}">
+                    <img src="{{ absolute_url(asset('images/logo.png')) }}" class="logo" alt="Logo">
+                </a>
+            </div>
+            <div class="content">
+                <h3 class="text-center">Tài khoản đăng ký tạo dự án</h3>
+                <p class="block">
+                    Có thêm 1 tài khoản đăng ký quyền tạo dự án trên site.
+
+                </p>
+                <p class="block">
+                    Bạn nhớ vào trang chủ admin để kiểm tra và cấp phép cho tài khoản !
+                </p>
+            </div>
+            <div class="footer">
+                <p class="block">
+                    Thân,<br><br>
+                    Yoyo
+                </p>
+                <p class="block bottom text-center">
+                    Dự án cua Viet Son NGUYEN
+                </p>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
+{% endapply %}

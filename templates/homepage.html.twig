@@ -16,6 +16,7 @@
                 <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-lg">{% trans %} Tạo dự án mới {% endtrans %}</a>
             {% else  %}
                 test
+                <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-lg">{% trans %} Tạo dự án mới {% endtrans %}</a>
             {% endif %}
         </header>
 
@@ -29,7 +30,7 @@
                     {% set diff = date(finish).diff(date(now)) %}
                     {% set leftDays = diff.days - 1 %}
                     {#if no image#}
-                    {% if post.imagePath == 'uploads/post/image/' %}
+                    {% if post.imagePath == '/post/image/' %}
 
                         <div>
                             <img class="card-img-top" src="{{ asset('uploads/post/default_img.jpeg') | imagine_filter('card_thumbnail_homepage')}}" alt="">
@@ -43,7 +44,7 @@
                         </div>
 
                     {% else %}
-                            <img class="card-img-top" src="{{ asset(post.imagePath) | imagine_filter('card_thumbnail_homepage')}}" alt="">
+                            <img class="card-img-top" src="{{ post.imagePath|imagine_filter('card_thumbnail_homepage')}}" alt="">
                         
     
                         {% if leftDays >10 %}

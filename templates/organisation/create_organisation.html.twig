@@ -55,14 +55,67 @@
                 {{ form_row(form.Awards) }}
             </div>
             <div class="col" >
+                <a onclick="addAwardInput()"> add awards</a>
+            </div>
+
+        </div>
+        <div class="row" >
+            <div class="col" id="awards_1" style="display: none;">
+                {{ form_row(form.Awards1) }}
+            </div>
+            <div class="col" >
 
             </div>
 
         </div>
+        <div class="row" >
+            <div class="col" id="awards_2" style="display: none;">
+                {{ form_row(form.Awards2) }}
+            </div>
+            <div class="col" >
 
+            </div>
+
+        </div>
+        <div class="row" >
+            <div class="col" id="awards_3" style="display: none;">
+                {{ form_row(form.Awards3) }}
+            </div>
+            <div class="col" >
+
+            </div>
+
+        </div>
+        <div class="row" >
+            <div class="col" id="awards_4" style="display: none;">
+                {{ form_row(form.Awards4) }}
+            </div>
+            <div class="col" >
+
+            </div>
+
+        </div>
     </div>
+
 
 
     <button type="submit" class="btn btn-primary">Dang ky </button>
     {{ form_end(form)}}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+    <script>
+        function addAwardInput() {
+            var i;
+            for (i = 1; i < 5; i++) {
+                var Id = 'awards_'+i;
+                var x = document.getElementById(Id);
+                if (x.style.display === "none") {
+                    x.style.display = "block";
+                    break;
+                }
+            }
+        }
+    </script>
 {% endblock %}

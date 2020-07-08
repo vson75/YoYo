@@ -5,6 +5,25 @@
 {% endblock %}
 
 {% block content_body %}
+    <div>
+        <h1>{% trans %} Danh sách các tổ chức đang chờ được kiểm duyệt {% endtrans %}</h1>
+        <table class="table table-striped">
+            <tr>
+                <th>{% trans %} Tên tổ chức {% endtrans %}</th>
+                <th>{% trans %} Email user  {% endtrans %}</th>
+                <th>{% trans %} Kiểm duyệt  {% endtrans %}</th>
+            </tr>
+            {% for list_organisation in pagination %}
+                <tr>
+                    <th>{{ list_organisation.getOrganisationName }}</th>
+                    <th>{{ list_organisation.email }}</th>
+                    <th> <button onclick="location.href='{{ path('app_admin_valide_organisation', {userId: list_organisation.id}) }}'">{% trans %} Kiểm duyệt{% endtrans %}</button></th>
+                </tr>
+
+            {% endfor %}
+        </table>
+        {{ knp_pagination_render(pagination) }}
+    </div>
 
 {% endblock %}
 

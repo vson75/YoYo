@@ -7,15 +7,20 @@ namespace App\Service;
 use App\Entity\Post;
 use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Mailer\MailerInterface;
 
 class Mailer
 {
     private $mailer;
+    private $admin_email;
 
-    public function __construct(MailerInterface $mailer)
+
+    public function __construct(MailerInterface $mailer, $admin_email)
     {
         $this->mailer = $mailer;
+        $this->admin_email = $admin_email;
+
     }
 
     public function SendMailPassword(User $user,$token, $tokenCreateAt, $template, $subject){
@@ -84,5 +89,17 @@ class Mailer
 
         $this->mailer->send($email);
     }
+
+
+    public function sendMailAlertToAdminWhenCreatingOrganisation(){
+        $email = (new TemplatedEmail())
+            ->from($this->admin_email)
+            ->to($this->admin_email)
+            ->subject('New organisation was created')
+            ->htmlTemplate('email/Alert_Admin_When_Creating_Organisation.html.twig')
+           ;
+        $this->mailer->send($email);
+    }
+
 
 }

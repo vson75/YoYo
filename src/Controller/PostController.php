@@ -214,7 +214,7 @@ class PostController extends AbstractController
             $uploadedFile = $form['imageFile']->getData();
 
             if ($uploadedFile) {
-                $newFilename = $uploadService->UploadPostImage($uploadedFile);
+                $newFilename = $uploadService->UploadPostImage($uploadedFile, $postExisted->getImageFilename());
                 $createNew->setImageFilename($newFilename);
             }
 
@@ -320,7 +320,7 @@ class PostController extends AbstractController
             $uploadedFile = $form['imageFile']->getData();
 
             if ($uploadedFile) {
-                $newFilename = $uploadService->UploadPostImage($uploadedFile);
+                $newFilename = $uploadService->UploadPostImage($uploadedFile, $post->getImageFilename());
                 $updatePost->setImageFilename($newFilename);
             }
            
