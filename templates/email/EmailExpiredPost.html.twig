@@ -18,12 +18,11 @@
             </div>
 
             <div class="content">
-                <h3 class="text-center"></h3>
+                <h1 class="text-center">Dự án: {{ post_name }} đã tới hạn chót.</h1>
+
                 <div class="block">
-                    Dự án: {{ post_name }} của bạn đã tới hạn chót.
-                </div>
-                <div class="block">
-                    Tới thời điểm hiện tại, bạn đã quyên góp được: {{ collected_amount }} / {{ target_amount }} € tại YoYo.
+                    Xin chảo bạn.
+                    Tới thời điểm hiện tại, bạn đã quyên góp được: {{ collected_amount }} / {{ target_amount }} € cho dự án {{ post_name }} tại YoYo.
                 </div>
 
                 {% if collected_amount < target_amount %}

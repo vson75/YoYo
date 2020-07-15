@@ -12,12 +12,17 @@
 
             <h1 class="display-3">{% trans %} A Warm Welcome! {% endtrans %}</h1>
             <p class="lead">{% trans %} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat. {% endtrans %}</p>
-            {% if is_granted('ROLE_ORGANISATION') or is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-lg">{% trans %} Tạo dự án mới {% endtrans %}</a>
-            {% else  %}
-                test
-                <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-lg">{% trans %} Tạo dự án mới {% endtrans %}</a>
+
+            {% if userInfo is not null %}
+                {% if is_granted('ROLE_ORGANISATION') or is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-lg">{% trans %} Tạo dự án mới {% endtrans %}</a>
+                {% elseif userInfo.askOrganisation == true  and userInfo.isOrganisation == false %}
+                    <a href="{{ path('app_edit_organisation_info', {'id': userInfo.Id}) }}" class="btn btn-warning btn-lg">{% trans %}Thay đổi thông tin tổ chức{% endtrans %}</a>
+                {% else %}
+                    <a href="{{ path('app_create_organisation') }}" class="btn btn-primary btn-lg">{% trans %} Tạo tài khoản tổ chức{% endtrans %}</a>
+                {% endif %}
             {% endif %}
+
         </header>
 
         <!-- Page Features -->

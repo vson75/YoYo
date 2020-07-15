@@ -2,14 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\UserDocumentRepository;
-use App\Service\UploadService;
+use App\Repository\OrganisationDocumentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=UserDocumentRepository::class)
+ * @ORM\Entity(repositoryClass=OrganisationDocumentRepository::class)
  */
-class UserDocument
+class OrganisationDocument
 {
     /**
      * @ORM\Id()
@@ -19,8 +18,7 @@ class UserDocument
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="userDocuments")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="organisationDocuments")
      */
     private $user;
 
@@ -30,21 +28,14 @@ class UserDocument
     private $filename;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $originalFilename;
+    private $original_filename;
 
     /**
-     * @ORM\ManyToOne(targetEntity=DocumentType::class, inversedBy="userDocuments")
-     * @ORM\JoinColumn(nullable=false)
-     *
+     * @ORM\ManyToOne(targetEntity=DocumentType::class, inversedBy="organisationDocuments")
      */
-    private $DocumentType;
-
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $depositDate;
+    private $documentTypeId;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
@@ -82,36 +73,24 @@ class UserDocument
 
     public function getOriginalFilename(): ?string
     {
-        return $this->originalFilename;
+        return $this->original_filename;
     }
 
-    public function setOriginalFilename(string $originalFilename): self
+    public function setOriginalFilename(?string $original_filename): self
     {
-        $this->originalFilename = $originalFilename;
+        $this->original_filename = $original_filename;
 
         return $this;
     }
 
-    public function getDocumentType(): ?DocumentType
+    public function getDocumentTypeId(): ?DocumentType
     {
-        return $this->DocumentType;
+        return $this->documentTypeId;
     }
 
-    public function setDocumentType(?DocumentType $DocumentType): self
+    public function setDocumentTypeId(?DocumentType $documentTypeId): self
     {
-        $this->DocumentType = $DocumentType;
-
-        return $this;
-    }
-
-    public function getDepositDate(): ?\DateTimeInterface
-    {
-        return $this->depositDate;
-    }
-
-    public function setDepositDate(?\DateTimeInterface $depositDate): self
-    {
-        $this->depositDate = $depositDate;
+        $this->documentTypeId = $documentTypeId;
 
         return $this;
     }
@@ -127,5 +106,4 @@ class UserDocument
 
         return $this;
     }
-
 }

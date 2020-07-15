@@ -6,38 +6,57 @@
 
 {% block content_body %}
     <h1 style="text-align: center">{% trans %} Kiểm duyệt tổ chức {% endtrans %}</h1>
+    <hr>
+    <div class="row">
+        <div class="col">
+            <h2>{% trans %}Thông tin cơ bản của tổ chức {% endtrans%}</h2>
+        </div>
+        <div class="col">
+            {% if organisationInfo.requestStatus.id == statusArray['Request_Sent'] %}
+
+            <a href="{{ path('app_admin_validateInfo_organisation', {userId: IDUserOrganisation}) }}" class="btn btn-primary"><span>{% trans %}Duyệt thông tin{% endtrans %}</span></a>
+            <a href="{{ path('app_admin_needMoreInfo_organisation', {userId: IDUserOrganisation}) }}" class="btn btn-warning"><span>{% trans %}Yêu cầu bổ sung{% endtrans %}</span></a>
+            {% elseif organisationInfo.requestStatus.id == statusArray['Request_Validated'] %}
+                <a href="" class="btn" style="background-color: forestgreen"><span>{% trans %}Thông tin đã được kiểm duyệt{% endtrans %}</span></a>
+            {% elseif organisationInfo.requestStatus.id == statusArray['Request_Information_tobe_completed'] %}
+                <a href="" class="btn" style="background-color: orange"><span>{% trans %}Thông tin cần bổ sung{% endtrans %}</span></a>
+            {% endif %}
+        </div>
+    </div>
+
+
+
 
     <table class="table table-striped">
         <tr>
             <th>{% trans %}Tên tổ chức:  {% endtrans %}</th>
-            <th>{{ organisationName }}</th>
+            <th>{{ organisationInfo.organisationName }}</th>
         </tr>
         <tr>
             <th>{% trans %}Địa chỉ:   {% endtrans %}</th>
-            <th>{{ address }}</th>
+            <th>{{ organisationInfo.address }}</th>
         </tr>
         <tr>
             <th>{% trans %}Zipcode :  {% endtrans %}</th>
-            <th>{{ zipCode }}</th>
+            <th>{{ organisationInfo.zipCode }}</th>
         </tr>
         <tr>
             <th>{% trans %}Thành phố  {% endtrans %}</th>
-            <th>{{ city }}</th>
+            <th>{{ organisationInfo.city }}</th>
         </tr>
         <tr>
             <th>{% trans %}Quốc gia  {% endtrans %}</th>
-            <th>{{ country }}</th>
+            <th>{{ organisationInfo.country }}</th>
         </tr>
         <tr>
             <th>{% trans %}Số điện thoại liên lạc {% endtrans %}</th>
-            <th>{{ phone }}</th>
+            <th>{{ organisationInfo.getPhonenumber }}</th>
         </tr>
 
     </table>
 
 <hr>
     <h2>{% trans %}Danh sách các tài liệu cần kiểm chứng {% endtrans %}</h2>
-
     {% for document in userDocumentId %}
             {% if document is not empty %}
                 <div class="row">
@@ -47,16 +66,72 @@
                     <div class="col">
                         {{ document.originalFilename }}
                         <span>
-                            <a href="{{ path('app_admin_download_user_document', {
+                            <a href="{{ path('app_download_user_document', {
                                 id: document.id
                             }) }}"><span class="fa fa-download"></span></a>
                         </span>
+                    </div>
+                    <div class="col">
+                        {% if document.requestStatus.id == statusArray['Request_Sent'] %}
+                        <a href="{{ path('app_admin_validateDocument', {userId: IDUserOrganisation, id: document.id}) }}" class="btn btn-primary"><span>{% trans %}Duyệt thông tin{% endtrans %}</span></a>
+                        <a href="{{ path('app_admin_tobe_complete_Document', {userId: IDUserOrganisation, id: document.id}) }}" class="btn btn-warning"><span>{% trans %}Yêu cầu bổ sung{% endtrans %}</span></a>
+                        {% elseif document.requestStatus.id == statusArray['Request_Validated'] %}
+                            <a href="" class="btn" style="background-color: forestgreen"><span>{% trans %}Thông tin đã được kiểm duyệt{% endtrans %}</span></a>
+                        {% elseif document.requestStatus.id == statusArray['Request_Information_tobe_completed'] %}
+                            <a href="" class="btn" style="background-color: orange"><span>{% trans %}Thông tin cần bổ sung{% endtrans %}</span></a>
+                        {% endif %}
                     </div>
                 </div>
 
             {% endif %}
 
     {% endfor %}
+
+    {% if award_document is not empty %}
+        {% for award in award_document %}
+            <div class="row">
+                <div class="col">
+                    {{ award.documentType.documentType }}
+                </div>
+                <div class="col">
+                    {{ award.originalFilename }}
+                    <span>
+                            <a href="{{ path('app_download_user_document', {
+                                id: award.id
+                            }) }}"><span class="fa fa-download"></span></a>
+                        </span>
+                </div>
+                <div class="col">
+                    {% if award.requestStatus.id == statusArray['Request_Sent'] %}
+                    <a href="{{ path('app_admin_validateDocument', {userId: IDUserOrganisation, id: award.id}) }}" class="btn btn-primary"><span>{% trans %}Duyệt thông tin{% endtrans %}</span></a>
+                    <a href="{{ path('app_admin_tobe_complete_Document', {userId: IDUserOrganisation, id: award.id}) }}" class="btn btn-warning"><span>{% trans %}Yêu cầu bổ sung{% endtrans %}</span></a>
+                    {% elseif award.requestStatus.id == statusArray['Request_Validated'] %}
+                        <a class="btn" style="background-color: forestgreen"><span>{% trans %}Thông tin đã được kiểm duyệt{% endtrans %}</span></a>
+                    {% elseif award.requestStatus.id == statusArray['Request_Information_tobe_completed'] %}
+                        <a class="btn" style="background-color: orange"><span>{% trans %}Thông tin cần bổ sung{% endtrans %}</span></a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <hr>
+    <h2>{% trans %}Quyết định của admin{% endtrans %}</h2>
+<div class="row">
+    <div class="col">
+        <a href="{{ path('app_admin_allow_to_be_organisation', {userId: IDUserOrganisation}) }}" class="btn btn-primary"><span>{% trans %}Cho phép đăng dự án {% endtrans %}</span></a>
+    </div>
+    <div class="col">
+        <a href="{{ path('app_admin_Demande_info_Organisation', {userId: IDUserOrganisation, choice:"ask"}) }}" class="btn btn-warning"><span>{% trans %}Yêu cầu bổ sung thông tin{% endtrans %}</span></a>
+    </div>
+    <div class="col">
+        <a href="" class="btn btn-danger"><span>{% trans %}Không cho phép tạo tài khoản tổ chức{% endtrans %}</span></a>
+    </div>
+</div>
+
+
+
+
 {#
     {% set url = "/uploads/documents/#{IDUserOrganisation}/#{certificate.Filename}" %}
     {{ dump(url) }}

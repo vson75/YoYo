@@ -16,8 +16,8 @@
             {% for list_organisation in pagination %}
                 <tr>
                     <th>{{ list_organisation.getOrganisationName }}</th>
-                    <th>{{ list_organisation.email }}</th>
-                    <th> <button onclick="location.href='{{ path('app_admin_valide_organisation', {userId: list_organisation.id}) }}'">{% trans %} Kiểm duyệt{% endtrans %}</button></th>
+                    <th>{{ list_organisation.user.email }}</th>
+                    <th> <button onclick="location.href='{{ path('app_admin_viewDetail_asking_organisation', {userId: list_organisation.user.id}) }}'">{% trans %} Kiểm duyệt{% endtrans %}</button></th>
                 </tr>
 
             {% endfor %}

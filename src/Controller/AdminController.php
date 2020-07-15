@@ -6,11 +6,17 @@ use App\Entity\DocumentType;
 use App\Entity\Post;
 use App\Entity\PostSearch;
 use App\Entity\PostStatus;
+use App\Entity\RequestOrganisationDocument;
+use App\Entity\RequestOrganisationInfo;
+use App\Entity\RequestStatus;
 use App\Entity\User;
 use App\Entity\UserDocument;
 use App\Form\PostSearchType;
 use App\Form\StopPostType;
 use App\Repository\PostRepository;
+use App\Repository\RequestOrganisationDocumentRepository;
+use App\Repository\RequestOrganisationInfoRepository;
+use App\Repository\RequestStatusRepository;
 use App\Repository\TransactionRepository;
 use App\Repository\UserDocumentRepository;
 use App\Repository\UserRepository;
@@ -178,15 +184,6 @@ class AdminController extends AbstractController
 
         $em->flush();
 
-        /**
-
-        $user_post = $post->getUser();
-        $template = 'email/EmailPublicOrStopPost.html.twig';
-        $subject = 'Tạm ngưng dự án của bạn tại YoYo';
-        $mailer->sendMailAdminStopOrPublishedPost($user_post,$post,$template,$subject,$context);
-
-         */
-        // dd(htmlspecialchars_decode($context));
 
         $this->addFlash('success', 'Post status changed');
         return $this->redirectToRoute('admin_show_post', [
@@ -197,9 +194,9 @@ class AdminController extends AbstractController
     /**
      * @Route("admin/list_validating_organisation", name="app_list_validate_organisation")
      */
-    public function listAskForOrganisationRole(UserRepository $userRepository, PaginatorInterface $paginator, Request $request){
+    public function listAskForOrganisationRole(RequestOrganisationInfoRepository $requestOrganisationInfoRepository, PaginatorInterface $paginator, Request $request){
 
-        $waiting_organisation = $userRepository->getDetailWaitingOrganisation();
+        $waiting_organisation = $requestOrganisationInfoRepository->getDetailWaitingOrganisation();
         $pagination = $paginator->paginate(
             $waiting_organisation, /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
@@ -213,9 +210,9 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("admin/control_demande_organisation/{userId}", name="app_admin_valide_organisation")
+     * @Route("admin/control_demande_organisation/{userId}", name="app_admin_viewDetail_asking_organisation")
      */
-    public function ControleOrganisation($userId, UserRepository $userRepository, EntityManagerInterface $em, UserDocumentRepository $documentRepository){
+    public function ControleOrganisation($userId, UserRepository $userRepository, EntityManagerInterface $em, RequestOrganisationDocumentRepository $requestOrganisationDocumentRepository){
 
         $checkUser = $userRepository->checkUserIsCreatingOrganisation($userId);
         if(empty($checkUser)){
@@ -223,24 +220,24 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('app_homepage');
         }
 
-        $userInfo = $em->getRepository(User::class)->findOneBy([
-            'id' => $userId
+        $OrganisationInfo = $em->getRepository(RequestOrganisationInfo::class)->findOneBy([
+            'user' => $userId
         ]);
-        $organisationName = $userInfo->getOrganisationname();
-        $address = $userInfo->getAddress();
-        $zipCode = $userInfo->getZipcode();
-        $city = $userInfo->getCity();
-        $country = $userInfo->getCountry();
-        $phone = $userInfo->getPhonenumber();
 
-        $userDocumentId = [DocumentType::Certificate_organisation,DocumentType::Bank_account_information,DocumentType::Awards_justification];
+
+        $userDocumentId = [DocumentType::Certificate_organisation,DocumentType::Bank_account_information];
        // $userdocumentId  = $userDocument->getId();
 
         for($i = 0; $i <sizeof($userDocumentId); $i++){
-                $document[$i] = $documentRepository->findDocumentByUserIdAndTypeDoc($userId,$userDocumentId[$i]);
+                $document[$i] = $requestOrganisationDocumentRepository->findLastDocumentByUserIdAndTypeDoc($userId,$userDocumentId[$i]);
         }
 
-        $certificateOrganisation = $documentRepository->findDocumentByUserIdAndTypeDoc($userId,DocumentType::Certificate_organisation);
+        $award_documents = $requestOrganisationDocumentRepository->findAllDocumentByUserId($userId,DocumentType::Awards_justification);
+
+
+        // get all content in RequestStatus
+        $requestStatus = new \ReflectionClass('App\Entity\RequestStatus');
+        $statusArray = $requestStatus->getConstants();
 
         //dd($certificateOrganisation);
 
@@ -248,37 +245,219 @@ class AdminController extends AbstractController
             'userInfo' => $this->getUser(),
             'userDocumentId' => $document,
             'IDUserOrganisation' => $userId,
-            'organisationName' => $organisationName,
-            'zipCode' => $zipCode,
-            'city' => $city,
-            'country' => $country,
-            'address' => $address,
-            'phone' => $phone,
-            'certificate' => $certificateOrganisation
+            'organisationInfo' => $OrganisationInfo,
+            'award_document' => $award_documents,
+            'statusArray' => $statusArray
         ]);
     }
 
 
     /**
-     * @Route("/admin/user/document/donwload/{id}", name="app_admin_download_user_document",methods={"GET"})
+     * @Route("/admin/allow_to_be_organisation/{userId}", name="app_admin_allow_to_be_organisation")
      */
-    public function AdminDownloadUserDocument(UserDocument $userDocument, UploadService $uploadService){
-       // dd($userDocument->getDocumentUserPath());
-        $response = new StreamedResponse(function() use ($userDocument, $uploadService) {
-            $outputStream = fopen('php://output', 'wb');
-            $fileStream = $uploadService->readStream($userDocument->getDocumentUserPath(), false);
-            stream_copy_to_stream($fileStream, $outputStream);
-        });
-        $response->headers->set('Content-Type', $userDocument->getMimeType());
+    public function AllowTobeOrganisation($userId, UserRepository $userRepository, EntityManagerInterface $em, Mailer $mailer, RequestOrganisationInfoRepository $infoRepository, RequestStatusRepository $requestStatus, RequestOrganisationDocumentRepository $requestDocument){
+        $user = $userRepository->findOneBy([
+           'id' => $userId
+        ]);
+        $role = ['ROLE_ORGANISATION'];
 
-        // Forced download instead of show in the new table
-        $disposition = HeaderUtils::makeDisposition(
-            HeaderUtils::DISPOSITION_ATTACHMENT,
-            $userDocument->getOriginalFilename()
+        $user->setIsOrganisation(true)
+             ->setAskOrganisation(false)
+             ->setRoles($role);
+        $em->persist($user);
+        $em->flush();
+
+        $validateStatus = $requestStatus->findOneBy([
+           'id' => RequestStatus::Request_Validated
+        ]);
+
+        $requestInfo = $infoRepository->findOneBy([
+            'user' => $userId
+        ]);
+        //dd($validateStatus);
+
+        $requestInfo->setRequestStatus($validateStatus);
+
+        $em->persist($requestInfo);
+        $em->flush();
+        //dump($user);
+        $document = $requestDocument->findBy([
+            'user' => $userId
+        ]);
+
+        for($i=0;$i<sizeof($document);$i++){
+            $document[$i]->setRequestStatus($validateStatus);
+            $em->persist($document[$i]);
+            $em->flush();
+        }
+
+
+        $mailer->sendMailCongratulationNewOrganisation($user);
+
+        $this->addFlash('success','Yêu cầu tạo tổ chức đã được kiểm định. 1 email sẽ được gửi tới người sử dụng');
+        return $this->redirectToRoute('app_admin_overview');
+    }
+
+
+    /**
+     * @Route("/admin/valide/Info/organisation/{userId}", name="app_admin_validateInfo_organisation")
+     */
+    public function validateInfoOrganisation($userId, RequestStatusRepository $statusRepository, EntityManagerInterface $em){
+
+        $status = $statusRepository->findOneBy([
+            'id' => RequestStatus::Request_Validated
+        ]);
+
+        $request =  $em->getRepository(RequestOrganisationInfo::class)->findOneBy([
+           'user' =>  $userId
+        ]);
+        $request->setRequestStatus($status);
+       // dd($request);
+
+        $em->persist($request);
+        $em->flush();
+
+        $this->addFlash("success","OK. This document has been verified");
+
+        return $this->redirectToRoute("app_admin_viewDetail_asking_organisation", [
+            'userId' => $userId
+        ]);
+    }
+
+
+
+    /**
+     * @Route("/admin/ask_more_detail/Info/organisation/{userId}", name="app_admin_needMoreInfo_organisation")
+     */
+    public function NeedMoreInfoOrganisation($userId,RequestOrganisationInfo $requestInfo, RequestStatusRepository $statusRepository, EntityManagerInterface $em, RequestOrganisationInfoRepository $infoRepo){
+
+        $status = $statusRepository->findOneBy([
+            'id' => RequestStatus::Request_Information_tobe_completed
+        ]);
+
+        $request =  $infoRepo->findOneBy([
+            'user' =>  $userId
+        ]);
+        $request->setRequestStatus($status);
+        //  dd($requestOrganisationDocument);
+
+        $em->persist($requestInfo);
+        $em->flush();
+
+        $this->addFlash("success","OK. This document has been verified");
+
+        return $this->redirectToRoute("app_admin_viewDetail_asking_organisation", [
+            'userId' => $userId
+        ]);
+    }
+
+    /**
+     * @Route("/admin/valide/document/organisation/{userId}/{id}", name="app_admin_validateDocument")
+     */
+    public function validateDocumentOrganisation($userId,RequestOrganisationDocument $requestOrganisationDocument, RequestStatusRepository $statusRepository, EntityManagerInterface $em){
+
+        $status = $statusRepository->findOneBy([
+           'id' => RequestStatus::Request_Validated
+        ]);
+        $requestOrganisationDocument->setRequestStatus($status);
+      //  dd($requestOrganisationDocument);
+
+        $em->persist($requestOrganisationDocument);
+        $em->flush();
+
+        $this->addFlash("success","OK. This document has been verified");
+
+        return $this->redirectToRoute("app_admin_viewDetail_asking_organisation", [
+            'userId' => $userId
+        ]);
+    }
+
+    /**
+     * @Route("/admin/ask_more_detail/document/organisation/{userId}/{id}", name="app_admin_tobe_complete_Document")
+     */
+    public function NeedMoreDocumentOrganisation($userId,RequestOrganisationDocument $requestOrganisationDocument, RequestStatusRepository $statusRepository, EntityManagerInterface $em){
+
+        $status = $statusRepository->findOneBy([
+            'id' => RequestStatus::Request_Information_tobe_completed
+        ]);
+        $requestOrganisationDocument->setRequestStatus($status);
+        //  dd($requestOrganisationDocument);
+
+        $em->persist($requestOrganisationDocument);
+        $em->flush();
+
+        $this->addFlash("success","OK. This document has been checked");
+
+        return $this->redirectToRoute("app_admin_viewDetail_asking_organisation", [
+            'userId' => $userId
+        ]);
+    }
+
+    /**
+     * @Route("/admin/Demande_info/organisation/{userId}/{choice}<ask|stop>", name="app_admin_Demande_info_Organisation")
+     */
+    public function askMoreInfoOrStopOrganisation($userId,$choice ,Request $request, Mailer $mailer, UserRepository $userRepository, RequestStatusRepository $statusRepository, EntityManagerInterface $em){
+        $form = $this->createForm(StopPostType::class);
+        $form->handleRequest($request);
+        $user = $userRepository->findOneBy([
+           'id' => $userId
+        ]);
+
+        $requestInfo = $em->getRepository(RequestOrganisationInfo::class)->findOneBy([
+            'user' => $userId
+        ]);
+
+        if($choice == "ask"){
+            if($form->isSubmitted() && $form->isValid()){
+
+                $status = $statusRepository->findOneBy([
+                    'id' => RequestStatus::Request_Information_tobe_completed
+                ]);
+
+                $raison = $form['Raison']->getData();
+
+                $requestInfo->setRequestStatus($status);
+                //  dd($requestOrganisationDocument);
+
+                $em->persist($requestInfo);
+                $em->flush();
+
+                $mailer->sendMailAskMoreInfoOrStopAboutOrganisation($choice, $user, $raison);
+
+                $this->addFlash("success", "1 email sent for user with the content");
+
+
+                return $this->redirectToRoute('app_list_validate_organisation');
+            }
+        }elseif ($choice = "stop"){
+            if($form->isSubmitted() && $form->isValid()){
+
+                $status = $statusRepository->findOneBy([
+                    'id' => RequestStatus::Request_Cancelled
+                ]);
+
+                $requestInfo->setRequestStatus($status);
+                //  dd($requestOrganisationDocument);
+
+                $em->persist($requestInfo);
+                $em->flush();
+
+                $raison = $form['Raison']->getData();
+                $mailer->sendMailAskMoreInfoOrStopAboutOrganisation($choice, $user, $raison);
+
+                $this->addFlash("success", "1 email sent for user with the content");
+                return $this->redirectToRoute('app_list_validate_organisation');
+            }
+        }
+
+
+
+        return $this->render('admin/demandeInfo_Organisation.htlm.twig',
+        [
+            'form' => $form->createView(),
+            'userInfo' => $this->getUser()
+        ]
         );
-        $response->headers->set('Content-Disposition', $disposition);
-
-        return $response;
     }
 
 

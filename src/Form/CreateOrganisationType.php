@@ -3,6 +3,8 @@
 namespace App\Form;
 
 
+use App\Entity\RequestOrganisationDocument;
+use App\Entity\RequestOrganisationInfo;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -47,7 +49,7 @@ class CreateOrganisationType extends AbstractType
                     ])
                 ]
             ])
-            ->add('Awards', FileType::class, [
+            ->add('Awards0', FileType::class, [
                 'required'=>false,
                 'help' => 'dạng File PDF hoặc hình ảnh',
                 'constraints'=>[

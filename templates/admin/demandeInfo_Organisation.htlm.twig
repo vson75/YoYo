@@ -1,0 +1,17 @@
+{% extends 'content_base.html.twig' %}
+
+
+{% block content_body %}
+    <h1 style="text-align: center">{% trans %} Yêu cầu thêm thông tin của tổ chức{% endtrans %}</h1>
+    {{ form_start(form) }}
+    {{ form_row(form.Raison, {
+        label: 'Yêu cầu thêm thông tin',
+        attr: {
+            'placeholder': 'Ghi chi tiết vào đây các thông tin còn thiếu để'
+        }
+    }) }}
+
+    <button type="submit" class="btn btn-primary">{% trans %} Yêu cầu thêm thông tin{% endtrans %}</button>
+    {{ form_end(form) }}
+
+{% endblock %}

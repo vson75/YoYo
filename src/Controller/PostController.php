@@ -328,11 +328,6 @@ class PostController extends AbstractController
             $em->persist($updatePost);
             $em->flush();
             $this->addFlash('success', 'Sửa đổi thành công');
-            $repo = $em->getRepository(Post::class);
-            $postUpdated = $repo->findOneBy([
-                'uniquekey' => $uniquekey,
-            ]);
-
 
             return $this->redirectToRoute('show_post',[
                 'uniquekey' => $uniquekey,

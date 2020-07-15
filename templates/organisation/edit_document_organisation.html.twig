@@ -1,0 +1,215 @@
+{% extends 'content_base.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block content_body %}
+{{ form_start(form) }}
+    <h1 style="text-align: center">{% trans %}Thêm/thay đổi tài liệu {% endtrans %}</h1>
+    <hr>
+    <div class="row">
+        <div class="col-6">
+            {{ form_row(form.Document0)
+            }}
+
+        </div>
+        <div class="col-4">
+            {{ form_row(form.DocType0) }}
+        </div>
+        <div class="col-2">
+            <a onclick="addDocumentInput()" style="">{% trans %}Thêm tài liệu {% endtrans %}</a>
+        </div>
+
+    </div>
+
+    <div class="row"  id="awards_1" style="display: none;">
+        <div class="col-6" >
+            {{ form_row(form.Document1) }}
+        </div>
+        <div class="col-4" >
+            {{ form_row(form.DocType1) }}
+        </div>
+        <div id ="delete1" class="col-2" style="display: none;">
+            <a onclick="removeDocumentInput()" style="">{% trans %}Xoá bỏ tài liệu{% endtrans %}</a>
+        </div>
+    </div>
+
+
+    <div class="row" id="awards_2" style="display: none;">
+        <div class="col-6">
+            {{ form_row(form.Document2) }}
+        </div>
+        <div class="col-4" >
+            {{ form_row(form.DocType2) }}
+        </div>
+        <div id ="delete2" class="col-2" style="display: none;">
+            <a onclick="removeDocumentInput()" style="">{% trans %}Xoá bỏ tài liệu{% endtrans %}</a>
+        </div>
+
+    </div>
+
+    <div class="row" id="awards_3" style="display: none;">
+        <div class="col-6">
+            {{ form_row(form.Document3) }}
+        </div>
+        <div class="col-4" >
+            {{ form_row(form.DocType3) }}
+        </div>
+        <div id ="delete3" class="col-2">
+            <a onclick="removeDocumentInput()" style="">{% trans %}Xoá bỏ tài liệu{% endtrans %}</a>
+        </div>
+
+    </div>
+
+
+
+    <div class="row"  id="awards_4" style="display: none;">
+        <div class="col-6">
+            {{ form_row(form.Document4) }}
+        </div>
+        <div class="col-4" >
+            {{ form_row(form.DocType4) }}
+        </div>
+        <div id ="delete4" class="col-2">
+            <a onclick="removeDocumentInput()" style="">{% trans %}Xoá bỏ tài liệu{% endtrans %}</a>
+        </div>
+
+    </div>
+
+
+    <div class="row"  id="awards_5" style="display: none;">
+        <div class="col-6">
+            {{ form_row(form.Document5) }}
+        </div>
+        <div class="col-4" >
+            {{ form_row(form.DocType5) }}
+        </div>
+        <div id ="delete5" class="col-2">
+            <a onclick="removeDocumentInput()" style="">{% trans %}Xoá bỏ tài liệu{% endtrans %}</a>
+        </div>
+    </div>
+
+
+    <div class="row" id="awards_6" style="display: none;">
+        <div class="col-6">
+            {{ form_row(form.Document6) }}
+        </div>
+        <div class="col-4" >
+            {{ form_row(form.DocType6) }}
+        </div>
+        <div id ="delete6" class="col-2">
+            <a onclick="removeDocumentInput()" style="">{% trans %}Xoá bỏ tài liệu{% endtrans %}</a>
+        </div>
+
+    </div>
+
+
+    <div class="row" id="awards_7" style="display: none;">
+        <div class="col-6" >
+            {{ form_row(form.Document7) }}
+        </div>
+        <div class="col-4" >
+            {{ form_row(form.DocType7) }}
+        </div>
+        <div id ="delete7" class="col-2">
+            <a onclick="removeDocumentInput()" style="">{% trans %}Xoá bỏ tài liệu{% endtrans %}</a>
+        </div>
+
+    </div>
+
+
+    <div class="row" id="awards_8" style="display: none;">
+        <div class="col-6" >
+            {{ form_row(form.Document8) }}
+        </div>
+        <div class="col-4" >
+            {{ form_row(form.DocType8) }}
+        </div>
+        <div id ="delete8" class="col-2">
+            <a onclick="removeDocumentInput()" style="">{% trans %}Xoá bỏ tài liệu{% endtrans %}</a>
+        </div>
+
+    </div>
+
+
+    <div class="row" id="awards_9" style="display: none;">
+        <div class="col-6" >
+            {{ form_row(form.Document9) }}
+        </div>
+        <div class="col-4" >
+            {{ form_row(form.DocType9) }}
+        </div>
+        <div id ="delete9"  class="col-2">
+            <a onclick="removeDocumentInput()" style="">{% trans %}Xoá bỏ tài liệu{% endtrans %}</a>
+        </div>
+
+    </div>
+
+
+
+
+    <div>
+        <button type="submit" class="btn btn-primary">{% trans %} Gửi tài liệu  {% endtrans %}</button>
+    </div>
+
+    {{ form_end(form)}}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+    <script>
+        function addDocumentInput() {
+            var i;
+            for (i = 1; i < 10; i++) {
+                var Id = 'awards_'+i;
+                var last = i-1;
+                var inputId = 'edit_document_organisation_Document'+i;
+                var selectId = 'edit_document_organisation_DocType'+i;
+                var deleteId = 'delete'+i;
+                var lastItemDeleteId = 'delete' +last;
+                var x = document.getElementById(Id);
+                if (x.style.display === "none") {
+                    x.style.display = "flex";
+                    document.getElementById(selectId).required = true;
+                    document.getElementById(inputId).required = true;
+                    if(i === 1){
+                        document.getElementById(deleteId).style.display = "flex";
+                    }else{
+                        document.getElementById(lastItemDeleteId).style.display = "none";
+                        document.getElementById(deleteId).style.display = "flex";
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        function removeDocumentInput(){
+            var i;
+            for (i = 9; i > 0; i--) {
+
+                var Id = 'awards_'+i;
+                var last = i-1;
+                var deleteId = 'delete'+last;
+                var inputId = 'edit_document_organisation_Document'+i;
+                var selectId = 'edit_document_organisation_DocType'+i;
+                var x = document.getElementById(Id);
+                if (x.style.display === "flex") {
+
+                    x.style.display = "none";
+                    x.value = '';
+                    document.getElementById(selectId).required = false;
+                    document.getElementById(inputId).required = false;
+                 //   x.remove();
+                    if(last !== 0){
+                        document.getElementById(deleteId).style.display = "flex";
+                    }
+
+                    break;
+                }
+            }
+        }
+    </script>
+{% endblock %}

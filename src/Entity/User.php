@@ -100,39 +100,30 @@ class User implements UserInterface
     private $isOrganisation;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $organisationName;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $address;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $zipcode;
-
-    /**
-     * @ORM\Column(type="string", length=10, nullable=true)
-     */
-    private $Country;
-
-    /**
-     * @ORM\Column(type="string", length=100, nullable=true)
-     */
-    private $phoneNumber;
-
-    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $askOrganisation;
 
+
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\OneToMany(targetEntity=RequestOrganisationDocument::class, mappedBy="User")
      */
-    private $City;
+    private $RequestOrganisationDocument;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OrganisationDocument::class, mappedBy="user")
+     */
+    private $organisationDocuments;
+
+    /**
+     * @ORM\OneToOne(targetEntity=RequestOrganisationInfo::class, mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $requestOrganisationInfo;
+
+    /**
+     * @ORM\OneToMany(targetEntity=RequestOrganisationDocument::class, mappedBy="user")
+     */
+    private $requestOrganisationDocuments;
 
     public function __construct()
     {
@@ -140,6 +131,9 @@ class User implements UserInterface
         $this->comments = new ArrayCollection();
         $this->userDocuments = new ArrayCollection();
         $this->transactions = new ArrayCollection();
+        $this->RequestOrganisationDocument = new ArrayCollection();
+        $this->organisationDocuments = new ArrayCollection();
+        $this->requestOrganisationDocuments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -442,66 +436,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getOrganisationName(): ?string
-    {
-        return $this->organisationName;
-    }
-
-    public function setOrganisationName(?string $organisationName): self
-    {
-        $this->organisationName = $organisationName;
-
-        return $this;
-    }
-
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
-
-    public function setAddress(?string $address): self
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    public function getZipcode(): ?string
-    {
-        return $this->zipcode;
-    }
-
-    public function setZipcode(?string $zipcode): self
-    {
-        $this->zipcode = $zipcode;
-
-        return $this;
-    }
-
-    public function getCountry(): ?string
-    {
-        return $this->Country;
-    }
-
-    public function setCountry(?string $Country): self
-    {
-        $this->Country = $Country;
-
-        return $this;
-    }
-
-    public function getPhoneNumber(): ?string
-    {
-        return $this->phoneNumber;
-    }
-
-    public function setPhoneNumber(?string $phoneNumber): self
-    {
-        $this->phoneNumber = $phoneNumber;
-
-        return $this;
-    }
-
     public function getAskOrganisation(): ?bool
     {
         return $this->askOrganisation;
@@ -514,14 +448,83 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getCity(): ?string
+
+    /**
+     * @return Collection|OrganisationDocument[]
+     */
+    public function getOrganisationDocuments(): Collection
     {
-        return $this->City;
+        return $this->organisationDocuments;
     }
 
-    public function setCity(?string $City): self
+    public function addOrganisationDocument(OrganisationDocument $organisationDocument): self
     {
-        $this->City = $City;
+        if (!$this->organisationDocuments->contains($organisationDocument)) {
+            $this->organisationDocuments[] = $organisationDocument;
+            $organisationDocument->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganisationDocument(OrganisationDocument $organisationDocument): self
+    {
+        if ($this->organisationDocuments->contains($organisationDocument)) {
+            $this->organisationDocuments->removeElement($organisationDocument);
+            // set the owning side to null (unless already changed)
+            if ($organisationDocument->getUser() === $this) {
+                $organisationDocument->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getRequestOrganisationInfo(): ?RequestOrganisationInfo
+    {
+        return $this->requestOrganisationInfo;
+    }
+
+    public function setRequestOrganisationInfo(?RequestOrganisationInfo $requestOrganisationInfo): self
+    {
+        $this->requestOrganisationInfo = $requestOrganisationInfo;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newUserId = null === $requestOrganisationInfo ? null : $this;
+        if ($requestOrganisationInfo->getUser() !== $newUserId) {
+            $requestOrganisationInfo->setUser($newUserId);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|RequestOrganisationDocument[]
+     */
+    public function getRequestOrganisationDocuments(): Collection
+    {
+        return $this->requestOrganisationDocuments;
+    }
+
+    public function addRequestOrganisationDocument(RequestOrganisationDocument $requestOrganisationDocument): self
+    {
+        if (!$this->requestOrganisationDocuments->contains($requestOrganisationDocument)) {
+            $this->requestOrganisationDocuments[] = $requestOrganisationDocument;
+            $requestOrganisationDocument->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRequestOrganisationDocument(RequestOrganisationDocument $requestOrganisationDocument): self
+    {
+        if ($this->requestOrganisationDocuments->contains($requestOrganisationDocument)) {
+            $this->requestOrganisationDocuments->removeElement($requestOrganisationDocument);
+            // set the owning side to null (unless already changed)
+            if ($requestOrganisationDocument->getUser() === $this) {
+                $requestOrganisationDocument->setUser(null);
+            }
+        }
 
         return $this;
     }

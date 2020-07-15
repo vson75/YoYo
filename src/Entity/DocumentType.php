@@ -38,9 +38,21 @@ class DocumentType
      */
     private $userDocuments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OrganisationDocument::class, mappedBy="documentTypeId")
+     */
+    private $organisationDocuments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=RequestOrganisationDocument::class, mappedBy="DocumentType")
+     */
+    private $requestOrganisationDocuments;
+
     public function __construct()
     {
         $this->userDocuments = new ArrayCollection();
+        $this->organisationDocuments = new ArrayCollection();
+        $this->requestOrganisationDocuments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -85,6 +97,68 @@ class DocumentType
             // set the owning side to null (unless already changed)
             if ($userDocument->getDocumentType() === $this) {
                 $userDocument->setDocumentType(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|OrganisationDocument[]
+     */
+    public function getOrganisationDocuments(): Collection
+    {
+        return $this->organisationDocuments;
+    }
+
+    public function addOrganisationDocument(OrganisationDocument $organisationDocument): self
+    {
+        if (!$this->organisationDocuments->contains($organisationDocument)) {
+            $this->organisationDocuments[] = $organisationDocument;
+            $organisationDocument->setDocumentTypeId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganisationDocument(OrganisationDocument $organisationDocument): self
+    {
+        if ($this->organisationDocuments->contains($organisationDocument)) {
+            $this->organisationDocuments->removeElement($organisationDocument);
+            // set the owning side to null (unless already changed)
+            if ($organisationDocument->getDocumentTypeId() === $this) {
+                $organisationDocument->setDocumentTypeId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|RequestOrganisationDocument[]
+     */
+    public function getRequestOrganisationDocuments(): Collection
+    {
+        return $this->requestOrganisationDocuments;
+    }
+
+    public function addRequestOrganisationDocument(RequestOrganisationDocument $requestOrganisationDocument): self
+    {
+        if (!$this->requestOrganisationDocuments->contains($requestOrganisationDocument)) {
+            $this->requestOrganisationDocuments[] = $requestOrganisationDocument;
+            $requestOrganisationDocument->setDocumentType($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRequestOrganisationDocument(RequestOrganisationDocument $requestOrganisationDocument): self
+    {
+        if ($this->requestOrganisationDocuments->contains($requestOrganisationDocument)) {
+            $this->requestOrganisationDocuments->removeElement($requestOrganisationDocument);
+            // set the owning side to null (unless already changed)
+            if ($requestOrganisationDocument->getDocumentType() === $this) {
+                $requestOrganisationDocument->setDocumentType(null);
             }
         }
 

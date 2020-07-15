@@ -1,0 +1,79 @@
+{% extends 'content_base.html.twig' %}
+
+{% block title %}
+    {% trans %} Thay đổi thông tin organisation {% endtrans %}
+{% endblock %}
+
+{% block content_body %}
+    <h1 style="text-align: center">Thay đổi thông tin organisation</h1>
+
+    <hr>
+    <h2>{% trans %}Thông tin cơ bản của tổ chức {% endtrans %}</h2>
+    <div>
+        {{ form_start(form) }}
+        <div>
+            {{ form_row(form.OrganisationName) }}
+            {{ form_row(form.Address) }}
+
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.ZipCode) }}
+                </div>
+                <div class="col">
+                    {{ form_row(form.City) }}
+                </div>
+                <div class="col">
+                    {{ form_row(form.Country) }}
+                </div>
+                <div class="col">
+                    {{ form_row(form.PhoneNumber) }}
+                </div>
+
+            </div>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">{% trans %} Cập nhật thông tin tổ chức  {% endtrans %}</button>
+        </div>
+        {{ form_end(form)}}
+
+    </div>
+
+    <hr>
+    <h2>{% trans %}Các tài liệu liên quan tới tổ chức{% endtrans %}</h2>
+    {% for d in document %}
+        <div class="row">
+            <div class="col">
+                {{ d.documentType.DocumentType }}
+            </div>
+            <div class="col">
+                {{ d.originalFilename }}
+                <span>
+                    <a href="{{ path('app_download_user_document', {
+                        id: d.id
+                    }) }}"><span class="fa fa-download"></span></a>
+                </span>
+            </div>
+
+        </div>
+    {% endfor %}
+
+    {% for award in award_document %}
+        <div class="row">
+            <div class="col">
+                {{ award.documentType.DocumentType }}
+            </div>
+            <div class="col">
+                {{ award.originalFilename }}
+                <span>
+                    <a href="{{ path('app_download_user_document', {
+                                id: award.id
+                            }) }}"><span class="fa fa-download"></span></a>
+                </span>
+
+            </div>
+
+        </div>
+    {% endfor %}
+    <a href="{{ path('app_edit_document_organisation', {id: userInfo.id}) }}" class="btn btn-primary"><span>{% trans %}Thêm tài liệu đính kèm{% endtrans %}</span></a>
+
+{% endblock %}

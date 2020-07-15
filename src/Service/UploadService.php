@@ -5,8 +5,11 @@ namespace App\Service;
 
 
 use App\Entity\DocumentType;
+use App\Entity\RequestOrganisationDocument;
+use App\Entity\RequestStatus;
 use App\Entity\User;
 use App\Entity\UserDocument;
+use App\Repository\RequestStatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Sluggable\Util\Urlizer;
 use League\Flysystem\FilesystemInterface;
@@ -17,19 +20,22 @@ class UploadService
 {
     const Post_image = '/post/image';
     const User_icon = '/user/icon';
-    const User_document = '/user/documents/';
+    const Organisation_document_request = '/user/documents_request/';
+    const Organisation_document_validate = '/user/documents_validate/';
 
     private $filesystem;
     private $em;
     private $publicAssetBaseUrl;
     private $privateUploadsFilesystem;
+    private $requestStatusRepository;
 
-    public function __construct(EntityManagerInterface $em, FilesystemInterface $publicUploadsFilesystem,string $uploadedAssetsBaseUrl, FilesystemInterface $privateUploadsFilesystem)
+    public function __construct(EntityManagerInterface $em, FilesystemInterface $publicUploadsFilesystem,string $uploadedAssetsBaseUrl, FilesystemInterface $privateUploadsFilesystem, RequestStatusRepository $requestStatusRepository)
     {
         $this->em = $em;
         $this->filesystem = $publicUploadsFilesystem;
         $this->publicAssetBaseUrl = $uploadedAssetsBaseUrl;
         $this->privateUploadsFilesystem = $privateUploadsFilesystem;
+        $this->requestStatusRepository = $requestStatusRepository;
     }
 
     public function UploadPostImage(UploadedFile $uploadedFile,?string $existingFilename): string {
@@ -77,8 +83,8 @@ class UploadService
     }
 
 
-    public function UploadUserDocument(UploadedFile $uploadedFile, $userID, $documentType): string {
-        $destination = self::User_document.$userID;
+    public function UploadRequestOrganisationDocument(UploadedFile $uploadedFile, $userID, $documentType): string {
+        $destination = self::Organisation_document_request.$userID;
         $origineFilename = pathinfo($uploadedFile->getClientOriginalName(),PATHINFO_FILENAME);
         $newFilename = $documentType.'-'.Urlizer::urlize($origineFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
 
@@ -96,20 +102,28 @@ class UploadService
     }
 
 
-    public function UploadUserDocumentByType($documentType, UploadedFile $uploadedFile, User $user){
+    public function UploadRequestOrganisationDocumentByType($documentType, UploadedFile $uploadedFile, User $user){
         $documentTypeRepo  = $this->em->getRepository(DocumentType::class);
-        $userDocument = new UserDocument();
+        $userDocument = new RequestOrganisationDocument();
         $document_type =  $documentTypeRepo->findOneBy([
             'id' => $documentType
         ]);
 
-        $newFileName = $this->UploadUserDocument($uploadedFile,$user->getId(), $documentType);
+        $status = $this->requestStatusRepository->findOneBy([
+            'id' => RequestStatus::Request_Sent
+        ]);
+
+    //     dd($user);
+        $newFileName = $this->UploadRequestOrganisationDocument($uploadedFile,$user->getId(), $documentType);
+        $userDocument->setUser($user);
+       // dd($userDocument);
         $userDocument->setUser($user)
             ->setFilename($newFileName)
             ->setOriginalFilename($uploadedFile->getClientOriginalName())
-            ->setDepositDate(new \DateTime('now'))
+            ->setDepositeDate(new \DateTime('now'))
             ->setMimeType($uploadedFile->getMimeType() ?? 'application/octet-stream')
-            ->setDocumentType($document_type);
+            ->setDocumentType($document_type)
+            ->setRequestStatus($status);
 
         $this->em->persist($userDocument);
         $this->em->flush();
@@ -119,6 +133,7 @@ class UploadService
     public function readStream(string $path,bool $isPublic){
 
         $filesystem = $isPublic ? $this->filesystem : $this->privateUploadsFilesystem;
+       // dd($filesystem);
         $resource = $filesystem->readStream($path);
         if ($resource === false) {
             throw new \Exception(sprintf('Error opening stream for "%s"', $path));

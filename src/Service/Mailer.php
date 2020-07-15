@@ -91,15 +91,59 @@ class Mailer
     }
 
 
-    public function sendMailAlertToAdminWhenCreatingOrganisation(){
+    public function sendMailAlertToAdminWhenCreatingOrganisation($username){
         $email = (new TemplatedEmail())
             ->from($this->admin_email)
             ->to($this->admin_email)
-            ->subject('New organisation was created')
+            ->subject('New organisation was created/updated info')
             ->htmlTemplate('email/Alert_Admin_When_Creating_Organisation.html.twig')
+            ->context([
+                'username'=> $username
+            ])
            ;
         $this->mailer->send($email);
     }
 
+
+    public function sendMailCongratulationNewOrganisation(User $user){
+        $email = (new TemplatedEmail())
+            ->from($this->admin_email)
+            ->to($user->getEmail())
+            ->bcc($this->admin_email)
+            ->subject('Tổ chức đã được công nhận bởi YoYo')
+            ->htmlTemplate('email/WelcomeNewOrganisation.html.twig')
+        ;
+        $this->mailer->send($email);
+    }
+
+    public function ThankToCreateOrganisation(User $user){
+        $email = (new TemplatedEmail())
+            ->from($this->admin_email)
+            ->to($user->getEmail())
+            ->bcc($this->admin_email)
+            ->subject('Thông tin tổ chức đã được chuyển tới admin YoYo')
+            ->htmlTemplate('email/ThankToCreateOrganisation.html.twig')
+        ;
+        $this->mailer->send($email);
+    }
+
+    public function sendMailAskMoreInfoOrStopAboutOrganisation($choice, User $user, $content){
+        $email = (new TemplatedEmail())
+            ->from($this->admin_email)
+            ->to($user->getEmail())
+            ->bcc($this->admin_email)
+            ->htmlTemplate('email/Ask_More_Info_Organisation.html.twig')
+            ->context([
+                'content'=> $content,
+                'id' => $user->getId()
+            ]);
+        if($choice == "ask"){
+            $email->subject('Bổ sung thông tin cho tổ chức của bạn');
+        }elseif ($choice == "stop"){
+            $email->subject('Chúng tôi không thể chứng nhận tổ chức của bạn ');
+        }
+
+        $this->mailer->send($email);
+    }
 
 }
