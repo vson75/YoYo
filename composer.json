@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "antishov/doctrine-extensions-bundle": "^1.4",
+        "cmen/google-charts-bundle": "^3.2",
         "doctrine/annotations": "^1.10",
         "friendsofsymfony/ckeditor-bundle": "^2.2",
         "knplabs/knp-markdown-bundle": "^1.8",

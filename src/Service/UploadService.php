@@ -83,7 +83,7 @@ class UploadService
     }
 
 
-    public function UploadRequestOrganisationDocument(UploadedFile $uploadedFile, $userID, $documentType): string {
+    public function UploadRequestOrganisationDocument(UploadedFile $uploadedFile, $userID, $documentType, ?string $existingFilename): string {
         $destination = self::Organisation_document_request.$userID;
         $origineFilename = pathinfo($uploadedFile->getClientOriginalName(),PATHINFO_FILENAME);
         $newFilename = $documentType.'-'.Urlizer::urlize($origineFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
@@ -97,12 +97,16 @@ class UploadService
         if (is_resource($stream)) {
             fclose($stream);
         }
+        // Delete old document except Awards_justification
+        if($documentType != DocumentType::Awards_justification && $existingFilename){
+            $this->privateUploadsFilesystem->delete(self::Organisation_document_request.'/'.$userID.'/'.$existingFilename);
+        }
 
         return $newFilename;
     }
 
 
-    public function UploadRequestOrganisationDocumentByType($documentType, UploadedFile $uploadedFile, User $user){
+    public function UploadRequestOrganisationDocumentByType($documentType, UploadedFile $uploadedFile, User $user, ?string $existingFilename){
         $documentTypeRepo  = $this->em->getRepository(DocumentType::class);
         $userDocument = new RequestOrganisationDocument();
         $document_type =  $documentTypeRepo->findOneBy([
@@ -114,7 +118,9 @@ class UploadService
         ]);
 
     //     dd($user);
-        $newFileName = $this->UploadRequestOrganisationDocument($uploadedFile,$user->getId(), $documentType);
+            $newFileName = $this->UploadRequestOrganisationDocument($uploadedFile,$user->getId(), $documentType, $existingFilename);
+
+
         $userDocument->setUser($user);
        // dd($userDocument);
         $userDocument->setUser($user)

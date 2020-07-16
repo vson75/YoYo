@@ -26,26 +26,21 @@
 
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Thông tin cá nhân</a>
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">{% trans %}Thông tin cá nhân{% endtrans %}</a>
                             </li>
+
                             <li class="nav-item">
-                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Tài liệu cá nhân</a>
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">{% trans %}Thông tin tổ chức{% endtrans %}</a>
                             </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">{% trans %}Tài liệu{% endtrans %}</a>
+                                </li>
+
                         </ul>
                     </div>
-                </div>
-                <div class="col-md-2">
-                    <a href="{{ path('app_edit_profil') }}">{% trans %}Thay đổi thông tin cá nhân{% endtrans %}</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="profile-work">
-                        <a href="">{% trans %}Danh sách các dự án bạn đã quyên góp{% endtrans %}</a><br/>
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="tab-content profile-tab" id="myTabContent">
+                    <div class="tab-content" id="myTabContent">
+
+                    {# Tab 1 #}
                         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row">
                                 <div class="col-md-6">
@@ -71,6 +66,135 @@
                                     <p>{{ userInfo.email }}</p>
                                 </div>
                             </div>
+
+                            <a class="btn btn-primary" href="{{ path('app_edit_profil') }}">{% trans %}Thay đổi thông tin cá nhân{% endtrans %}</a>
+                        </div>
+
+                        {# Tab 2 #}
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            {% if organisationInfo is null %}
+                            {% trans %}Profil của bạn không có tổ chức đính kèm {% endtrans %}
+                            {% else %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>{% trans %}Tên tổ chức {% endtrans %}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ organisationInfo.organisationName }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>{% trans %}Địa chỉ {% endtrans %}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ organisationInfo.address }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>{% trans %} ZipCode {% endtrans %}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ organisationInfo.zipcode }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>{% trans %} Thành phố {% endtrans %}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ organisationInfo.city }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>{% trans %} Quốc gia {% endtrans %}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ organisationInfo.city }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>{% trans %} Số điện thoại{% endtrans %}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ organisationInfo.phoneNumber }}</p>
+                                </div>
+                            </div>
+                            <a class="btn btn-primary" href="{{ path('app_edit_organisation_info', {id: userInfo.Id}) }}">{% trans %}Thay đổi thông tin tổ chức{% endtrans %}</a>
+                            {% endif %}
+                        </div>
+
+                        {# Tab 3 #}
+                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                            {% if certificate is null %}
+                                {% trans %}Bạn không có tài liệu trong hệ thống của chúng tôi {% endtrans %}
+                            {% else %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>{% trans %}Chứng nhận tổ chức {% endtrans %}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{ certificate.originalFilename }}
+                                    <span>
+                                        <a href="{{ path('app_download_user_document', {
+                                            id: certificate.id
+                                        }) }}"><span class="fa fa-download"></span></a>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>{% trans %}Tài khoản ngân hàng{% endtrans %}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{ bank.originalFilename }}
+                                    <span>
+                                        <a href="{{ path('app_download_user_document', {
+                                            id: bank.id
+                                        }) }}"><span class="fa fa-download"></span></a>
+                                    </span>
+                                </div>
+                            </div>
+
+                            {% for award in awards %}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>{% trans %}Bằng khen{% endtrans %}</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ award.originalFilename }}
+                                        <span>
+                                        <a href="{{ path('app_download_user_document', {
+                                            id: award.id
+                                        }) }}"><span class="fa fa-download"></span></a>
+                                    </span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <a class="btn btn-primary" href="{{ path('app_edit_document_organisation', {id: userInfo.Id}) }}">{% trans %}Cập nhật tài liệu{% endtrans %}</a>
+
+                            {% endif %}
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="col-md-2">
+
+                </div>
+            </div>
+            <div class="row">
+
+            {#
+            <div class="col-md-8">
+                    <div class="tab-content profile-tab" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+
                         </div>
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                             <div class="row">
@@ -85,6 +209,8 @@
                         </div>
                     </div>
                 </div>
+
+            #}
             </div>
 
     </div>
