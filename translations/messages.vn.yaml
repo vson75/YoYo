@@ -1,0 +1,8 @@
+form:
+  userRegistration:
+    lastname: Họ của bạn
+    firstname: Tên của bạn
+    email: Email của bạn
+
+
+

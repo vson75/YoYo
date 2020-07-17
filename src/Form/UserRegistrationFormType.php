@@ -17,15 +17,16 @@ class UserRegistrationFormType extends AbstractType
     {
         $builder
             ->add('firstname', TextType::class, [
-                'attr' => ['placeholder' => 'Tên của bạn',
+                'attr' => [
+                    'placeholder' => 'form.userRegistration.firstname',
 
                 ],
             ])
             ->add('lastname', TextType::class, [
-                'attr' => ['placeholder' => 'Họ của bạn'],
+                'attr' => ['placeholder' => 'form.userRegistration.lastname'],
             ])
             ->add('email', EmailType::class, [
-                'attr' => ['placeholder' => 'Email của bạn'],
+                'attr' => ['placeholder' => 'form.userRegistration.email'],
             ]);
         /**
             ->add('password', RepeatedType::class,[

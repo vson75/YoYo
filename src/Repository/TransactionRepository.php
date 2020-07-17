@@ -44,19 +44,6 @@ class TransactionRepository extends ServiceEntityRepository
             ->getResult()
             ;
 
-        /**
-         * SUM(t.amount) as amount
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = 'SELECT t.user_id as user, sum(t.amount) as amount
-        FROM TRANSACTION t
-        WHERE t.post_id = :val
-        GROUP by t.user_id';
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([
-        'val' => $val
-        ]);
-        return $stmt->fetchAll();
-         */
     }
 
     public function getNotAnonymousByPost($val){
@@ -91,6 +78,30 @@ class TransactionRepository extends ServiceEntityRepository
             ->getSingleScalarResult()
         ;
     }
+
+    public function getDistinctPostFinancedByUser($val){
+        return $this->createQueryBuilder('t')
+            ->select('DISTINCT IDENTITY(t.post)')
+            ->andWhere('t.user = :val')
+            ->setParameter('val', $val)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function getTotalPostFinancedByUser($val){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT count(*) FROM 
+                (SELECT t.user_id, t.post_id from transaction t WHERE t.user_id = :val GROUP BY t.user_id, t.post_id) 
+                as dt';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            'val' => $val
+        ]);
+        return $stmt->fetchAll();
+    }
+
+
 
     // /**
     //  * @return Transaction[] Returns an array of Transaction objects

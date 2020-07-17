@@ -1,0 +1,6 @@
+form:
+  userRegistration:
+    lastname: Votre nom
+    firstname: Votre prénom
+    email: Votre adresse mail
+

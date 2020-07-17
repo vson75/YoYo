@@ -11,6 +11,7 @@ use App\Entity\PostStatus;
 use App\Entity\RequestOrganisationDocument;
 use App\Entity\RequestOrganisationInfo;
 use App\Entity\RequestStatus;
+use App\Entity\Transaction;
 use App\Entity\User;
 use App\Entity\UserDocument;
 use App\Form\CreateOrganisationType;
@@ -19,9 +20,11 @@ use App\Form\OrganisationInfoType;
 use App\Form\PostSearchType;
 use App\Form\UserProfileFormType;
 use App\Repository\RequestStatusRepository;
+use App\Repository\TransactionRepository;
 use App\Repository\UserRepository;
 use App\Service\Mailer;
 use App\Service\UploadService;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use PhpParser\Comment\Doc;
@@ -136,6 +139,43 @@ class UserProfilController extends AbstractController
             'pagination' => $pagination,
             'form' => $form->createView(),
             'statusArray' => $statusArray
+        ]);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/my_profil/testChart", name="app_test_chart")
+     */
+    public function testChart(EntityManagerInterface $em){
+        $pieChart = new PieChart();
+        $pieChart->getData()->setArrayToDataTable(
+            [['Task', 'Hours per Day'],
+                ['Work',     11],
+                ['Eat',      2],
+                ['Commute',  2],
+                ['Watch TV', 2],
+                ['Sleep',    7]
+            ]
+        );
+        $pieChart->getOptions()->setTitle('My Daily Activities');
+        $pieChart->getOptions()->setHeight(500);
+        $pieChart->getOptions()->setWidth(900);
+        $pieChart->getOptions()->getTitleTextStyle()->setBold(true);
+        $pieChart->getOptions()->getTitleTextStyle()->setColor('#009900');
+        $pieChart->getOptions()->getTitleTextStyle()->setItalic(true);
+        $pieChart->getOptions()->getTitleTextStyle()->setFontName('Arial');
+        $pieChart->getOptions()->getTitleTextStyle()->setFontSize(20);
+
+        $repo = $em->getRepository(Transaction::class);
+        $nbProjectFinanced = $repo->getTotalPostFinancedByUser($this->getUser()->getId());
+
+        $projectFinanced = $repo->getDistinctPostFinancedByUser($this->getUser());
+        dump($projectFinanced);
+
+        return $this->render('user_profil/testChart.html.twig', [
+            'userInfo' => $this->getUser(),
+            'piechart' => $pieChart,
+            'nbProjectFinanced' => $nbProjectFinanced[0]["count(*)"]
         ]);
     }
 

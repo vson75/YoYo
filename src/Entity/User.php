@@ -80,11 +80,6 @@ class User implements UserInterface
     private $userDocuments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="user")
-     */
-    private $post;
-
-    /**
      * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="user")
      */
     private $transactions;
@@ -104,11 +99,6 @@ class User implements UserInterface
      */
     private $askOrganisation;
 
-
-    /**
-     * @ORM\OneToMany(targetEntity=RequestOrganisationDocument::class, mappedBy="User")
-     */
-    private $RequestOrganisationDocument;
 
     /**
      * @ORM\OneToMany(targetEntity=OrganisationDocument::class, mappedBy="user")

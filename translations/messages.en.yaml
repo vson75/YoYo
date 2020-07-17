@@ -1,0 +1,5 @@
+form:
+  userRegistration:
+    lastname: Your lastname
+    firstname: Your firstname
+    email: Your email
