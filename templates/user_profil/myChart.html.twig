@@ -1,0 +1,203 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/userChart.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/homepage.css') }}">
+{% endblock %}
+
+{% block title %}
+{% trans %}Tóm tắt các hoạt động {% endtrans %}
+{% endblock %}
+
+{% block body %}
+
+    {# example template here : https://codepen.io/sathishlxg/pen/OVyMwN #}
+    <div class="container">
+        <div>
+            <h1 style="text-align: center; margin-top: 1.25rem;">
+                {% trans %}Tóm tắt các hoạt động của tôi {% endtrans %}
+            </h1>
+        </div>
+
+
+        <div class="row">
+            <div class="col-lg-4 col-xs-4" onclick="Project()">
+                <div class="rad-info-box">
+                    <i class="fas fa-chart-line" style="color: #3C589C"></i>
+                    <span class="heading">{% trans %}Số dự án đầu tư{% endtrans %}</span>
+                    <span class="value">{{ nbProjectFinanced }}</span>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-xs-4" onclick="AmountFinanced()">
+                <div class="rad-info-box">
+                    <i class="fas fa-hand-holding-usd" style="color: #DF4B3B"></i>
+
+                    <span class="heading">{% trans %}Số tiền đã góp {% endtrans %}</span>
+                    <span class="value">{{ totalInvested }} EUR</span>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-xs-4 favorite" onclick="favorite()">
+                <div class="rad-info-box">
+                    <i class="fas fa-star" style="color: yellowgreen"></i>
+
+                    <span class="heading">{% trans %}Dự án yêu thích {% endtrans %}</span>
+                    <span class="value"> {{ nbFavorite }} </span>
+                </div>
+            </div>
+        </div>
+
+            <div id="div_chart" style="width: 1100px;height: 350px;display: none"></div>
+
+
+
+        <table id="project" style="display: table; width: 100%">
+            <tr>
+                <th>{% trans %}Du an {% endtrans %}</th>
+                <th>{% trans %}So tien ban da dau tu {% endtrans %}</th>
+                <th>{% trans %}% Sô tiên da keu goi duoc cho du an {% endtrans %}</th>
+                <th>{% trans %} Muc tieu quyen gop cua du an{% endtrans %}</th>
+            </tr>
+            {% for p in projectFinanced %}
+
+                <tr>
+                    <td>
+                        {% if p.imagePath == '/post/image/' %}
+                            <img src="{{ p.getDefaultImagePath | imagine_filter('card_thumbnail_myProfil_stat')}}" alt="">
+
+                        {% else %}
+                        <img class="img-fluid rounded-custom img-post" src="{{ p.imagePath| imagine_filter('card_thumbnail_myProfil_stat') }}" alt="">
+                        {% endif %}
+                        {{ p.title }}
+                    </td>
+                    <td>{{ p.getTransactionSumByUser(userInfo) }} €</td>
+                    <td>{{ p.getPercentageAdvancement }} %</td>
+                    <td>{{ p.targetAmount }} €</td>
+                </tr>
+            {% endfor %}
+        </table>
+        {{ knp_pagination_render(projectFinanced) }}
+
+        <div class="row" id="favorite_list" style="display: none">
+            {% for post in FavProject %}
+                <div class="col-lg-3 col-md-6 mb-4">
+
+                    <div class="card h-100">
+                        {% set finish = post.finishAt %}
+                        {% set now = "now"|date("m/d/Y") %}
+                        {% set diff = date(finish).diff(date(now)) %}
+                        {% set leftDays = diff.days - 1 %}
+                        {#if no image#}
+                        <div class="image_thumbnail">
+                            {% if post.imagePath == '/post/image/' %}
+                                <img class="card-img-top" src="{{ post.DefaultImagePath | imagine_filter('card_thumbnail_homepage')}}" alt="">
+                            {% else %}
+                                <img class="card-img-top" src="{{ post.imagePath|imagine_filter('card_thumbnail_homepage')}}" alt="">
+                            {% endif %}
+
+                            {% if leftDays >10 %}
+                                <div class="dayCountdownWhite">J-{{ leftDays }}</div>
+                            {% else %}
+                                <div class="dayCountdownRed">J-{{ leftDays }}</div>
+                            {% endif %}
+
+                        </div>
+                        {% set percent_advancement = post.getTransactionSum/post.targetAmount*100 %}
+                        {% set  percent_for_css = 90 -  percent_advancement%}
+                        <div class="card-body" style="position: relative;">
+                            <div class="custom_progress" style="top: 0">
+                                <div class="progress">
+
+
+                                    {% if post.getTransactionSum == 0 %}
+                                        <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-count" style="right: 90%;">
+                                                0%
+                                            </div>
+                                        </div>
+
+                                    {% elseif percent_advancement < 100 %}
+
+                                        <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <span class="progress-count" style="right: {{percent_for_css}}%">
+                                {{percent_advancement|round(0,'floor')}}%
+                            </span>
+                                        </div>
+                                    {% else %}
+                                        <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <span class="progress-count" style="right: -1%;">
+                                {{percent_advancement|round(0,'floor')}}%
+                            </span>
+                                        </div>
+                                    {% endif %}
+
+
+                                </div>
+                            </div>
+                            <h5 class="card-title text-left">{{ post.title }}</h5>
+
+                            {{ post.content|raw }}
+
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}" class="btn btn-primary" style="text-align: left;">{% trans %} Xem chi tiết {% endtrans %}</a>
+
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        {{ gc_draw(piechart, 'div_chart') }}
+    </script>
+    <script>
+        function Project(){
+
+            var tableProject = document.getElementById('project');
+            var divChart = document.getElementById('div_chart');
+            var tableFavorite = document.getElementById("favorite_list");
+
+                tableProject.style.display = "table";
+                tableFavorite.style.display = "none";
+                divChart.style.display = "none";
+
+        }
+
+        function AmountFinanced(){
+
+            var tableProject = document.getElementById('project');
+            var tableFavorite = document.getElementById("favorite_list");
+            var divChart = document.getElementById('div_chart');
+
+                tableProject.style.display = "none";
+                tableFavorite.style.display = "none";
+                divChart.style.display = "";
+
+        }
+
+       function favorite(){
+
+           var tableProject = document.getElementById('project');
+           var tableFavorite = document.getElementById("favorite_list");
+           var divChart = document.getElementById('div_chart');
+
+               tableProject.style.display = "none";
+               tableFavorite.style.display = "flex";
+               divChart.style.display = "none";
+
+       }
+
+    </script>
+
+{% endblock %}

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Entity\DocumentType;
+use App\Entity\Favorite;
 use App\Entity\OrganisationInfo;
 use App\Entity\Post;
 use App\Entity\PostSearch;
@@ -144,38 +145,66 @@ class UserProfilController extends AbstractController
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/my_profil/testChart", name="app_test_chart")
+     * @Route("/my_profil/myChart", name="app_my_chart")
      */
-    public function testChart(EntityManagerInterface $em){
+    public function myChart(EntityManagerInterface $em, PaginatorInterface $paginator, Request $request){
+
         $pieChart = new PieChart();
-        $pieChart->getData()->setArrayToDataTable(
-            [['Task', 'Hours per Day'],
-                ['Work',     11],
-                ['Eat',      2],
-                ['Commute',  2],
-                ['Watch TV', 2],
-                ['Sleep',    7]
-            ]
+        $dataChart = [
+            ['Project', 'Amount financed']
+        ];
+
+        $repo = $em->getRepository(Transaction::class);
+        $nbProjectFinanced = $repo->getTotalPostFinancedByUser($this->getUser()->getId());
+
+        $ArrayProjectFinanced = $repo->getDistinctPostFinancedByUser($this->getUser());
+
+        $totalInvested = $repo->getTotalAmountInvestedByUser($this->getUser());
+
+        for($i=0;$i<sizeof($ArrayProjectFinanced);$i++){
+            $project[$i] = $em->getRepository(Post::class)->findOneBy([
+                'id' => $ArrayProjectFinanced[$i]
+            ]);
+            //get data in pie chart for each project
+            $dataChart[$i+1] =   [$project[$i]->getTitle(),$project[$i]->getTransactionSumByUser($this->getUser())];
+        }
+
+        $pagination = $paginator->paginate(
+            $project, /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            5/*limit per page*/
         );
-        $pieChart->getOptions()->setTitle('My Daily Activities');
-        $pieChart->getOptions()->setHeight(500);
-        $pieChart->getOptions()->setWidth(900);
+
+        $favoriteRepo = $em->getRepository(Favorite::class);
+        $nbFavorite = $favoriteRepo->getNbFavoriteByUser($this->getUser()->getId());
+        $ArrayFavoriteProject = $favoriteRepo->getDistinctFavoriteByUser($this->getUser()->getId());
+        for($i=0;$i<sizeof($ArrayFavoriteProject);$i++){
+            $FavoriteProject[$i] = $em->getRepository(Post::class)->findOneBy([
+                'id' => $ArrayFavoriteProject[$i]
+            ]);
+        }
+
+        // Pie chart information
+        $pieChart->getData()->setArrayToDataTable($dataChart);
+        $pieChart->getOptions()->setTitle('Sô tiền đã đóng góp');
         $pieChart->getOptions()->getTitleTextStyle()->setBold(true);
         $pieChart->getOptions()->getTitleTextStyle()->setColor('#009900');
         $pieChart->getOptions()->getTitleTextStyle()->setItalic(true);
         $pieChart->getOptions()->getTitleTextStyle()->setFontName('Arial');
         $pieChart->getOptions()->getTitleTextStyle()->setFontSize(20);
+        $pieChart->getOptions()->setHeight(350);
+        $pieChart->getOptions()->setWidth(1100);
+        $pieChart->getOptions()->setPieSliceText("none");
+        $pieChart->getOptions()->setIs3D(true);
 
-        $repo = $em->getRepository(Transaction::class);
-        $nbProjectFinanced = $repo->getTotalPostFinancedByUser($this->getUser()->getId());
-
-        $projectFinanced = $repo->getDistinctPostFinancedByUser($this->getUser());
-        dump($projectFinanced);
-
-        return $this->render('user_profil/testChart.html.twig', [
+        return $this->render('user_profil/myChart.html.twig', [
             'userInfo' => $this->getUser(),
             'piechart' => $pieChart,
-            'nbProjectFinanced' => $nbProjectFinanced[0]["count(*)"]
+            'nbProjectFinanced' => $nbProjectFinanced[0]["count(*)"],
+            'projectFinanced' => $pagination,
+            'totalInvested' => $totalInvested,
+            'nbFavorite' => $nbFavorite,
+            'FavProject' => $FavoriteProject
         ]);
     }
 

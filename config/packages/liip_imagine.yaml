@@ -36,5 +36,13 @@ liip_imagine:
             filters:
                 thumbnail:
                     size:          [800, 500]
-                    mode:          inbound
+                    mode:          outbound
+                    allow_upscale: true
+
+
+        card_thumbnail_myProfil_stat:
+            filters:
+                thumbnail:
+                    size:          [70, 35]
+                    mode:          outbound
                     allow_upscale: true

@@ -68,6 +68,14 @@
 
 }
 
+.favorite{
+    position: absolute; /* Position the background text */
+    top: 2rem;
+    right: 2rem;
+    font-size: 30px;
+
+}
+
 #btn-transaction{
     background: rgba(255,95,103,0.89);
     border-radius: 3px;
@@ -177,4 +185,8 @@ body {
     background-color: #4eb49a;
     line-height: 32px;
     top: -13px;
+}
+
+.fa-star{
+    color: yellow;
 }

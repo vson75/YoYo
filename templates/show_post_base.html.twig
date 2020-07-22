@@ -23,25 +23,29 @@
         <div class="col-md-8 col-xs-8 showpost">
 
             <!-- Preview Image -->
+            <div>
             {% if postInfo.imagePath == '/post/image/' %}
-                <div>
-                    <img class="img-fluid rounded-custom img-post" src="{{ asset('uploads/post/default_img.jpeg') | imagine_filter('card_thumbnail_showpost') }}" alt="">
-                    <div class="authorInfo rounded-custom">
-                        {% trans %}Tạo bởi: {% endtrans %} {{ postInfo.user.firstname }} {{ postInfo.user.lastname }}
-                    </div>
-                </div>
-                
-
+                    <img class="img-fluid rounded-custom img-post" src="{{ postInfo.DefaultImagePath | imagine_filter('card_thumbnail_showpost') }}" alt="">
             {% else %}
-                <div>
                     <img class="img-fluid rounded-custom img-post" src="{{ postInfo.imagePath| imagine_filter('card_thumbnail_showpost') }}" alt="">
+            {% endif %}
                     <div class="authorInfo rounded-custom">
                         {% trans %}Tạo bởi: {% endtrans %} {{ postInfo.user.firstname }} {{ postInfo.user.lastname }}
                     </div>
+                {% if is_granted('ROLE_USER') == true %}
+                {% if userFavorite is null or userFavorite == false %}
+                    <div class="favorite">
+                        <i id="start_empty" class="far fa-star" style="display: flex" onclick="checkfavorite()"></i>
+                        <i id="start_checked" class="fas fa-star" style="display: none" onclick="uncheckFavorite()"></i>
+                    </div>
+                {% else %}
+                <div class="favorite">
+                    <i id="start_empty" class="far fa-star" style="display: none" onclick="checkfavorite()"></i>
+                    <i id="start_checked" class="fas fa-star" style="display: flex" onclick="uncheckFavorite()"></i>
                 </div>
-
-
-            {% endif %}
+                {% endif %}
+                {% endif %}
+            </div>
 
             {% set percent_advancement = totalAmount/postInfo.targetAmount*100 %}
             {% set  percent_for_css = 98 -  percent_advancement%}
@@ -244,10 +248,6 @@
     {% block javascripts %}
         {{ parent() }}
         <script>
-            $(document).ready(function(){
-                $('[data-toggle="tooltip"]').tooltip();
-            });
-
             var fbButton = document.getElementById('fb-share-button');
             var url = window.location.href;
 
@@ -259,8 +259,45 @@
                 return false;
             });
 
+
+            function checkfavorite(){
+                var start_empty = document.getElementById("start_empty");
+                var start_checked = document.getElementById("start_checked");
+                var path = window.location.pathname;
+                var uniquekey = path.replace("/post/","");
+
+                if(start_checked.style.display === "none"){
+                    start_checked.style.display = "flex";
+                    start_empty.style.display = "none";
+                }
+                $.ajax({
+                    cache: false,
+                    url: '/ajax/add_favorite/'+uniquekey+'/1',
+                    method: 'POST',
+                    async: false,
+                })
+
+            }
+
+            function uncheckFavorite(){
+                var start_empty = document.getElementById("start_empty");
+                var start_checked = document.getElementById("start_checked");
+                var path = window.location.pathname;
+                var uniquekey = path.replace("/post/","");
+
+                if(start_checked.style.display === "flex"){
+                    start_checked.style.display = "none";
+                    start_empty.style.display = "flex";
+                }
+                $.ajax({
+                    cache: false,
+                    url: '/ajax/add_favorite/'+uniquekey+'/0',
+                    method: 'POST',
+                    async: false,
+                })
+            }
+
         </script>
 
-        <script src="{{ asset('js/post.js') }}"></script>
     {% endblock %}
 

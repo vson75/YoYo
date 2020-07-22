@@ -79,6 +79,17 @@ class TransactionRepository extends ServiceEntityRepository
         ;
     }
 
+    public function getTotalInvestedByUserAndPost($post, $user){
+        return $this->createQueryBuilder('t')
+            ->select('SUM(t.amount)')
+            ->andWhere('t.post = :val and t.user = :user')
+            ->setParameter('val', $post)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
     public function getDistinctPostFinancedByUser($val){
         return $this->createQueryBuilder('t')
             ->select('DISTINCT IDENTITY(t.post)')
@@ -99,6 +110,17 @@ class TransactionRepository extends ServiceEntityRepository
             'val' => $val
         ]);
         return $stmt->fetchAll();
+    }
+
+    public function getTotalAmountInvestedByUser($val)
+    {
+        return $this->createQueryBuilder('t')
+            ->select('SUM(t.amount)')
+            ->andWhere('t.user = :val')
+            ->setParameter('val', $val)
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
     }
 
 

@@ -89,11 +89,17 @@ class Post
      */
     private $targetAmount;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Favorite::class, mappedBy="post")
+     */
+    private $favorites;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->transactions = new ArrayCollection();
+        $this->favorites = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -145,6 +151,11 @@ class Post
     public function getImagePath()
     {
         return '/post/image/'.$this->getImageFilename();
+    }
+
+    public function getDefaultImagePath()
+    {
+        return '/post/default_img.jpeg';
     }
 
     public function setImageFilename(?string $imageFilename): self
@@ -321,12 +332,35 @@ class Post
             $total =0;
 
             for ($i=0; $i< count($amount); $i++) {
-               // var_dump($amount[$i]);
+               //var_dump($amount[$i]->getUser());
                 //var_dump($amount[$i]->getAmount());
                 $total += $amount[$i]->getAmount();
 
             }
             return $total;
+
+    }
+
+    public function getTransactionSumByUser(User $user){
+
+        $amount = $this->getTransactions()->getValues();
+        //dd(count($amount));
+        $total =0;
+
+        for ($i=0; $i< count($amount); $i++) {
+
+            if($amount[$i]->getUser() === $user){
+                $total += $amount[$i]->getAmount();
+                //dump('amount ID'.$amount[$i]->getId());
+                //dump($this->getId());
+                //dump('amount Total'.$total);
+            }
+          //  if($amount[$i]->)
+            //var_dump($amount[$i]->getAmount());
+
+
+        }
+        return $total;
 
     }
 
@@ -342,5 +376,45 @@ class Post
             }
         }
         return $total;
+    }
+
+    public function getPercentageAdvancement(){
+        $amountCollected = $this->getTransactionSum();
+        $targetAmount = $this->getTargetAmount();
+
+        $percentage = $amountCollected/$targetAmount * 100;
+
+        return $percentage;
+    }
+
+    /**
+     * @return Collection|Favorite[]
+     */
+    public function getFavorites(): Collection
+    {
+        return $this->favorites;
+    }
+
+    public function addFavorite(Favorite $favorite): self
+    {
+        if (!$this->favorites->contains($favorite)) {
+            $this->favorites[] = $favorite;
+            $favorite->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavorite(Favorite $favorite): self
+    {
+        if ($this->favorites->contains($favorite)) {
+            $this->favorites->removeElement($favorite);
+            // set the owning side to null (unless already changed)
+            if ($favorite->getPost() === $this) {
+                $favorite->setPost(null);
+            }
+        }
+
+        return $this;
     }
 }

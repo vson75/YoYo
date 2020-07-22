@@ -1,0 +1,72 @@
+
+.rad-info-box{
+    margin-bottom:16px;
+    box-shadow:1px 1px 2px 0 #CCCCCC;
+    padding:20px;
+    box-shadow:0 2px 5px 0 rgba(0,0,0,.26);
+    background: white !important;
+}
+
+.rad-info-box i{
+    display:block;
+    background-clip:padding-box;
+    margin-right:15px;
+    height:60px;
+    width:60px;
+    border-radius:100%;
+    line-height:60px;
+    text-align:center;
+    font-size:4.4em;
+    position:absolute;
+}
+
+.rad-info-box .value,
+.rad-info-box .heading{
+    display:block;
+    position:relative;
+    color: #515d6e;
+    text-align:right;
+    z-index:10;
+}
+
+.rad-info-box .heading{
+    font-size:1.2em;
+    font-weight:300;
+   
+}
+
+.rad-info-box .value{
+    font-size:2.1em;
+    font-weight:600;
+    margin-top:5px;
+}
+
+#project #favorite_list{
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#favorite_list td, #favorite_list th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#project td, #project th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#project tr:nth-child(even){background-color: #f2f2f2;}
+#favorite_list tr:nth-child(even){background-color: #f2f2f2;}
+
+#project tr:hover {background-color: #ddd;}
+#favorite_list tr:hover {background-color: #ddd;}
+
+#project th,  #favorite_list th{
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}

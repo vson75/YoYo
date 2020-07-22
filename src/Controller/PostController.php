@@ -3,7 +3,7 @@
 
 namespace App\Controller;
 use Cassandra\Date;
-use App\Entity\{Post, PostStatus, Transaction};
+use App\Entity\{Favorite, Post, PostStatus, Transaction};
 use App\Form\{CommentFormType, ExtendPostType, PostFormType, PaymentType};
 use App\Repository\PostRepository;
 use App\Repository\TransactionRepository;
@@ -55,7 +55,7 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("post/{uniquekey}", name="show_post")
+     * @Route("/post/{uniquekey}", name="show_post")
      * @param MarkdownHelper $markdownHelper
      * @return Response
      */
@@ -112,8 +112,6 @@ class PostController extends AbstractController
             $new_comment->setPost($postInfo);
             $new_comment->setCreatedAt(new \DateTime('now'));
 
-
-
             // dd($new_comment);
             $em->persist($new_comment);
             $em->flush();
@@ -124,6 +122,16 @@ class PostController extends AbstractController
         }
         $postStatus = new \ReflectionClass('App\Entity\PostStatus');
         $statusArray = $postStatus->getConstants();
+
+        $userFavorite = $em->getRepository(Favorite::class)->findOneBy([
+            'user' => $this->getUser(),
+            'post' => $postInfo
+        ]);
+        if(is_null($userFavorite)){
+            $favorite = null;
+        }else{
+            $favorite = $userFavorite->getisFavorite();
+        }
 
         return $this->render('post/show_post.html.twig',[
                 'postInfo' => $postInfo,
@@ -136,30 +144,48 @@ class PostController extends AbstractController
                 'TransactionThisPost' => $TransactionThisPost,
                 'TotalAnonymous' => $TransactionAnonymous,
                 'financeForm' => $this->createForm(PaymentType::class)->createView(),
-                'statusArray' => $statusArray
+                'statusArray' => $statusArray,
+                'userFavorite' => $favorite
             ]
         );
     }
 
-
     /**
-     * @Route("/participant_project/{uniquekey}", name="add_participant_in_project", methods="POST", requirements={"id":"\d+"})
+     * @Route("/ajax/add_favorite/{uniquekey}/{isFavorite<0|1>}", name="add_favorite", methods="POST")
      * @IsGranted("ROLE_USER")
-     * @param EntityManagerInterface $em
-     * @param Post $post
-     * @param LoggerInterface $logger
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function addNumberParticipant(EntityManagerInterface $em, Post $post, LoggerInterface $logger){
+    public function addAjaxFavorite(EntityManagerInterface $em, Post $post, LoggerInterface $logger, $isFavorite){
 
-       // dump($post);die;
-        $post->setNumberParticipant($post->getNumberParticipant() + 1);
-        $em->flush();
+        $favorite = $em->getRepository(Favorite::class)->findOneBy([
+            'user' => $this->getUser(),
+            'post' => $post
+        ]);
+        if($isFavorite == 0){
+            $setFav = false;
+        }else{
+            $setFav = true;
+        }
+        if(is_null($favorite)){
+            $favorite = new Favorite();
+            $favorite->setUser($this->getUser())
+                ->setPost($post)
+                ->setIsFavorite($setFav);
+            $em->persist($favorite);
+            $em->flush();
+        }else{
+            $favorite->setIsFavorite($setFav);
+            $em->persist($favorite);
+            $em->flush();
+        }
+
 
         $logger->info('a new participant has been finance this project');
         //the key to increase nb Participant = nb_Participant (use this key in post.js)
-        return $this->json(['nb_Participant'=> $post->getNumberParticipant(),
-            'id_post'=>$post->getTitle()]);
+        return $this->json([
+            'nb_Participant'=> $post->getNumberParticipant(),
+            'id_post'=>$post->getTitle()
+        ]);
     }
 
     /**
