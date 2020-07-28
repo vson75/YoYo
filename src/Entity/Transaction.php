@@ -47,6 +47,21 @@ class Transaction
      */
     private $clientSecret;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $fees;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $customDonationForSite;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $amountAfterFees;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +135,43 @@ class Transaction
     public function setClientSecret(string $clientSecret): self
     {
         $this->clientSecret = $clientSecret;
+
+        return $this;
+    }
+
+    public function getFees(): ?float
+    {
+        return $this->fees;
+    }
+
+    public function setFees(?float $fees): self
+    {
+        $this->fees = $fees;
+
+        return $this;
+    }
+
+
+    public function getCustomDonationForSite(): ?float
+    {
+        return $this->customDonationForSite;
+    }
+
+    public function setCustomDonationForSite(?float $customDonationForSite): self
+    {
+        $this->customDonationForSite = $customDonationForSite;
+
+        return $this;
+    }
+
+    public function getAmountAfterFees(): ?float
+    {
+        return $this->amountAfterFees;
+    }
+
+    public function setAmountAfterFees(?float $amountAfterFees): self
+    {
+        $this->amountAfterFees = $amountAfterFees;
 
         return $this;
     }

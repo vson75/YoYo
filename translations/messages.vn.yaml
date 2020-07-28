@@ -4,5 +4,8 @@ form:
     firstname: Tên của bạn
     email: Email của bạn
 
+  documentOrganisation:
+    help: Dạng file hình ảnh
+
 
 

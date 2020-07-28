@@ -372,7 +372,7 @@ class Post
         for ($i=0; $i< count($amount); $i++) {
 
             if($amount[$i]->getAnonymousDonation()){
-                $total += $amount[$i]->getAmount();
+                $total += $amount[$i]->getAmountAfterFees();
             }
         }
         return $total;

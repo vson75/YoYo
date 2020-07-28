@@ -177,7 +177,7 @@ class TransfertFundAfterExpiredCommand extends Command
 
                 $lastcol = count($arrayTransaction) + 7;
                 $sheet->setCellValue('A'.$lastcol, 'Total');
-                $sheet->setCellValue('B'.$lastcol, $this->transactionRepository->getTotalAmountbyPost($expiredPost));
+                $sheet->setCellValue('B'.$lastcol, round($this->transactionRepository->getTotalAmountbyPost($expiredPost),2));
                 // send email recap with detail of each transaction
 
 

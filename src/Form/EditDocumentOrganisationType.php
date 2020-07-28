@@ -16,13 +16,11 @@ class EditDocumentOrganisationType extends AbstractType
         $builder
             ->add('Document0', FileType::class, [
                 'required' => true,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.documentOrganisation.help',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
                         'mimeTypes' => [
-                            'application/pdf',
-                            'application/x-pdf',
                             'image/*'
                         ]
                     ])
@@ -30,13 +28,11 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('Document1', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.documentOrganisation.help',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
                         'mimeTypes' => [
-                            'application/pdf',
-                            'application/x-pdf',
                             'image/*'
                         ]
                     ])
@@ -44,13 +40,11 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('Document2', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.documentOrganisation.help',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
                         'mimeTypes' => [
-                            'application/pdf',
-                            'application/x-pdf',
                             'image/*'
                         ]
                     ])
@@ -58,13 +52,11 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('Document3', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.documentOrganisation.help',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
                         'mimeTypes' => [
-                            'application/pdf',
-                            'application/x-pdf',
                             'image/*'
                         ]
                     ])
@@ -72,13 +64,11 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('Document4', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.documentOrganisation.help',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
                         'mimeTypes' => [
-                            'application/pdf',
-                            'application/x-pdf',
                             'image/*'
                         ]
                     ])
@@ -86,13 +76,11 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('Document5', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.documentOrganisation.help',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
                         'mimeTypes' => [
-                            'application/pdf',
-                            'application/x-pdf',
                             'image/*'
                         ]
                     ])
@@ -100,13 +88,11 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('Document6', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.documentOrganisation.help',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
                         'mimeTypes' => [
-                            'application/pdf',
-                            'application/x-pdf',
                             'image/*'
                         ]
                     ])
@@ -114,13 +100,11 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('Document7', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.documentOrganisation.help',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
                         'mimeTypes' => [
-                            'application/pdf',
-                            'application/x-pdf',
                             'image/*'
                         ]
                     ])
@@ -128,7 +112,7 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('Document8', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.documentOrganisation.help',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -142,13 +126,11 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('Document9', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.documentOrganisation.help',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
                         'mimeTypes' => [
-                            'application/pdf',
-                            'application/x-pdf',
                             'image/*'
                         ]
                     ])

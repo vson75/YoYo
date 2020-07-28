@@ -14,16 +14,14 @@
         <div class="row">
             <div class="col-md-4" style="position:relative; overflow:hidden">
 
-                    {% if postInfo.imagePath == 'uploads/post/image/' %}
-                        <div class="wrapper">
-                            <img style="position: absolute;"  src="{{ asset('uploads/post/default_img.jpeg') }}" alt="">
-                        </div>
-                    {% else %}
-                        <div class="wrapper">
-                            <img style="position: absolute;" src="{{ asset(postInfo.imagePath) }}" alt="">
-                        </div>
-                    {% endif %}
+                {% if postInfo.imagePath == '/post/image/' %}
+                    <div>
+                        <img class="img-fluid rounded-custom img-post" src="{{ postInfo.DefaultImagePath | imagine_filter('card_thumbnail_showpost') }}" alt="">
+                    </div>
 
+                {% else %}
+                    <img class="img-fluid rounded-custom img-post" src="{{ postInfo.imagePath| imagine_filter('card_thumbnail_showpost') }}" alt="">
+                {% endif %}
             </div>
 
             <div class="col-md-8">
@@ -41,8 +39,9 @@
                     <!-- We'll put the error messages in this element -->
                     <div id="card-errors" role="alert"></div>
 
+                    <input id="token" type="hidden" name="token" value="{{ csrf_token('funding_step') }}"/>
 
-                    <button id="submit" class="btn-transaction">{% trans %}Quyên góp {% endtrans %} {{ amount }} €</button>
+                    <button id="submit" class="btn">{% trans %}Quyên góp {% endtrans %} {{ amount }} €</button>
 
                 </form>
             </div>
@@ -57,15 +56,20 @@
     <script>
         var clientSecret = '{{ clientSecret }}';
         var uniquekey = '{{ postInfo.uniquekey }}';
-        var userId = {{ userInfo.Id }}
+        var userId = {{ userInfo.Id }};
         var userEmail = '{{ userInfo.Email }}';
         var amount = {{ amount }};
+        var Donation_After_fees = {{ donationIncludeFees }};
+        var totalFees = {{ totalFees }};
+        var token = document.getElementById("token");
+        var givingAmount = {{ givingAmount }};
+    //    console.log(givingAmount);
 
         var IsNotAnonymous = false;
         $('#anonymous').click(function() {
             IsNotAnonymous = $('#anonymous').prop('checked');
         });
-        console.log(IsNotAnonymous);
+       // console.log(IsNotAnonymous);
     </script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 

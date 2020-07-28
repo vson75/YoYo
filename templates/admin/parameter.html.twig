@@ -1,0 +1,17 @@
+{% extends 'content_base.html.twig' %}
+
+{% block content_body %}
+{{ form_start(form) }}
+{{ form_widget(form) }}
+    <button class="btn btn-primary" type="submit">
+        <span>{% trans %}Thay đổi parameter của trang web{% endtrans %}</span>
+    </button>
+{{ form_end(form)}}
+
+
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

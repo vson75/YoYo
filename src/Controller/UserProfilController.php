@@ -51,12 +51,22 @@ class UserProfilController extends AbstractController
      */
     public function index(EntityManagerInterface $em, Request $request)
     {
-        // use the methode getUser() existe in AbstractController
-        $userEmail = $this->getUser()->getUsername();
+        // use the methode getUser() existe in AbstractControlle
 
+        //  dd($userInfo);
+        return $this->render('user_profil/user_profil.html.twig', [
+            'controller_name' => 'UserProfilController',
+            'userInfo' => $this->getUser(),
+        ]);
+    }
+
+    /**
+     * @Route("/my_organisation", name="app_my_organisation")
+     */
+    public function myOrganisation(EntityManagerInterface $em){
+        $userEmail = $this->getUser()->getUsername();
         $repository = $em->getRepository(User::class);
         $userInfo = $repository->findOneBy(['email' => $userEmail]);
-
         $organisationInfo = $em->getRepository(RequestOrganisationInfo::class)->findOneBy([
             'user' => $userInfo
         ]);
@@ -65,16 +75,15 @@ class UserProfilController extends AbstractController
         $bankAccount =  $em->getRepository(RequestOrganisationDocument::class)->findLastDocumentByUserIdAndTypeDoc($userInfo, DocumentType::Bank_account_information);
         $awards = $em->getRepository(RequestOrganisationDocument::class)->findAllDocumentByUserId($userInfo, DocumentType::Awards_justification);
 
-        //  dd($userInfo);
-        return $this->render('user_profil/user_profil.html.twig', [
-            'controller_name' => 'UserProfilController',
-            'userInfo' => $userInfo,
+        return $this->render('user_profil/my_organisation.html.twig',[
+            'userInfo' => $this->getUser(),
             'organisationInfo' => $organisationInfo,
             'certificate' => $certificate,
             'bank'  => $bankAccount,
             'awards' => $awards
         ]);
     }
+
 
     /**
      * @Route("/edit_profil", name="app_edit_profil")
@@ -135,7 +144,7 @@ class UserProfilController extends AbstractController
         $postStatus = new \ReflectionClass('App\Entity\PostStatus');
         $statusArray = $postStatus->getConstants();
 
-        return $this->render('post_admin/post_admin.index.html.twig',[
+        return $this->render('admin/post_admin/post_admin.index.html.twig',[
             'userInfo' => $this->getUser(),
             'pagination' => $pagination,
             'form' => $form->createView(),

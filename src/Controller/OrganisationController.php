@@ -253,9 +253,7 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
 
             if(in_array("ROLE_ORGANISATION",$arrayRole)){
                 $this->addFlash('success','Cảm ơn bạn. Các tài liệu liên quan tới tổ chức đã được lưu lại trên hệ thống');
-                return $this->redirectToRoute('app_edit_organisation_info', [
-                    'id' => $id
-                ]);
+                return $this->redirectToRoute('app_my_organisation');
             }else{
                 $user->setAskOrganisation(true);
                 $mailer->sendMailAlertToAdminWhenCreatingOrganisation($user->getUsername());
@@ -284,7 +282,7 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
         if($requestOrganisationDocument->getUser() == $this->getUser() || in_array("ROLE_ADMIN",$this->getUser()->getRoles())){
             $response = new StreamedResponse(function() use ($requestOrganisationDocument, $uploadService) {
                 $outputStream = fopen('php://output', 'wb');
-                $fileStream = $uploadService->readStream($requestOrganisationDocument->getDocumentUserPath(), false);
+                $fileStream = $uploadService->readStream($requestOrganisationDocument->getUploadsDownloadDocumentPath(), true);
                 stream_copy_to_stream($fileStream, $outputStream);
             });
             $response->headers->set('Content-Type', $requestOrganisationDocument->getMimeType());

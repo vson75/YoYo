@@ -53,7 +53,7 @@ form.addEventListener('submit', function(ev) {
       // Show error to your customer (e.g., insufficient funds)
 
         swal("Chuyển khoản thất bại",result.error.message, "error");
-      console.log(result.error.message);
+      //console.log(result.error.message);
     } else {
       // The payment has been processed!
       if (result.paymentIntent.status === 'succeeded') {
@@ -63,17 +63,13 @@ form.addEventListener('submit', function(ev) {
         // payment_intent.succeeded event that handles any business critical
         // post-payment actions.
 
-         /// console.log(anonyme);
-         console.log(IsNotAnonymous);
         $.ajax({
           cache: false,
-          url: '/add_transaction/'+uniquekey+'/'+clientSecret+'/'+amount+'/'+IsNotAnonymous,
+          url: '/add_transaction/'+uniquekey+'/'+clientSecret+'/'+amount+'/'+givingAmount+'/'+IsNotAnonymous,
           method: 'POST',
+          data: {token: token.value},
           async: false,
       }).then(function(data) {
-          //  alert(data.nb_Participant);
-
-          //  swal("Chuyển khoản thành công", "Cảm ơn bạn đã đóng góp cho dự án này", "success");
 
       });
           var path = window.location.pathname;
@@ -84,7 +80,6 @@ form.addEventListener('submit', function(ev) {
                   title: "Chuyển khoản thành công",
                   text: "Cảm ơn bạn đã đóng góp cho dự án này!",
                   icon: "success",
-                  //button: "Aww yiss!",
               }
           )
               .then((value) => {

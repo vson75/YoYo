@@ -37,7 +37,7 @@
         {{ form_end(form)}}
 
     </div>
-
+{#
     <hr>
     <h2>{% trans %}Các tài liệu liên quan tới tổ chức{% endtrans %}</h2>
     {% for d in document %}
@@ -75,5 +75,7 @@
         </div>
     {% endfor %}
     <a href="{{ path('app_edit_document_organisation', {id: userInfo.id}) }}" class="btn btn-primary"><span>{% trans %}Cập nhật tài liệu{% endtrans %}</span></a>
+
+#}
 
 {% endblock %}

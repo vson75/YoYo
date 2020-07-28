@@ -24,7 +24,7 @@ class TransactionRepository extends ServiceEntityRepository
     public function getTotalAmountbyPost($val)
     {
         return $this->createQueryBuilder('t')
-            ->select('SUM(t.amount)')
+            ->select('SUM(t.amountAfterFees)')
             ->andWhere('t.post = :val')
             ->setParameter('val', $val)
             ->orderBy('t.id','DESC')
@@ -59,7 +59,7 @@ class TransactionRepository extends ServiceEntityRepository
     public function getAnonymousTransactionbyPost($val)
     {
         return $this->createQueryBuilder('t')
-            ->select('SUM(t.amount)')
+            ->select('SUM(t.amountAfterFees)')
             ->andWhere('t.post = :val')
             ->andWhere('t.anonymousDonation = 1')
             ->setParameter('val', $val)
@@ -81,7 +81,7 @@ class TransactionRepository extends ServiceEntityRepository
 
     public function getTotalInvestedByUserAndPost($post, $user){
         return $this->createQueryBuilder('t')
-            ->select('SUM(t.amount)')
+            ->select('SUM(t.amountAfterFees)')
             ->andWhere('t.post = :val and t.user = :user')
             ->setParameter('val', $post)
             ->setParameter('user', $user)
@@ -115,7 +115,7 @@ class TransactionRepository extends ServiceEntityRepository
     public function getTotalAmountInvestedByUser($val)
     {
         return $this->createQueryBuilder('t')
-            ->select('SUM(t.amount)')
+            ->select('SUM(t.amountAfterFees)')
             ->andWhere('t.user = :val')
             ->setParameter('val', $val)
             ->getQuery()

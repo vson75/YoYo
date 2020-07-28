@@ -15,9 +15,17 @@ class PaymentType extends AbstractType
         $builder
             ->add('amount', MoneyType::class, [
                 'label' => false,
+                //set currency = false to hide the icon EUR in the form
+                'currency' => false,
                 'constraints' => [
                     new Constraints\NotBlank
                 ]
+            ])
+            ->add('giveForSite', MoneyType::class, [
+                'label' => false,
+                //set currency = false to hide the icon EUR in the form
+                'currency' => false,
+                'required' => false
             ])
         ;
     }
@@ -26,7 +34,7 @@ class PaymentType extends AbstractType
     {
         $resolver->setDefaults([
             // Configure your form options here
-            'csrf_protection' => true
+            'csrf_protection' => false
         ]);
     }
 }

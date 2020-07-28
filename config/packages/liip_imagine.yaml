@@ -39,6 +39,12 @@ liip_imagine:
                     mode:          outbound
                     allow_upscale: true
 
+        card_imagePost_FundingStep:
+            filters:
+                thumbnail:
+                    size:          [500, 500]
+                    mode:          outbound
+                    allow_upscale: true
 
         card_thumbnail_myProfil_stat:
             filters:

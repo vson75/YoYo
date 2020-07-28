@@ -3,7 +3,15 @@
 
 namespace App\Controller;
 use Cassandra\Date;
-use App\Entity\{Favorite, Post, PostStatus, Transaction};
+use App\Entity\{AdminParameter,
+    DocumentType,
+    Favorite,
+    Post,
+    PostStatus,
+    RequestOrganisationDocument,
+    RequestOrganisationInfo,
+    Transaction,
+    User};
 use App\Form\{CommentFormType, ExtendPostType, PostFormType, PaymentType};
 use App\Repository\PostRepository;
 use App\Repository\TransactionRepository;
@@ -74,9 +82,9 @@ class PostController extends AbstractController
 
         $nb_participant = $transactionRepository->getNumberParticipantbyPost($postInfo->getId());
 
-        $totalAmount = $transactionRepository->getTotalAmountbyPost($postInfo->getId());
-        $TransactionThisPost = $transactionRepository->getTransactionbyPost($postInfo->getId());
-       // dd($TransactionThisPost);
+        $totalAmount = round($transactionRepository->getTotalAmountbyPost($postInfo->getId()),2);
+        $arrayDonationNotAnonymous = $transactionRepository->getTransactionbyPost($postInfo->getId());
+       // dd($arrayDonationNotAnonymous);
 
         $TransactionAnonymous = $postInfo->getTransactionAnonymousSum();
 
@@ -86,11 +94,6 @@ class PostController extends AbstractController
 
         $datediff = date_diff($postInfo->getFinishAt(),new \DateTime('now'));
         $datediff = $datediff->format('%d');
-
-
-
-       // dd($currentUserLooged);
-      // var_dump($comment);die;
 
         $postContentCache = $postInfo->getContent();
         if(!is_null($postContentCache)){
@@ -133,6 +136,18 @@ class PostController extends AbstractController
             $favorite = $userFavorite->getisFavorite();
         }
 
+        $userEmail = $postInfo->getUser()->getEmail();
+        $repository = $em->getRepository(User::class);
+        $userInfo = $repository->findOneBy(['email' => $userEmail]);
+        $organisationInfo = $em->getRepository(RequestOrganisationInfo::class)->findOneBy([
+            'user' => $userInfo
+        ]);
+
+        $certificate = $em->getRepository(RequestOrganisationDocument::class)->findLastDocumentByUserIdAndTypeDoc($userInfo, DocumentType::Certificate_organisation);
+
+        $awards = $em->getRepository(RequestOrganisationDocument::class)->findAllDocumentByUserId($userInfo, DocumentType::Awards_justification);
+      //  dd($certificate->getDocumentPath());
+
         return $this->render('post/show_post.html.twig',[
                 'postInfo' => $postInfo,
                 'datediff' => $datediff,
@@ -141,11 +156,14 @@ class PostController extends AbstractController
                 'userInfo' => $currentUserLooged,
                 'nb_participant' => $nb_participant,
                 'totalAmount' => $totalAmount,
-                'TransactionThisPost' => $TransactionThisPost,
+                'ArrayDonation' => $arrayDonationNotAnonymous,
                 'TotalAnonymous' => $TransactionAnonymous,
                 'financeForm' => $this->createForm(PaymentType::class)->createView(),
                 'statusArray' => $statusArray,
-                'userFavorite' => $favorite
+                'userFavorite' => $favorite,
+                'organisationInfo' => $organisationInfo,
+                'certificate' => $certificate,
+                'awards' => $awards
             ]
         );
     }
@@ -240,7 +258,7 @@ class PostController extends AbstractController
             $uploadedFile = $form['imageFile']->getData();
 
             if ($uploadedFile) {
-                $newFilename = $uploadService->UploadPostImage($uploadedFile, $postExisted->getImageFilename());
+                $newFilename = $uploadService->UploadPostImage($uploadedFile, null);
                 $createNew->setImageFilename($newFilename);
             }
 
@@ -388,11 +406,15 @@ class PostController extends AbstractController
             throw $this->createNotFoundException('The Post is not exist');
         }
 
+        $managementFees = $em->getRepository(AdminParameter::class)->findLastestParamId();
+
 
         return $this->render('post/funding_step_1.html.twig', [
             'userInfo' => $user,
             'financeForm' => $financeForm->createView(),
-            'postInfo' => $postInfo
+            'postInfo' => $postInfo,
+            'ManagementFees' => $managementFees->getManagementFees(),
+            'FixedFees' => $managementFees->getFixedFees()
         ]);
     }
 
@@ -414,10 +436,26 @@ class PostController extends AbstractController
             'uniquekey' => $uniquekey,
         ]);
 
+
+
         //dd($financeForm->getData());
 
         if ($financeForm->isSubmitted() && $financeForm->isValid()) {
-            $amount = $financeForm->getData()['amount'];
+            $donationAmount = $financeForm->getData()['amount'];
+            $givingAmount = $financeForm->getData()['giveForSite'];
+         //   dd($givingAmount);
+            if(is_null($givingAmount)){
+                $givingAmount = 0;
+            }
+            $amount = $donationAmount + $givingAmount;
+            //dd($amount);
+
+            $paramAdmin = $em->getRepository(AdminParameter::class)->findLastestParamId();
+            $percentManagementFees = $paramAdmin->getManagementFees() * $donationAmount;
+            $fixedFees = $paramAdmin->getFixedFees();
+            $totalFees = $percentManagementFees + $fixedFees;
+            $donationAfterFees = $donationAmount - $totalFees;
+
 
             Stripe::setApiKey('sk_test_gxLCkDYIJRoJXx7Ovh4RqBTB00aHGuN3mt');
             $intent = PaymentIntent::create([
@@ -439,53 +477,84 @@ class PostController extends AbstractController
             'userInfo'      => $user,
             'clientSecret' => $intent->client_secret,
             'amount'        => $amount,
-            'postInfo' => $postInfo
+            'givingAmount' => $givingAmount,
+            'postInfo' => $postInfo,
+            'donationIncludeFees' => $donationAfterFees,
+            'totalFees' => $totalFees
         ]);
     }
 
 
     /**
-     * @Route("/add_transaction/{uniquekey}/{clientSecret}/{amount}/{anonyme}", methods="POST", name="app_add_transaction")
+     * @Route("/add_transaction/{uniquekey}/{clientSecret}/{amount}/{give}/{anonyme}", methods="POST", name="app_add_transaction")
      */
-    public function addTransactioninDB($uniquekey, $clientSecret, $amount, $anonyme, EntityManagerInterface $em, Mailer $mailer){
+    public function addTransactioninDB($uniquekey, $clientSecret, $amount,$give, $anonyme, EntityManagerInterface $em, Mailer $mailer, Request $request){
 
         $repo = $em->getRepository(Post::class);
         $post = $repo->findOneBy([
            'uniquekey' => $uniquekey
         ]);
 
+        $submittedToken = $request->request->get('token');
 
-        $transaction = new Transaction();
+        /**
+         add log to debug
 
-        $transaction->setUser($this->getUser())
-                    ->setPost($post)
-                    ->setAmount($amount)
-                    ->setClientSecret($clientSecret)
-                    ->setTransfertAt(new \DateTime('now'));
-        // $anonyme is consider for a string
+        $logger->debug('submitted token : ',[
+        'submittoken' => $submittedToken
+        ]
+        );
+         */
+        $repoAdminParameter = $em->getRepository(AdminParameter::class);
+        $AdminParameter = $repoAdminParameter->findLastestParamId();
+        $percentManagementFees = $AdminParameter->getmanagementFees();
+        $fixedFees = $AdminParameter->getfixedFees();
+        $fees = ($amount-$give) *$percentManagementFees + $fixedFees;
 
-        if($anonyme == 'true'){
-            $transaction->setAnonymousDonation(1);
+
+        if ($this->isCsrfTokenValid('funding_step', $submittedToken)) {
+
+            $transaction = new Transaction();
+
+            $transaction->setUser($this->getUser())
+                ->setPost($post)
+                ->setAmount($amount)
+                ->setFees($fees)
+                ->setAmountAfterFees($amount - $fees)
+                ->setCustomDonationForSite($give)
+                ->setClientSecret($clientSecret)
+                ->setTransfertAt(new \DateTime('now'));
+            // $anonyme is consider for as a string
+
+            if($anonyme == 'true'){
+                $transaction->setAnonymousDonation(1);
+            }else{
+                $transaction->setAnonymousDonation(0);
+            }
+            //dd($transaction);
+
+            $em->persist($transaction);
+            $em->flush();
+
+
+            $template='email/EmailCreateOrDonation.html.twig';
+            $subject ="Cảm ơn bạn đã quyên góp cho dự án ".$post->getTitle();
+            $title ="YoYo - quyên góp dự án";
+            $action = "quyên góp cho dự án: ";
+            $caption_link = "Bạn có thể xem dự án bạn mới quyên góp tại đây: ";
+            $mailer->sendMailCreateOrDonationPost($this->getUser(),$post,$template,$subject,$title,$action, $caption_link);
+
+            //$this->addFlash('success', 'Cảm ơn bạn đã quyên góp tiền');
+            return $this->json([
+                'transaction' => $transaction
+            ]);
         }else{
-            $transaction->setAnonymousDonation(0);
+         //   $logger->log('500','Token is not valid in paiement Step 2');
+            return $this->redirectToRoute('app_homepage');
         }
-        //dd($transaction);
-
-        $em->persist($transaction);
-        $em->flush();
 
 
-        $template='email/EmailCreateOrDonation.html.twig';
-        $subject ="Cảm ơn bạn đã quyên góp cho dự án ".$post->getTitle();
-        $title ="YoYo - quyên góp dự án";
-        $action = "quyên góp cho dự án: ";
-        $caption_link = "Bạn có thể xem dự án bạn mới quyên góp tại đây: ";
-        $mailer->sendMailCreateOrDonationPost($this->getUser(),$post,$template,$subject,$title,$action, $caption_link);
 
-        //$this->addFlash('success', 'Cảm ơn bạn đã quyên góp tiền');
-        return $this->json([
-            'transaction' => $transaction
-        ]);
 
     }
 

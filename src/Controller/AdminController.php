@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\AdminParameter;
 use App\Entity\DocumentType;
+use App\Entity\Favorite;
 use App\Entity\Post;
 use App\Entity\PostSearch;
 use App\Entity\PostStatus;
@@ -11,6 +13,7 @@ use App\Entity\RequestOrganisationInfo;
 use App\Entity\RequestStatus;
 use App\Entity\User;
 use App\Entity\UserDocument;
+use App\Form\AdminParameterType;
 use App\Form\PostSearchType;
 use App\Form\StopPostType;
 use App\Repository\PostRepository;
@@ -80,7 +83,7 @@ class AdminController extends AbstractController
         $postStatus = new \ReflectionClass('App\Entity\PostStatus');
         $statusArray = $postStatus->getConstants();
 
-        return $this->render('post_admin/post_admin.index.html.twig', [
+        return $this->render('admin/post_admin/post_admin.index.html.twig', [
             'pagination' => $pagination,
             'userInfo' => $this->getUser(),
             'form' => $form->createView(),
@@ -103,7 +106,7 @@ class AdminController extends AbstractController
             throw $this->createNotFoundException('The Post is not exist');
         }
         $nb_participant = $transactionRepository->getNumberParticipantbyPost($postInfo->getId());
-        $totalAmount = $transactionRepository->getTotalAmountbyPost($postInfo->getId());
+        $totalAmount = round($transactionRepository->getTotalAmountbyPost($postInfo->getId()),2);
         $TransactionThisPost = $transactionRepository->getTransactionbyPost($postInfo->getId());
 
         $datediff = date_diff($postInfo->getFinishAt(),new \DateTime('now'));
@@ -112,14 +115,44 @@ class AdminController extends AbstractController
         $postStatus = new \ReflectionClass('App\Entity\PostStatus');
         $statusArray = $postStatus->getConstants();
 
-        return $this->render('post_admin/show_post.html.twig', [
+
+        $userFavorite = $em->getRepository(Favorite::class)->findOneBy([
+            'user' => $this->getUser(),
+            'post' => $postInfo
+        ]);
+        if(is_null($userFavorite)){
+            $favorite = null;
+        }else{
+            $favorite = $userFavorite->getisFavorite();
+        }
+
+        $userEmail = $postInfo->getUser()->getUsername();
+        $repository = $em->getRepository(User::class);
+        $userInfo = $repository->findOneBy(['email' => $userEmail]);
+        $organisationInfo = $em->getRepository(RequestOrganisationInfo::class)->findOneBy([
+            'user' => $userInfo
+        ]);
+
+        $certificate = $em->getRepository(RequestOrganisationDocument::class)->findLastDocumentByUserIdAndTypeDoc($userInfo, DocumentType::Certificate_organisation);
+        $bankAccount =  $em->getRepository(RequestOrganisationDocument::class)->findLastDocumentByUserIdAndTypeDoc($userInfo, DocumentType::Bank_account_information);
+        $awards = $em->getRepository(RequestOrganisationDocument::class)->findAllDocumentByUserId($userInfo, DocumentType::Awards_justification);
+        //  dd($certificate->getDocumentPath());
+
+
+
+        return $this->render('admin/post_admin/show_post.html.twig', [
             'postInfo' => $postInfo,
             'nb_participant' => $nb_participant,
             'totalAmount' => $totalAmount,
             'TransactionThisPost' => $TransactionThisPost,
             'userInfo' => $user,
             'datediff' => $datediff,
-            'statusArray' => $statusArray
+            'statusArray' => $statusArray,
+            'userFavorite' => $favorite,
+            'organisationInfo' => $organisationInfo,
+            'certificate' => $certificate,
+            'bank'  => $bankAccount,
+            'awards' => $awards
         ]);
     }
 
@@ -160,7 +193,7 @@ class AdminController extends AbstractController
             ]);
         }
 
-        return $this->render('post_admin/stop_post.html.twig',[
+        return $this->render('admin/post_admin/stop_post.html.twig',[
             'post' => $form->createView(),
             'userInfo' => $this->getUser()
         ]);
@@ -458,6 +491,37 @@ class AdminController extends AbstractController
             'userInfo' => $this->getUser()
         ]
         );
+    }
+
+
+    /**
+     * @Route("/admin/modify_parameter", name="app_admin_parameter")
+     */
+    public function AdminModifyParameter(Request $request, EntityManagerInterface $em){
+            $existedParameter = $em->getRepository(AdminParameter::class)->findLastestParamId();
+        //  dd($existedParameter);
+            if(is_null($existedParameter)){
+                $form = $this->createForm(AdminParameterType::class);
+            }else{
+                //$existedParameter = $em->getRepository(AdminParameter::class)->findAll();
+                $form = $this->createForm(AdminParameterType::class,$existedParameter);
+            }
+
+            $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $parameter = $form->getData();
+            $em->persist($parameter);
+            $em->flush();
+
+            $this->addFlash("success","Parameter saved");
+            return $this->redirectToRoute("app_admin_overview");
+        }
+
+        return $this->render('admin/parameter.html.twig',[
+            'form' => $form->createView(),
+            'userInfo' => $this->getUser()
+        ]);
     }
 
 

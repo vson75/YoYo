@@ -14,9 +14,6 @@
         <h1 style="text-align: center"><span>{{ postInfo.title }}</span></h1>
     </div>
 
-
-
-
     <div class="row">
 
         <!-- Post Content Column -->
@@ -135,27 +132,48 @@
                     </svg>
                     <span>{% trans %}Chia sẻ qua facebook{% endtrans %}</span>
                 </div>
-
-
-
                 {% endif %}
                 {% block admin_post %}
-                    
+
                 {% endblock %}
 
 
             </div>
 
+            {# Section document of Organisation #}
+
+            {% if certificate is not null or awards is not empty %}
+            <div class="card-document col-md-3">
+                {% trans %}Danh sách bằng khen và giấy chứng nhận của tổ chức {% endtrans %}
+
+                <div style="margin-bottom: 1rem">
+                    {% if certificate is not null %}
+                        <img id="myImg" class="OrganisationDocument" src="{{ asset(certificate.documentPath)}}">
+                    {% endif %}
+
+                    {% if awards is not empty %}
+                        {% for award in awards %}
+
+                            <img id="award{{ loop.index }}" src="{{ asset(award.documentPath)}}" class="OrganisationDocument">
+                        {% endfor %}
+                    {% endif %}
+
+                </div>
+
+            </div>
+            {% endif %}
+
         </div>
-
-
-
 
     </div>
 
-
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="img01">
+        <div id="caption"></div>
+    </div>
 {% endblock %}
-
 
 {% block comment %}
 <div class="row">
@@ -184,14 +202,14 @@
 
                         {% endif %}
 
-                        {% for transactionpost in TransactionThisPost %}
+                        {% for donation in ArrayDonation %}
 
                         <div class="media col-md-4" style="margin: 0.5rem 0 0.5rem">
                             <img class="d-flex mr-3 rounded-circle icone-user" src="http://placehold.it/50x50" alt="">
                             <div class="media-body">
-                                <small class="mt-0">{{ transactionpost.user.firstname }} {{ transactionpost.user.lastname }}</small>
+                                <small class="mt-0">{{ donation.user.firstname }} {{ donation.user.lastname }}</small>
                                 <br>
-                                <div  style="white-space: pre-wrap;">{{ transactionpost.amount }} €</div>
+                                <div  style="white-space: pre-wrap;">{{ donation.amountAfterFees|round(2, 'floor')  }} €</div>
                             </div>
                         </div>
                         {% endfor %}
@@ -247,57 +265,6 @@
 
     {% block javascripts %}
         {{ parent() }}
-        <script>
-            var fbButton = document.getElementById('fb-share-button');
-            var url = window.location.href;
-
-            fbButton.addEventListener('click', function() {
-                window.open('https://www.facebook.com/sharer/sharer.php?u=' + url,
-                    'facebook-share-dialog',
-                    'width=800,height=600'
-                );
-                return false;
-            });
-
-
-            function checkfavorite(){
-                var start_empty = document.getElementById("start_empty");
-                var start_checked = document.getElementById("start_checked");
-                var path = window.location.pathname;
-                var uniquekey = path.replace("/post/","");
-
-                if(start_checked.style.display === "none"){
-                    start_checked.style.display = "flex";
-                    start_empty.style.display = "none";
-                }
-                $.ajax({
-                    cache: false,
-                    url: '/ajax/add_favorite/'+uniquekey+'/1',
-                    method: 'POST',
-                    async: false,
-                })
-
-            }
-
-            function uncheckFavorite(){
-                var start_empty = document.getElementById("start_empty");
-                var start_checked = document.getElementById("start_checked");
-                var path = window.location.pathname;
-                var uniquekey = path.replace("/post/","");
-
-                if(start_checked.style.display === "flex"){
-                    start_checked.style.display = "none";
-                    start_empty.style.display = "flex";
-                }
-                $.ajax({
-                    cache: false,
-                    url: '/ajax/add_favorite/'+uniquekey+'/0',
-                    method: 'POST',
-                    async: false,
-                })
-            }
-
-        </script>
-
+        <script src="{{ asset('js/showpost.js') }}"></script>
     {% endblock %}
 

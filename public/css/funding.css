@@ -103,3 +103,24 @@ span.price {
     width: 100%;
     object-fit: contain;
 }
+
+.img_funding{
+    width: 100%;
+    height: 100%;
+}
+
+input{
+    display: flex;
+    text-align: right;
+    max-width: 100%;
+
+}
+
+.calculate_amount{
+    text-align: right;
+    display: block;
+}
+
+#receive_amount{
+    color: green;
+}

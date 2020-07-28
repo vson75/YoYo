@@ -20,8 +20,8 @@ class UploadService
 {
     const Post_image = '/post/image';
     const User_icon = '/user/icon';
-    const Organisation_document_request = '/user/documents_request/';
-    const Organisation_document_validate = '/user/documents_validate/';
+    const Organisation_document_Upload_Download_Path = '/user/documents_request/';
+    const Organisation_document_path = 'uploads/user/documents_request/';
 
     private $filesystem;
     private $em;
@@ -84,12 +84,12 @@ class UploadService
 
 
     public function UploadRequestOrganisationDocument(UploadedFile $uploadedFile, $userID, $documentType, ?string $existingFilename): string {
-        $destination = self::Organisation_document_request.$userID;
+        $destination = self::Organisation_document_Upload_Download_Path.$userID;
         $origineFilename = pathinfo($uploadedFile->getClientOriginalName(),PATHINFO_FILENAME);
         $newFilename = $documentType.'-'.Urlizer::urlize($origineFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
 
         $stream = fopen($uploadedFile->getPathname(), 'r');
-        $result = $this->privateUploadsFilesystem->writeStream($destination.'/'.$newFilename,$stream);
+        $result = $this->filesystem->writeStream($destination.'/'.$newFilename,$stream);
         if ($result === false) {
             throw new \Exception(sprintf('Could not write uploaded file "%s"', $newFilename));
         }
@@ -99,7 +99,7 @@ class UploadService
         }
         // Delete old document except Awards_justification
         if($documentType != DocumentType::Awards_justification && $existingFilename){
-            $this->privateUploadsFilesystem->delete(self::Organisation_document_request.'/'.$userID.'/'.$existingFilename);
+            $this->privateUploadsFilesystem->delete(self::Organisation_document_Upload_Download_Path.'/'.$userID.'/'.$existingFilename);
         }
 
         return $newFilename;
