@@ -7,5 +7,20 @@ form:
   documentOrganisation:
     help: Dạng file hình ảnh
 
+  CreateOrganisation:
+    fileFormat: Dạng file hình ảnh
+    fileFormatJpgPdf: Dạng file hình ảnh hoặc PDF
+    CertificateOrganisation: Giấy chứng nhận tổ chức
+    BankAccountInformation: Thông tin tài khoản ngân hàng
+    award: Bằng khen
+    PhoneNumber: Số điện thoại
+    Address: Địa chỉ
+    OrganisationName: Tên tổ chức
+    Country: Quốc gia
+    ZipCode: Mã vùng
+    City: Thành phố
+
+
+
 
 

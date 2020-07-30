@@ -27,7 +27,11 @@
                     <img class="img-fluid rounded-custom img-post" src="{{ postInfo.imagePath| imagine_filter('card_thumbnail_showpost') }}" alt="">
             {% endif %}
                     <div class="authorInfo rounded-custom">
-                        {% trans %}Tạo bởi: {% endtrans %} {{ postInfo.user.firstname }} {{ postInfo.user.lastname }}
+                        {% if postInfo.user.requestOrganisationInfo is not null %}
+                            {% trans %}Tạo bởi: {% endtrans %} {{ postInfo.user.requestOrganisationInfo.OrganisationName }}
+                        {% else %}
+                            {% trans %}Tạo bởi: {% endtrans %} {{ postInfo.user.firstname }} {{ postInfo.user.lastname }}
+                        {% endif %}
                     </div>
                 {% if is_granted('ROLE_USER') == true %}
                 {% if userFavorite is null or userFavorite == false %}
@@ -140,10 +144,13 @@
 
             </div>
 
-            {# Section document of Organisation #}
+            {# Section document of Organisation. Check if certificate or awards is not empty #}
 
             {% if certificate is not null or awards is not empty %}
+            {# Check if we have a echec/success message #}
+
             <div class="card-document col-md-3">
+
                 {% trans %}Danh sách bằng khen và giấy chứng nhận của tổ chức {% endtrans %}
 
                 <div style="margin-bottom: 1rem">

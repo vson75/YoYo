@@ -170,28 +170,45 @@ class UserProfilController extends AbstractController
 
         $totalInvested = $repo->getTotalAmountInvestedByUser($this->getUser());
 
-        for($i=0;$i<sizeof($ArrayProjectFinanced);$i++){
-            $project[$i] = $em->getRepository(Post::class)->findOneBy([
-                'id' => $ArrayProjectFinanced[$i]
-            ]);
-            //get data in pie chart for each project
-            $dataChart[$i+1] =   [$project[$i]->getTitle(),$project[$i]->getTransactionSumByUser($this->getUser())];
+        if(empty($ArrayProjectFinanced)){
+            $project = 0;
+            //echo("alo");
+        }else{
+            for($i=0;$i<sizeof($ArrayProjectFinanced);$i++){
+                $project[$i] = $em->getRepository(Post::class)->findOneBy([
+                    'id' => $ArrayProjectFinanced[$i]
+                ]);
+                //get data in pie chart for each project
+                $dataChart[$i+1] =   [$project[$i]->getTitle(),$project[$i]->getTransactionSumByUser($this->getUser())];
+            }
+          //  echo("123");
         }
 
-        $pagination = $paginator->paginate(
-            $project, /* query NOT result */
-            $request->query->getInt('page', 1)/*page number*/,
-            5/*limit per page*/
-        );
+        if($project === 0){
+            $pagination = [];
+        }else{
+            $pagination = $paginator->paginate(
+                $project,
+                $request->query->getInt('page', 1),
+                5
+            );
+
+        }
 
         $favoriteRepo = $em->getRepository(Favorite::class);
         $nbFavorite = $favoriteRepo->getNbFavoriteByUser($this->getUser()->getId());
         $ArrayFavoriteProject = $favoriteRepo->getDistinctFavoriteByUser($this->getUser()->getId());
-        for($i=0;$i<sizeof($ArrayFavoriteProject);$i++){
-            $FavoriteProject[$i] = $em->getRepository(Post::class)->findOneBy([
-                'id' => $ArrayFavoriteProject[$i]
-            ]);
+       // dd($ArrayFavoriteProject);
+        if(empty($ArrayFavoriteProject)){
+            $FavoriteProject = 0;
+        }else{
+            for($i=0;$i<sizeof($ArrayFavoriteProject);$i++){
+                $FavoriteProject[$i] = $em->getRepository(Post::class)->findOneBy([
+                    'id' => $ArrayFavoriteProject[$i]
+                ]);
+            }
         }
+
 
         // Pie chart information
         $pieChart->getData()->setArrayToDataTable($dataChart);
@@ -211,7 +228,7 @@ class UserProfilController extends AbstractController
             'piechart' => $pieChart,
             'nbProjectFinanced' => $nbProjectFinanced[0]["count(*)"],
             'projectFinanced' => $pagination,
-            'totalInvested' => $totalInvested,
+            'totalInvested' => round($totalInvested,2),
             'nbFavorite' => $nbFavorite,
             'FavProject' => $FavoriteProject
         ]);

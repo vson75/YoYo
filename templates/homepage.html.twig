@@ -21,6 +21,10 @@
                 {% else %}
                     <a href="{{ path('app_create_organisation') }}" class="btn btn-primary btn-lg">{% trans %} Tạo tài khoản tổ chức{% endtrans %}</a>
                 {% endif %}
+            {% else %}
+                    <a href="{{ path('app_create_organisation') }}" class="btn btn-primary btn-lg">{% trans %} Tạo tài khoản tổ chức{% endtrans %}</a>
+                    <a href="{{ path('app_registration') }}" class="btn btn-info btn-lg">{% trans %}Tạo tài khoản cá nhân{% endtrans %}</a>
+
             {% endif %}
 
         </header>

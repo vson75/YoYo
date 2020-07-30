@@ -99,7 +99,7 @@ class UploadService
         }
         // Delete old document except Awards_justification
         if($documentType != DocumentType::Awards_justification && $existingFilename){
-            $this->privateUploadsFilesystem->delete(self::Organisation_document_Upload_Download_Path.'/'.$userID.'/'.$existingFilename);
+            $this->filesystem->delete(self::Organisation_document_Upload_Download_Path.'/'.$userID.'/'.$existingFilename);
         }
 
         return $newFilename;

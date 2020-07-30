@@ -30,21 +30,61 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
      */
     public function askForRoleOrganisation(Request $request, EntityManagerInterface $em, UploadService $uploadService, Mailer $mailer, RequestStatusRepository $requestStatusRepository){
         $user = $this->getUser();
-        //  dd($user);
+      //  dd($user);
         $requestInfo = $em->getRepository(RequestOrganisationInfo::class)->findOneBy([
             'user' => $user
         ]);
+       // dd($requestInfo);
         if($requestInfo){
             $this->addFlash('echec', "Bạn đã tạo tài khoản tổ chức, 1 tài khoản chỉ có thể tạo 1 tổ chức.");
             return $this->redirectToRoute('app_homepage');
         }
         $form = $this->createForm(CreateOrganisationType::class);
         $form->handleRequest($request);
+       // dd($form);
         if($form->isSubmitted() && $form->isValid()){
 
-            $repo = $em->getRepository(User::class);
-            $user = $repo->findOneBy([
-                'email' => $user->getUsername()
+            if(is_null($user)){
+                $email = $request->request->get("email");
+              //  dd($email);
+                $repo = $em->getRepository(User::class);
+                $checkEmail = $repo->findOneBy([
+                    'email' => $email
+                ]);
+
+                if(!empty($checkEmail)){
+                    $this->addFlash("echec","Email này đã được đăng ký trong hệ thống của chúng tôi. Bạn có thể tạo password mới bằng cách ấn vào quên mật khẩu");
+                    return $this->redirectToRoute("app_create_organisation");
+                }else{
+
+                    // create new user email
+                    $user = new User();
+                    $user->setEmail($email);
+                    $user->setToken(hash('haval160,3',$email.rand(0,1000),false));
+                    $user->setTokencreateAt(new \DateTime('now'));
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($user);
+                    $em->flush();
+
+
+                    // send mail
+                    $token = $user->getToken();
+                    $tokenCreateAt = $user->getTokencreateAt();
+                    $template = 'email/password.html.twig';
+                    $subject = "Chào mừng bạn đã tới với YoYo - Tạo mật khẩu mới";
+                    $mailer->SendMailPassword($user,$token,$tokenCreateAt,$template,$subject);
+
+                    $user = $repo->findOneBy([
+                        'email' => $email
+                    ]);
+
+                  //  dd($request->request->get("email"));
+                }
+
+            }
+           // dd($user);
+            $user = $em->getRepository(User::class)->findOneBy([
+                'email' => $user->getEmail()
             ]);
             $user->setAskOrganisation(true);
             $em->persist($user);
@@ -56,13 +96,13 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
                 'id' => RequestStatus::Request_Sent
             ]);
 
-            $organisationInfo   ->setOrganisationName($form['OrganisationName']->getData())
+            $organisationInfo->setOrganisationName($form['OrganisationName']->getData())
                 ->setAddress($form['Address']->getData())
                 ->setCity($form['City']->getData())
                 ->setZipCode($form['ZipCode']->getData())
                 ->setCountry($form['Country']->getData())
                 ->setPhoneNumber($form['PhoneNumber']->getData())
-                ->setUser($this->getUser())
+                ->setUser($user)
                 ->setRequestStatus($request);
 
             $em->persist($organisationInfo);
@@ -88,15 +128,17 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
                 //  dd($uploadService);
             }
 
-            for($i=0;$i< sizeof($award_document);$i++){
-                if(!is_null($award_document[$i])){
-                    $uploadService->UploadRequestOrganisationDocumentByType(DocumentType::Awards_justification,$award_document[$i], $user,null);
+            if(!empty($award_document)){
+                for($i=0;$i< sizeof($award_document);$i++){
+                    if(!is_null($award_document[$i])){
+                        $uploadService->UploadRequestOrganisationDocumentByType(DocumentType::Awards_justification,$award_document[$i], $user,null);
 
+                    }
                 }
             }
 
             $mailer->sendMailAlertToAdminWhenCreatingOrganisation($user->getUsername());
-           $mailer->ThankToCreateOrganisation($user);
+            $mailer->ThankToCreateOrganisation($user);
 
             $this->addFlash('success','Yêu cầu tạo tài khoản cho phép đăng dự án của bạn đã gửi tới chúng tôi. Chúng tôi sẽ kiểm tra và gửi phản hồi lại cho bạn trong thời gian 24h');
             return $this->redirectToRoute('app_homepage');
@@ -123,13 +165,14 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
             return $this->redirectToRoute("app_homepage");
         }else{
 
-
+            // type document NOT award. The document we need to get the lastest.
             $userDocumentId = [DocumentType::Certificate_organisation,DocumentType::Bank_account_information];
-            // $userdocumentId  = $userDocument->getId();
+            //$userdocumentId  = $userDocument->getId();
+            //dd($userDocumentId);
 
-            for($i = 0; $i <sizeof($userDocumentId); $i++){
-                $document[$i] = $em->getRepository(RequestOrganisationDocument::class)->findLastDocumentByUserIdAndTypeDoc($id,$userDocumentId[$i]);
-            }
+            $certification_organisation = $em->getRepository(RequestOrganisationDocument::class)->findLastDocumentByUserIdAndTypeDoc($id,DocumentType::Certificate_organisation);
+
+            $bank_Account = $em->getRepository(RequestOrganisationDocument::class)->findLastDocumentByUserIdAndTypeDoc($id,DocumentType::Bank_account_information);
 
             $award_documents = $em->getRepository(RequestOrganisationDocument::class)->findAllDocumentByUserId($id,DocumentType::Awards_justification);
 
@@ -137,6 +180,8 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
             $infoOrganisaton = $em->getRepository(RequestOrganisationInfo::class)->findOneBy([
                 'user' => $id
             ]);
+
+           // dd($document);
 
             $form = $this->createForm(OrganisationInfoType::class,$infoOrganisaton);
             $form->handleRequest($request);
@@ -177,7 +222,8 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
 
             return $this->render('organisation/edit_info_organisation.html.twig',[
                 'userInfo' => $this->getUser(),
-                'document' => $document,
+                'certification_organisation' => $certification_organisation,
+                'bank_account' => $bank_Account,
                 'award_document' => $award_documents,
                 'form' => $form->createView()
             ]);
@@ -227,7 +273,12 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
 
                 if(!is_null($document[$i])){
                     $existingFilename = $em->getRepository(RequestOrganisationDocument::class)->findLastDocumentByUserIdAndTypeDoc($id,$type);
-                    $uploadService->UploadRequestOrganisationDocumentByType($type,$document[$i], $this->getUser(),$existingFilename->getFilename());
+                    if(is_null($existingFilename)){
+                        $uploadService->UploadRequestOrganisationDocumentByType($type,$document[$i], $this->getUser(),null);
+                    }else{
+                        $uploadService->UploadRequestOrganisationDocumentByType($type,$document[$i], $this->getUser(),$existingFilename->getFilename());
+
+                    }
 
                 }else{
                     $this->addFlash("echec", "Bạn cần đính kèm file và chọn dạng tài liệu bạn muốn thay đổi cho tài liệu");

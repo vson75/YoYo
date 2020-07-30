@@ -7,6 +7,7 @@
 {% block content_body %}
             <h1 style="text-align: center">Tạo tài khoản cho phép đăng dự án</h1>
 
+
  {{ form_start(form)}}
    <div>
     <p>
@@ -22,7 +23,18 @@
     </p>
  </div>
 
-    <div>
+
+    <div style="margin-top: 3em;">
+        {% if userInfo is null %}
+
+            <div>
+                {% trans %} Địa chỉ email {% endtrans %}
+            </div>
+
+            <input type="email" name="email" required="required" class="form-control" style="margin-bottom: 1em;">
+
+
+        {% endif %}
         {{ form_row(form.OrganisationName) }}
         {{ form_row(form.Address) }}
 

@@ -1,11 +1,10 @@
 // Set your publishable key: remember to change this to your live publishable key in production
 // See your keys here: https://dashboard.stripe.com/account/apikeys
-var stripe = Stripe('pk_test_xpnUKfTJeENGTpG8tdzzpPd800IsDeAKjJ');
+var stripe = Stripe(stripe_pk_key);
 var elements = stripe.elements();
 
 
-
-var style = {
+ var style = {
     base: {
         iconColor: '#2F4F4F',
         color:  'rgba(42,38,38,0.85)',
@@ -18,15 +17,37 @@ var style = {
             color: '#25e738',
         },
         '::placeholder': {
-            color: 'rgba(42,38,38,0.85)',
+            color: 'rgba(154,148,148,0.85)',
         },
     }
 };
+/**
+old code here
+ var card = elements.create("card", { style: style });
+ card.mount("#card-element");
 
-var card = elements.create("card", { style: style });
-card.mount("#card-element");
+ */
 
-card.on('change', function(event) {
+
+var cardNumberElement = elements.create('cardNumber', {
+    style: style,
+    placeholder: '0000 0000 0000 0000',
+});
+cardNumberElement.mount('#card-number-element');
+
+var cardExpiryElement = elements.create('cardExpiry', {
+    style: style,
+    placeholder: 'DD/MM',
+});
+cardExpiryElement.mount('#card-expiry-element');
+
+var cardCvcElement = elements.create('cardCvc', {
+    style: style,
+    placeholder: 'XXX',
+});
+cardCvcElement.mount('#card-cvc-element');
+
+cardNumberElement.on('change', function(event) {
     var displayError = document.getElementById('card-errors');
     if (event.error) {
       displayError.textContent = event.error.message;
@@ -35,13 +56,35 @@ card.on('change', function(event) {
     }
 });
 
-var form = document.getElementById('payment-form');
+cardExpiryElement.on('change', function(event) {
+    var displayError = document.getElementById('card-errors');
+    if (event.error) {
+        displayError.textContent = event.error.message;
+    } else {
+        displayError.textContent = '';
+    }
+});
 
-form.addEventListener('submit', function(ev) {
+cardCvcElement.on('change', function(event) {
+    var displayError = document.getElementById('card-errors');
+    if (event.error) {
+        displayError.textContent = event.error.message;
+    } else {
+        displayError.textContent = '';
+    }
+});
+
+ var form = document.getElementById('payment-form');
+
+ form.addEventListener('submit', function(ev) {
+
+   $(".btn_payment").hide();
+   $(".btn_loading").show();
+
   ev.preventDefault();
   stripe.confirmCardPayment(clientSecret, {
     payment_method: {
-      card: card,
+      card: cardNumberElement,
       billing_details: {
         name: userId+' - '+userEmail
       }
@@ -49,10 +92,12 @@ form.addEventListener('submit', function(ev) {
   }).then(function(result) {
 
 
+      //break;
     if (result.error) {
-      // Show error to your customer (e.g., insufficient funds)
 
         swal("Chuyển khoản thất bại",result.error.message, "error");
+        $(".btn_payment").show();
+        $(".btn_loading").hide();
       //console.log(result.error.message);
     } else {
       // The payment has been processed!
@@ -72,6 +117,8 @@ form.addEventListener('submit', function(ev) {
       }).then(function(data) {
 
       });
+          $(".btn_payment").hide();
+          $(".btn_loading").hide();
           var path = window.location.pathname;
           var redirectURL = path.replace("/finance/","/post/");
 
@@ -92,3 +139,4 @@ form.addEventListener('submit', function(ev) {
     }
   });
 });
+

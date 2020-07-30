@@ -110,10 +110,8 @@ span.price {
 }
 
 input{
-    display: flex;
     text-align: right;
     max-width: 100%;
-
 }
 
 .calculate_amount{
@@ -123,4 +121,63 @@ input{
 
 #receive_amount{
     color: green;
+}
+
+
+.card_info {
+    position: relative;
+    font-weight: 300;
+    height: 40px;
+    line-height: 40px;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.card_info > span {
+    width: 120px;
+    text-align: left;
+    margin-right: 30px;
+}
+
+
+.card_info_name, .field {
+    text-align: left;
+    background: transparent;
+    width: 70%;
+    height: 100%;
+    padding: 7px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.field::-webkit-input-placeholder {
+    color: #bebec2;
+}
+
+.field::-moz-placeholder {
+    color: #bebec2;
+}
+
+
+::placeholder {
+    color: rgba(154,148,148,0.85);
+    opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: rgba(154,148,148,0.85);
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: rgba(154,148,148,0.85);
+}
+
+
+[type="checkbox"]
+{
+    vertical-align:middle;
+    width: 55px;
+    text-align: left;
+
 }

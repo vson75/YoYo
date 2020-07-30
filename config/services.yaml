@@ -5,13 +5,14 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     app.locales: [vn,fr,en]
-    paypal_client_id: AZ69DRO-_qZ1uDfd3pR7qm4iADZD3MEuKEGI50CKGRlZ66V5MAMiPNT5eiR_wZurttRdWHyMyPz2K11l
-    paypal_secret: ELRWvcq8nAt5sk2LgkV9YFUPc-rT_tqAvWRUCpwxmTavqo5rkWPpduQTgeiCNsmgjFw-_MgGhsRHwPPw
+    paypal_client_id: '%env(PAYPAL_CLIENT_ID)%'
+    paypal_secret: '%env(PAYPAL_SECRET)%'
     router.request_context.scheme: '%env(SITE_BASE_SCHEME)%'
     router.request_context.host: '%env(SITE_BASE_HOST)%'
     uploads_dir_name: 'uploads'
     uploads_base_url: '%env(SITE_BASE_URL)%/%uploads_dir_name%'
-
+    stripe_pk_key: '%env(STRIPE_PK_KEY)%'
+    stripe_sk_key: '%env(STRIPE_SK_KEY)%'
 
 
 services:

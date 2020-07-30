@@ -51,33 +51,36 @@
             <div id="div_chart" style="width: 1100px;height: 350px;display: none"></div>
 
 
-
-        <table id="project" style="display: table; width: 100%">
-            <tr>
-                <th>{% trans %}Du an {% endtrans %}</th>
-                <th>{% trans %}So tien ban da dau tu {% endtrans %}</th>
-                <th>{% trans %}% Sô tiên da keu goi duoc cho du an {% endtrans %}</th>
-                <th>{% trans %} Muc tieu quyen gop cua du an{% endtrans %}</th>
-            </tr>
-            {% for p in projectFinanced %}
-
+        <div>
+            <table id="project" style="display: table; width: 100%">
                 <tr>
-                    <td>
-                        {% if p.imagePath == '/post/image/' %}
-                            <img src="{{ p.getDefaultImagePath | imagine_filter('card_thumbnail_myProfil_stat')}}" alt="">
-
-                        {% else %}
-                        <img class="img-fluid rounded-custom img-post" src="{{ p.imagePath| imagine_filter('card_thumbnail_myProfil_stat') }}" alt="">
-                        {% endif %}
-                        {{ p.title }}
-                    </td>
-                    <td>{{ p.getTransactionSumByUser(userInfo) }} €</td>
-                    <td>{{ p.getPercentageAdvancement }} %</td>
-                    <td>{{ p.targetAmount }} €</td>
+                    <th>{% trans %}Du an {% endtrans %}</th>
+                    <th>{% trans %}So tien ban da dau tu {% endtrans %}</th>
+                    <th>{% trans %}% Sô tiên da keu goi duoc cho du an {% endtrans %}</th>
+                    <th>{% trans %} Muc tieu quyen gop cua du an{% endtrans %}</th>
                 </tr>
-            {% endfor %}
-        </table>
-        {{ knp_pagination_render(projectFinanced) }}
+                {% for p in projectFinanced %}
+
+                    <tr>
+                        <td>
+                            {% if p.imagePath == '/post/image/' %}
+                                <img src="{{ p.getDefaultImagePath | imagine_filter('card_thumbnail_myProfil_stat')}}" alt="">
+
+                            {% else %}
+                                <img class="img-fluid rounded-custom img-post" src="{{ p.imagePath| imagine_filter('card_thumbnail_myProfil_stat') }}" alt="">
+                            {% endif %}
+                            {{ p.title }}
+                        </td>
+                        <td>{{ p.getTransactionSumByUser(userInfo) }} €</td>
+                        <td>{{ p.getPercentageAdvancement }} %</td>
+                        <td>{{ p.targetAmount }} €</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            {% if projectFinanced is not empty %}
+                {{ knp_pagination_render(projectFinanced) }}
+            {% endif %}
+        </div>
 
         <div class="row" id="favorite_list" style="display: none">
             {% for post in FavProject %}

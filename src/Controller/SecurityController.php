@@ -148,7 +148,7 @@ class SecurityController extends AbstractController
                     $em->persist($user);
                     $em->flush();
 
-                    $this->addFlash('success','mât khâu cua ban da OK ! chào mung ban toi voi YoYo');
+                    $this->addFlash('success','Chúc mừng bạn ! Bạn có thể đăng nhập với mật khẩu vừa chọn');
 
                 //method allow to redirect in the page if authentificator sucess
                 return $this->redirectToRoute('app_login');

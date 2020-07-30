@@ -7,6 +7,7 @@ use App\Entity\RequestOrganisationDocument;
 use App\Entity\RequestOrganisationInfo;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -23,7 +24,8 @@ class CreateOrganisationType extends AbstractType
         $builder
             ->add('CertificateOrganisation', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.CreateOrganisation.fileFormat',
+                'label' => 'form.CreateOrganisation.CertificateOrganisation',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -37,7 +39,8 @@ class CreateOrganisationType extends AbstractType
             ])
             ->add('BankAccountInformation', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.CreateOrganisation.fileFormatJpgPdf',
+                'label' => 'form.CreateOrganisation.BankAccountInformation',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -51,7 +54,8 @@ class CreateOrganisationType extends AbstractType
             ])
             ->add('Awards0', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.CreateOrganisation.fileFormat',
+                'label' => 'form.CreateOrganisation.award',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -65,7 +69,8 @@ class CreateOrganisationType extends AbstractType
             ])
             ->add('Awards1', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.CreateOrganisation.fileFormat',
+                'label' => 'form.CreateOrganisation.award',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -79,7 +84,8 @@ class CreateOrganisationType extends AbstractType
             ])
             ->add('Awards2', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.CreateOrganisation.fileFormat',
+                'label' => 'form.CreateOrganisation.award',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -93,7 +99,8 @@ class CreateOrganisationType extends AbstractType
             ])
             ->add('Awards3', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.CreateOrganisation.fileFormat',
+                'label' => 'form.CreateOrganisation.award',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -107,7 +114,8 @@ class CreateOrganisationType extends AbstractType
             ])
             ->add('Awards4', FileType::class, [
                 'required'=>false,
-                'help' => 'dạng File PDF hoặc hình ảnh',
+                'help' => 'form.CreateOrganisation.fileFormat',
+                'label' => 'form.CreateOrganisation.award',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -120,22 +128,28 @@ class CreateOrganisationType extends AbstractType
                 ]
             ])
             ->add('PhoneNumber', TelType::class, [
-                'required'=>false
+                'required'=>false,
+                'label' => 'form.CreateOrganisation.PhoneNumber'
             ])
             ->add('Address', TextType::class, [
-                'required'=>false
+                'required'=>true,
+                'label' => 'form.CreateOrganisation.Address'
             ])
             ->add('OrganisationName', TextType::class, [
-                'required'=>false
+                'required'=>true,
+                'label' => 'form.CreateOrganisation.OrganisationName'
             ])
             ->add('Country', CountryType::class, [
-                'required'=>false
+                'required'=>true,
+                'label' => 'form.CreateOrganisation.Country'
             ])
             ->add('ZipCode', TextType::class, [
-                'required'=>false
+                'required'=>false,
+                'label' => 'form.CreateOrganisation.ZipCode'
             ])
             ->add('City', TextType::class, [
-                'required'=>false
+                'required'=>true,
+                'label' => 'form.CreateOrganisation.City'
             ])
         ;
     }

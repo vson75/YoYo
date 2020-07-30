@@ -1,80 +1,116 @@
 {% extends 'content_base.html.twig' %}
 
 {% block title %}
-    {% trans %} Thay đổi thông tin organisation {% endtrans %}
+    {% trans %} Thay đổi thông tin tổ chức {% endtrans %}
 {% endblock %}
 
 {% block content_body %}
-    <h1 style="text-align: center">Thay đổi thông tin organisation</h1>
+    <h1 style="text-align: center"> Thay đổi thông tin tổ chức</h1>
 
-    <hr>
-    <h2>{% trans %}Thông tin cơ bản của tổ chức {% endtrans %}</h2>
-    <div>
-        {{ form_start(form) }}
-        <div>
-            {{ form_row(form.OrganisationName) }}
-            {{ form_row(form.Address) }}
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-organisationInfo" role="tab" aria-controls="pills-organisationInfo" aria-selected="true">{% trans %}Thông tin về tổ chức {% endtrans %}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-organisationDocument" role="tab" aria-controls="pills-organisationDocument" aria-selected="false">{% trans %}Tài liệu liên quan {% endtrans %}</a>
+        </li>
+    </ul>
 
-            <div class="row">
-                <div class="col">
-                    {{ form_row(form.ZipCode) }}
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-organisationInfo" role="tabpanel" aria-labelledby="">
+
+            <div>
+                {{ form_start(form) }}
+                <div>
+                    {{ form_row(form.OrganisationName) }}
+                    {{ form_row(form.Address) }}
+
+                    <div class="row">
+                        <div class="col">
+                            {{ form_row(form.ZipCode) }}
+                        </div>
+                        <div class="col">
+                            {{ form_row(form.City) }}
+                        </div>
+                        <div class="col">
+                            {{ form_row(form.Country) }}
+                        </div>
+                        <div class="col">
+                            {{ form_row(form.PhoneNumber) }}
+                        </div>
+
+                    </div>
                 </div>
-                <div class="col">
-                    {{ form_row(form.City) }}
+                <div>
+                    <button type="submit" class="btn btn-primary">{% trans %} Cập nhật thông tin tổ chức  {% endtrans %}</button>
                 </div>
-                <div class="col">
-                    {{ form_row(form.Country) }}
-                </div>
-                <div class="col">
-                    {{ form_row(form.PhoneNumber) }}
-                </div>
+                {{ form_end(form)}}
 
             </div>
         </div>
-        <div>
-            <button type="submit" class="btn btn-primary">{% trans %} Cập nhật thông tin tổ chức  {% endtrans %}</button>
-        </div>
-        {{ form_end(form)}}
+        <div class="tab-pane fade" id="pills-organisationDocument" role="tabpanel" aria-labelledby="pills-contact-tab">
 
-    </div>
-{#
-    <hr>
-    <h2>{% trans %}Các tài liệu liên quan tới tổ chức{% endtrans %}</h2>
-    {% for d in document %}
-        <div class="row">
-            <div class="col">
-                {{ d.documentType.DocumentType }}
-            </div>
-            <div class="col">
-                {{ d.originalFilename }}
-                <span>
+            <h2>{% trans %}Các tài liệu liên quan tới tổ chức{% endtrans %}</h2>
+
+
+                {% if certification_organisation is not null %}
+                <div class="row">
+                    <div class="col">
+                        {{ certification_organisation.documentType.DocumentType }}
+                    </div>
+                    <div class="col">
+                        {{ certification_organisation.originalFilename }}
+                        <span>
                     <a href="{{ path('app_download_user_document', {
-                        id: d.id
+                        id: certification_organisation.id
                     }) }}"><span class="fa fa-download"></span></a>
                 </span>
-            </div>
+                    </div>
 
-        </div>
-    {% endfor %}
+                </div>
+                {% endif %}
 
-    {% for award in award_document %}
-        <div class="row">
-            <div class="col">
-                {{ award.documentType.DocumentType }}
-            </div>
-            <div class="col">
-                {{ award.originalFilename }}
-                <span>
+                {% if bank_account is not null %}
+                    <div class="row">
+                        <div class="col">
+                            {{ bank_account.documentType.DocumentType }}
+                        </div>
+                        <div class="col">
+                            {{ bank_account.originalFilename }}
+                            <span>
                     <a href="{{ path('app_download_user_document', {
-                                id: award.id
-                            }) }}"><span class="fa fa-download"></span></a>
+                        id: bank_account.id
+                    }) }}"><span class="fa fa-download"></span></a>
+                </span>
+                        </div>
+
+                    </div>
+                {% endif %}
+
+
+            {% for award in award_document %}
+                <div class="row">
+                    <div class="col">
+                        {{ award.documentType.DocumentType }}
+                    </div>
+                    <div class="col">
+                        {{ award.originalFilename }}
+                        <span>
+                    <a href="{{ path('app_download_user_document', {
+                        id: award.id
+                    }) }}"><span class="fa fa-download"></span></a>
                 </span>
 
-            </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+            <a href="{{ path('app_edit_document_organisation', {id: userInfo.id}) }}" class="btn btn-primary" style="margin-top: 2em;"><span>{% trans %}Cập nhật tài liệu{% endtrans %}</span></a>
 
         </div>
-    {% endfor %}
-    <a href="{{ path('app_edit_document_organisation', {id: userInfo.id}) }}" class="btn btn-primary"><span>{% trans %}Cập nhật tài liệu{% endtrans %}</span></a>
+    </div>
+
+{#
 
 #}
 

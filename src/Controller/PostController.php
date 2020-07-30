@@ -456,8 +456,10 @@ class PostController extends AbstractController
             $totalFees = $percentManagementFees + $fixedFees;
             $donationAfterFees = $donationAmount - $totalFees;
 
+            $stripe_pk_key = $this->getParameter('stripe_pk_key');
+            $stripe_sk_key = $this->getParameter('stripe_sk_key');
 
-            Stripe::setApiKey('sk_test_gxLCkDYIJRoJXx7Ovh4RqBTB00aHGuN3mt');
+            Stripe::setApiKey($stripe_sk_key);
             $intent = PaymentIntent::create([
                 'amount'   => $amount*100,
                 'currency' => 'eur',
@@ -480,7 +482,8 @@ class PostController extends AbstractController
             'givingAmount' => $givingAmount,
             'postInfo' => $postInfo,
             'donationIncludeFees' => $donationAfterFees,
-            'totalFees' => $totalFees
+            'totalFees' => $totalFees,
+            'stripe_pk_key' => $stripe_pk_key
         ]);
     }
 
@@ -520,7 +523,7 @@ class PostController extends AbstractController
                 ->setPost($post)
                 ->setAmount($amount)
                 ->setFees($fees)
-                ->setAmountAfterFees($amount - $fees)
+                ->setAmountAfterFees($amount - $fees - $give)
                 ->setCustomDonationForSite($give)
                 ->setClientSecret($clientSecret)
                 ->setTransfertAt(new \DateTime('now'));
