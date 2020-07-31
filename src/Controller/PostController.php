@@ -2,7 +2,8 @@
 
 
 namespace App\Controller;
-use Cassandra\Date;
+
+
 use App\Entity\{AdminParameter,
     DocumentType,
     Favorite,
@@ -43,13 +44,14 @@ class PostController extends AbstractController
     /**
      * @Route("/", name="app_homepage")
      */
-    public function homepage(EntityManagerInterface $em, TransactionRepository $transactionRepository){
+    public function homepage(EntityManagerInterface $em, TransactionRepository $transactionRepository, Request $request){
 
         $repository = $em->getRepository(Post::class);
         $post = $repository->findPostByNewest();
         $userInfo = $this->getUser();
-      
-        
+
+        $locale = $request->getLocale();
+        //dd($locale);
 
        // dump($post);die;
        // dd($post->getFinishAt());
@@ -92,8 +94,9 @@ class PostController extends AbstractController
 
         $currentUserLooged = $this->security->getUser();
 
-        $datediff = date_diff($postInfo->getFinishAt(),new \DateTime('now'));
-        $datediff = $datediff->format('%d');
+        $datenow = new \DateTime('now');
+        $datediff = date_diff($datenow,$postInfo->getFinishAt())->format("%R%a");
+       // dd($datediff);
 
         $postContentCache = $postInfo->getContent();
         if(!is_null($postContentCache)){

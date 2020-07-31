@@ -105,6 +105,17 @@
     background: rgba(255,75,89,0.89)
 }
 
+#btn-expirePost{
+    background: rgba(88, 83, 87, 0.83);
+    border-radius: 3px;
+    font-weight: 400;
+    padding: 5px 8px;
+    cursor: not-allowed;
+    display: inline-block;
+    position: static;
+    margin: 0 1rem 1rem;
+    color: white;
+}
 
 #btn-modify{
     background: rgba(73, 116, 222, 0.89);

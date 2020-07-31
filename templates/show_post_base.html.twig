@@ -103,10 +103,14 @@
                 <p><h1>{{ totalAmount }} € </h1> <span><small>{% trans %}quyên góp được trên{% endtrans %} {{postInfo.targetAmount}} €</small></span></p>
                 {% endif %}
 
-                <p> <span><i class="fas fa-user"></i></span> {{ nb_participant }} {% trans %}người tham gia{% endtrans %}</p>
+                <p> <span><i class="fas fa-user fa-lg"></i></span> <strong>{{ nb_participant }}</strong> {% trans %}người tham gia{% endtrans %}</p>
 
-                <p><span><i class="far fa-clock"></i></span> <span>{% trans %}Còn lại {% endtrans %} {{ datediff }} {% trans %} ngày{% endtrans %}</span></p>
+                {% if datediff > 0 %}
 
+                <p><span><i class="far fa-clock fa-lg"></i></span> <span>{% trans %}Còn lại {% endtrans %} <strong>{{ datediff|trim('+') }}</strong> {% trans %} ngày{% endtrans %}</span></p>
+                {% else %}
+                    <p><span><i class="far fa-clock fa-lg"></i></span> <span>{% trans %}Còn lại {% endtrans %} <strong>0</strong> {% trans %} ngày{% endtrans %}</span></p>
+                {% endif %}
                 {% if postInfo.status.id == statusArray['POST_DRAFT'] or postInfo.status.id == statusArray['POST_WAITING_INFO'] %}
                     {% if userInfo == postInfo.user %}
                     <div id="btn-transaction" onclick="location.href='{{ path('app_submit_post', {uniquekey: postInfo.uniquekey}) }}'">
@@ -122,6 +126,7 @@
 
                 {% elseif postInfo.status.id != statusArray['POST_SUBMIT_TO_ADMIN'] %}
 
+                {% if datediff > 0 %}
 
                 <div id="btn-transaction" onclick="location.href='{{ path('app_payment', {uniquekey: postInfo.uniquekey}) }}'">
                     <span>{% trans %}Quyên góp{% endtrans %}</span>
@@ -136,6 +141,14 @@
                     </svg>
                     <span>{% trans %}Chia sẻ qua facebook{% endtrans %}</span>
                 </div>
+
+                 {% else %}
+                     <button id="btn-expirePost" disabled>
+                         <span>{% trans %}Hết hạn quyên góp{% endtrans %}</span>
+                     </button>
+
+                 {% endif %}
+
                 {% endif %}
                 {% block admin_post %}
 

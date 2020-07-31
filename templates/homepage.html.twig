@@ -36,8 +36,9 @@
                 <div class="card h-100">
                     {% set finish = post.finishAt %}
                     {% set now = "now"|date("m/d/Y") %}
-                    {% set diff = date(finish).diff(date(now)) %}
-                    {% set leftDays = diff.days - 1 %}
+                    {% set diff = date(now).diff(date(finish)) %}
+
+                    {% set leftDays = diff.format("%R%a") - 1 %}
                     {#if no image#}
                     <div class="image_thumbnail">
                     {% if post.imagePath == '/post/image/' %}
@@ -45,13 +46,15 @@
                         {% else %}
                             <img class="card-img-top" src="{{ post.imagePath|imagine_filter('card_thumbnail_homepage')}}" alt="">
                     {% endif %}
-
+                        {% if leftDays >= 0 %}
                             {% if leftDays >10 %}
                                 <div class="dayCountdownWhite">J-{{ leftDays }}</div>
                             {% else %}
                                 <div class="dayCountdownRed">J-{{ leftDays }}</div>
                             {% endif %}
-
+                        {% else %}
+                            <div class="dayCountdownRed">{% trans %}Hết hạn{% endtrans %}</div>
+                         {% endif %}
                     </div>
 
                     {% set percent_advancement = post.getTransactionSum/post.targetAmount*100 %}
