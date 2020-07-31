@@ -70,6 +70,33 @@
     background-color: white;
 }
 
+.card-admin{
+    text-align: center;
+    font-family: arial;
+    /*border-color: orangered; */
+    margin-left: 1%;
+    position: fixed;
+    margin-top: 11.5em;
+    background-color: white;
+}
+
+.btn-admin{
+    margin-bottom: 1em;
+    position: center;
+    width: 49%;
+
+}
+
+.btn-stop{
+    margin-left: 1px;
+}
+
+.admin-section{
+    margin: auto;
+    width: 50%;
+}
+
+
 .authorInfo{
     position: absolute; /* Position the background text */
     top: 1rem; /* At the bottom. Use top:0 to append it to the top */

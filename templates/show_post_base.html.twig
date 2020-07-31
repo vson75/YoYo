@@ -12,6 +12,9 @@
 <div class="container">
     <div>
         <h1 style="text-align: center"><span>{{ postInfo.title }}</span></h1>
+        {% block admin_post %}
+
+        {% endblock %}
     </div>
 
     <div class="row">
@@ -150,10 +153,6 @@
                  {% endif %}
 
                 {% endif %}
-                {% block admin_post %}
-
-                {% endblock %}
-
 
             </div>
 

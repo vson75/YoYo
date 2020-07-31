@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200601181102 extends AbstractMigration
+final class Version20200731123951 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -20,16 +20,16 @@ final class Version20200601181102 extends AbstractMigration
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
-
-        $this->addSql('ALTER TABLE post ADD finish_at DATE DEFAULT NULL');
+        $this->addSql('ALTER TABLE post ADD lang_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE post ADD CONSTRAINT FK_5A8A6C8DB213FA4 FOREIGN KEY (lang_id) REFERENCES website_language (id)');
+        $this->addSql('CREATE INDEX IDX_5A8A6C8DB213FA4 ON post (lang_id)');
     }
 
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
-
-        $this->addSql('ALTER TABLE post DROP finish_at');
+        $this->addSql('ALTER TABLE post DROP FOREIGN KEY FK_5A8A6C8DB213FA4');
+        $this->addSql('DROP INDEX IDX_5A8A6C8DB213FA4 ON post');
+        $this->addSql('ALTER TABLE post DROP lang_id');
     }
 }

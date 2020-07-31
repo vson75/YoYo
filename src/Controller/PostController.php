@@ -9,11 +9,13 @@ use App\Entity\{AdminParameter,
     Favorite,
     Post,
     PostStatus,
+    PostTranslation,
     RequestOrganisationDocument,
     RequestOrganisationInfo,
     Transaction,
-    User};
-use App\Form\{CommentFormType, ExtendPostType, PostFormType, PaymentType};
+    User,
+    WebsiteLanguage};
+use App\Form\{CommentFormType, ExtendPostType, PostFormType, PaymentType, TranslationPostType};
 use App\Repository\PostRepository;
 use App\Repository\TransactionRepository;
 use App\Service\Mailer;
@@ -237,6 +239,28 @@ class PostController extends AbstractController
             $postStep = $repo->findOneBy([
                 'id' => PostStatus::POST_DRAFT
             ]);
+
+            $repoLang = $em->getRepository(WebsiteLanguage::class);
+
+            $langEN = $repoLang->findOneBy([
+               'id' => WebsiteLanguage::lang_en
+            ]);
+            $langFR = $repoLang->findOneBy([
+                'id' => WebsiteLanguage::lang_fr
+            ]);
+            $langOther = $repoLang->findOneBy([
+                'id' => WebsiteLanguage::lang_other
+            ]);
+
+            $locale = $request->getLocale();
+            if($locale === "en"){
+                $createNew->setLang($langEN);
+            }elseif ($locale === "fr"){
+                $createNew->setLang($langFR);
+            }else{
+                $createNew->setLang($langOther);
+            }
+
             $createNew->setStatus($postStep);
 
 
@@ -259,6 +283,7 @@ class PostController extends AbstractController
             }
 
             $uploadedFile = $form['imageFile']->getData();
+
 
             if ($uploadedFile) {
                 $newFilename = $uploadService->UploadPostImage($uploadedFile, null);
@@ -630,6 +655,52 @@ class PostController extends AbstractController
             $this->addFlash('echec', 'Sorry you are not the author of this project, you cant decide to transfert fund this project');
             return $this->redirectToRoute('app_homepage');
         }
+    }
+
+
+    /**
+     * @Route("/translation_post/{lang<en|fr>}/{uniquekey}", name="app_post_translation")
+     * languague by default = EN
+     */
+    public function translationPost($uniquekey, $lang, EntityManagerInterface $em, Request $request){
+        $repo = $em->getRepository(Post::class);
+        $post = $repo->findOneBy([
+            'uniquekey' => $uniquekey
+        ]);
+
+        $repoWebLang = $em->getRepository(WebsiteLanguage::class);
+
+        if($lang === 'en'){
+            $langToTranslate = $repoWebLang->findOneBy([
+               'id' => WebsiteLanguage::lang_en
+            ]);
+        }elseif($lang === 'fr'){
+            $langToTranslate = $repoWebLang->findOneBy([
+                'id' => WebsiteLanguage::lang_fr
+            ]);
+        }
+        $repoTranslation = $em->getRepository(PostTranslation::class);
+        $postTranslation = $repoTranslation->findOneBy([
+            'post' => $post,
+            'lang' => $langToTranslate
+        ]);
+
+        // if null : create new. If not: update
+        if(is_null($postTranslation)){
+            $form = $this->createForm(TranslationPostType::class);
+            $form->handleRequest($request);
+        }else{
+            $form = $this->createForm(TranslationPostType::class,$postTranslation);
+            $form->handleRequest($request);
+        }
+
+        $langPost = $post->getLang();
+
+        return $this->render('post/translation_post.html.twig',[
+            'userInfo' => $this->getUser(),
+            'postInfo' => $post,
+            'form' => $form->createView()
+        ]);
     }
 
 

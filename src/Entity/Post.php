@@ -94,12 +94,23 @@ class Post
      */
     private $favorites;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=WebsiteLanguage::class, inversedBy="posts")
+     */
+    private $lang;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PostTranslation::class, mappedBy="post")
+     */
+    private $postTranslations;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->favorites = new ArrayCollection();
+        $this->postTranslations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -412,6 +423,49 @@ class Post
             // set the owning side to null (unless already changed)
             if ($favorite->getPost() === $this) {
                 $favorite->setPost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getLang(): ?WebsiteLanguage
+    {
+        return $this->lang;
+    }
+
+    public function setLang(?WebsiteLanguage $lang): self
+    {
+        $this->lang = $lang;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PostTranslation[]
+     */
+    public function getPostTranslations(): Collection
+    {
+        return $this->postTranslations;
+    }
+
+    public function addPostTranslation(PostTranslation $postTranslation): self
+    {
+        if (!$this->postTranslations->contains($postTranslation)) {
+            $this->postTranslations[] = $postTranslation;
+            $postTranslation->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostTranslation(PostTranslation $postTranslation): self
+    {
+        if ($this->postTranslations->contains($postTranslation)) {
+            $this->postTranslations->removeElement($postTranslation);
+            // set the owning side to null (unless already changed)
+            if ($postTranslation->getPost() === $this) {
+                $postTranslation->setPost(null);
             }
         }
 

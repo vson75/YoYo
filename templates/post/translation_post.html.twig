@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% trans %}Dịch dự án sang các tiếng khác{% endtrans %}
+{% endblock %}
+{% block stylesheets %}
+{{ parent() }}
+
+    <link href="{{ asset('css/translation_post.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div>
+        <h1 style="text-align: center; margin-top: 1rem;">
+        </h1>
+    </div>
+    <div id="container">
+        <div id="textareaPostInfo">
+            <div id="textarea">
+                <div id="textareawrapped">
+                    <h2 style="text-align: center">Original content</h2>
+                    <div>
+                        <div class="row postInfo">
+                            Title
+                        </div>
+                        <div class="row postInfo">
+                            {{ postInfo.title }}
+                        </div>
+                        <div class="row postInfo">
+                            Content
+                        </div>
+                        <div class="row postInfo">
+                            <p>{{ postInfo.content|markdown }}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+            <div id="textareaTranslation">
+                <div id="textarea">
+                    <div id="textareawrapped">
+                        <h2 style="text-align: center">Translation content</h2>
+                        <div style="margin: 1em 1em 1em 1em;">
+                            {{ form_start(form) }}
+
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+    </div>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+    <script>
+        var lang = document.getElementById("translation_post_lang");
+        var uniquekey = '{{postInfo.uniquekey}}';
+        var path = window.location.pathname;
+        var redirectURL;
+
+        $( document ).ready(function() {
+            $("#translation_post_lang").val(path.substring(18,20));
+        });
+
+        $("#translation_post_lang").change(function(){
+
+
+
+            if(lang.value === 'en'){
+                //change to Lang EN
+                redirectURL = path.replace("/fr/","/en/");
+                window.location.href = redirectURL;
+
+            }else{
+                //change to Lang FR
+                redirectURL = path.replace("/en/","/fr/");
+                window.location.href = redirectURL;
+            }
+            console.log(lang.value);
+           // var redirectURL = path.replace("/en/",);
+
+        });
+
+
+
+
+
+    </script>
+
+{% endblock %}
