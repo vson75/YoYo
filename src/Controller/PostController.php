@@ -486,6 +486,7 @@ class PostController extends AbstractController
 
             $stripe_pk_key = $this->getParameter('stripe_pk_key');
             $stripe_sk_key = $this->getParameter('stripe_sk_key');
+          //  dd($stripe_sk_key);
 
             Stripe::setApiKey($stripe_sk_key);
             $intent = PaymentIntent::create([

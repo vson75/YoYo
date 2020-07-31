@@ -29,8 +29,8 @@
                         <div class="row postInfo">
                             Content
                         </div>
-                        <div class="row postInfo">
-                            <p>{{ postInfo.content|markdown }}</p>
+                        <div class="postInfo">
+                            {{ postInfo.content|raw }}
                         </div>
                     </div>
                 </div>
