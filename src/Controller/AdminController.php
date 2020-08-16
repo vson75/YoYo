@@ -13,7 +13,6 @@ use App\Entity\RequestOrganisationDocument;
 use App\Entity\RequestOrganisationInfo;
 use App\Entity\RequestStatus;
 use App\Entity\User;
-use App\Entity\UserDocument;
 use App\Entity\WebsiteLanguage;
 use App\Form\AdminParameterType;
 use App\Form\PostSearchType;
@@ -23,18 +22,15 @@ use App\Repository\RequestOrganisationDocumentRepository;
 use App\Repository\RequestOrganisationInfoRepository;
 use App\Repository\RequestStatusRepository;
 use App\Repository\TransactionRepository;
-use App\Repository\UserDocumentRepository;
 use App\Repository\UserRepository;
 use App\Service\Mailer;
-use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class AdminController
@@ -43,6 +39,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AdminController extends AbstractController
 {
+
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
     /**
      * @Route("/admin/overview", name="app_admin_overview")
      * @IsGranted("ROLE_ADMIN")
@@ -205,7 +208,7 @@ class AdminController extends AbstractController
 
             $user_post = $post->getUser();
             $template = 'email/EmailPublicOrStopPost.html.twig';
-            $subject = 'Tạm ngưng dự án của bạn tại YoYo';
+            $subject = $this->translator->trans('email.subject.stopProject');
             $mailer->sendMailAdminStopOrPublishedPost($user_post,$post,$template,$subject,$context);
 
             $this->addFlash('success', 'Post status changed');

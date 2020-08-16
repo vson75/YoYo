@@ -15,24 +15,25 @@
                 </a>
             </div>
             <div class="content">
-                <h1 class="text-center">Yêu cầu thêm thông tin về tổ chức</h1>
+                <h1 class="text-center">{% trans %}Yêu cầu thêm thông tin về tổ chức {% endtrans %}</h1>
                 <div class="block">
                  {{ content|raw }}
                 </div>
                 <div class="block">
-                    Bạn có thể sửa đổi thông tin của bạn thông qua đường link dưới đây
+                    {% trans %}Bạn có thể sửa đổi thông tin của bạn thông qua đường link dưới đây{% endtrans %}
                 </div>
                 <p class="block text-center">
-                    <a href="{{ url('app_edit_organisation_info', {id: id}) }}" class="btn">Cập nhật thông tin</a>
+                    <a href="{{ url('app_edit_organisation_info', {id: id}) }}" class="btn">{% trans %}Cập nhật thông tin{% endtrans %}</a>
                 </p>
             </div>
             <div class="footer">
                 <p class="block">
-                    Thân,<br><br>
+                    {% trans %}Thân,{% endtrans %}
+                    <br><br>
                     Yoyo
                 </p>
                 <p class="block bottom text-center">
-                    Dự án cua Viet Son NGUYEN
+                    {% trans %}Dự án cua Viet Son NGUYEN{% endtrans %}
                 </p>
             </div>
         </div>

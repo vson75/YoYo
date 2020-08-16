@@ -15,26 +15,27 @@
                 </a>
             </div>
             <div class="content">
-                <h1 class="text-center">Tổ chức của bạn đã được công nhận</h1>
+                <h1 class="text-center">{% trans %}Tổ chức của bạn đã được công nhận{% endtrans %}</h1>
                 <p class="block">
-                    Chúc mừng bạn ! Bạn đã có thể tạo được dự án mới trên trang của chúng tôi.
-                    Bạn có thể tạo dự án mới thông qua đường linh dưới đây.
+                    {% trans %}Chúc mừng bạn ! Bạn đã có thể tạo được dự án mới trên trang của chúng tôi.
+                    Bạn có thể tạo dự án mới thông qua đường linh dưới đây.{% endtrans %}
                 </p>
 
                 <p class="block text-center">
                     <a href="{{ url('app_post_new') }}" class="btn">Tạo dự án mới</a>
                 </p>
                 <p class="block">
-                    Chúng tôi cảm ơn bạn và hy vọng sẽ sớm được làm việc cùng bạn
+                    {% trans %}Chúng tôi cảm ơn bạn và hy vọng sẽ sớm được làm việc cùng bạn{% endtrans %}
                 </p>
             </div>
             <div class="footer">
                 <p class="block">
-                    Thân,<br><br>
+                    {% trans %}Thân,{% endtrans %}
+                    <br><br>
                     Yoyo
                 </p>
                 <p class="block bottom text-center">
-                    Dự án cua Viet Son NGUYEN
+                    {% trans %}Dự án cua Viet Son NGUYEN{% endtrans %}
                 </p>
             </div>
         </div>

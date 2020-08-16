@@ -102,7 +102,7 @@ class SecurityController extends AbstractController
                 $token = $user->getToken();
                 $tokenCreateAt = $user->getTokencreateAt();
                 $template = 'email/password.html.twig';
-                $subject = "Chào ".$user->getFirstname()." tới với YoYo - Tạo mật khẩu mới";
+                $subject = $this->translator->trans('email.subject.createNewPassword')." ".$user->getFirstname();
                 $mailer->SendMailPassword($user,$token,$tokenCreateAt,$template,$subject);
 
                 $message = $this->translator->trans('message.security.CreateNewAccount');
@@ -185,17 +185,18 @@ class SecurityController extends AbstractController
         $form = $this->createForm(ResetPasswordType::class);
         $form->handleRequest($request);
 
+       // dd($request->getLocale());
+
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User $user */
-            $user = $form->getData();
-            $userEmail = $user->getEmail();
+            $userEmail = $form['email']->getData();
             $repo = $em->getRepository(User::class);
             $checkUserEmail = $repo->findOneBy([
                 'email' => $userEmail
             ]);
+           // dd($checkUserEmail);
 
-
-            if(!empty($checkEmail)){
+            if(!is_null($checkUserEmail)){
 
                // dd($checkEmail);
                 //$id = $checkEmail->getId();
@@ -206,12 +207,12 @@ class SecurityController extends AbstractController
                 $token = $checkUserEmail->getToken();
 
 
-                $tokenCreateAt = $user->getTokencreateAt();
+                $tokenCreateAt = $checkUserEmail->getTokencreateAt();
 
 
 
                 $template = 'email/password.html.twig';
-                $subject = "Thay đổi mật khẩu tại YoYo";
+                $subject = $this->translator->trans('email.subject.changePassword');
                 $mailer->SendMailPassword($checkUserEmail, $token, $tokenCreateAt,$template,$subject);
 
                 $message = $this->translator->trans('message.security.resetPassword');
@@ -223,7 +224,7 @@ class SecurityController extends AbstractController
 
                 $message = $this->translator->trans('message.security.EmailNotExist');
                 $this->addFlash('echec', $message);
-                return $this->render('security/register.html.twig', [
+                return $this->render('security/reset.html.twig', [
                     'resetForm' => $form->createView(),
                 ]);
             }

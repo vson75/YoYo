@@ -61,4 +61,32 @@ message:
   userProfil:
       changeSuccess: Thay đổi thành công
 
+email:
+  subject:
+    changePassword: Thay đổi mật khẩu
+    createNewPassword: Tạo mật khẩu mới cho tài khoản
+    project: Dự án
+    sentToAdmin: đã gửi tới ban quản trị
+    ThanktoFund: Cảm ơn bạn đã quyên góp cho dự án
+    thankToCreateNewProject: Cảm ơn bạn đã tạo chủ đề mới
+    NewOrganisationAndCreatePassword: Tài khoản tổ chức - chọn mật khẩu
+    AlertAdminNewOrganisation: Tài khoản tổ chức mới được tạo trên app
+    CongratNewOrganisation: Tổ chức đã được công nhận trên aplication
+    InfoOrganisationSentToAdmin: Thông tin tổ chức đã được chuyển tới admin
+    CompleteInfoOrganisation: Yêu cầu bổ sung thông tin cho tổ chức của bạn
+    CannotValidOrganisation: Chúng tôi không thể chứng nhận tổ chức của bạn
+    stopProject: Tạm ngưng dự án của bạn
+
+  title:
+    ThanktoFund: quyên góp dự án
+    CreateNewProject: Tạo dự án mới
+
+  action:
+    fundproject: quyên góp cho dự án
+    CreateNewProject: tạo dự án mới
+    sendToAdmin: Gửi ban quản trị
+
+  captionLink:
+    checkproject: Bạn có thể xem dự án bạn mới quyên góp tại đây
+    CheckProjectBeforePublish: Chúng tôi sẽ nhanh chóng kiểm tra dự án của bạn trước khi cho phép đăng lên trang của chúng tôi
 

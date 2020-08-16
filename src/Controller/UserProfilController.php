@@ -117,7 +117,7 @@ class UserProfilController extends AbstractController
                 $em->flush();
 
                 $message = $this->translator->trans('message.userProfil.changeSuccess');
-                $this->addFlash('success', 'Thay doi thanh cong');
+                $this->addFlash('success', $message);
 
                 return $this->redirectToRoute('app_profil');
             }

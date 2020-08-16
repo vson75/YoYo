@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Spartan&display=swap">
-        <title>Dự án {{ post_name }} đã tới hạn cuối</title>
+        <title>{% trans %}Dự án {% endtrans %}{{ post_name }} {% trans %}đã tới hạn cuối{% endtrans %}</title>
     </head>
     <body>
     <div class="body">
@@ -21,13 +21,13 @@
                 <h1 class="text-center">Dự án: {{ post_name }} đã tới hạn chót.</h1>
 
                 <div class="block">
-                    Xin chảo bạn.
-                    Tới thời điểm hiện tại, bạn đã quyên góp được: {{ collected_amount }} / {{ target_amount }} € cho dự án {{ post_name }} tại YoYo.
+                    {% trans %}Xin chảo bạn.
+                    Tới thời điểm hiện tại, bạn đã quyên góp được: {% endtrans %} {{ collected_amount }} / {{ target_amount }} € {% trans %}cho dự án {% endtrans %}{{ post_name }} {% trans %}tại YoYo.{% endtrans %}
                 </div>
 
                 {% if collected_amount < target_amount %}
                     <div class="block">
-                        Bạn có thể tiếp tục gia hạn cho dự án của bạn. Hoặc bạn có thể ngừng dự án và chúng tôi sẽ bắt đầu quá trình chuyển tiền cho bạn
+                        {% trans %}Bạn có thể tiếp tục gia hạn cho dự án của bạn. Hoặc bạn có thể ngừng dự án và chúng tôi sẽ bắt đầu quá trình chuyển tiền cho bạn{% endtrans %}
                     </div>
                     <div class="block-button">
 
@@ -42,26 +42,27 @@
 
                 {% else %}
                     <div class="block">
-                        Trong file đính kèm là danh sách chi tiết các đóng góp cho dự án của bạn.
+                        {% trans %}Trong file đính kèm là danh sách chi tiết các đóng góp cho dự án của bạn.{% endtrans %}
                     </div>
                     <p class="block text-center">
-                        <a href="{{ url('show_post', {uniquekey: post_uniqueKey}) }}" class="btn">Xem dự án</a>
+                        <a href="{{ url('show_post', {uniquekey: post_uniqueKey}) }}" class="btn">{% trans %}Xem dự án{% endtrans %}</a>
                     </p>
                     <div class="block">
-                        Chúng tôi sẽ bắt đầu quá trình chuyển tiền cho dự án của bạn. Bạn sẽ nhận được thông tin chi tiết về các khoản đóng góp.
+                       {% trans%} Chúng tôi sẽ bắt đầu quá trình chuyển tiền cho dự án của bạn. Bạn sẽ nhận được thông tin chi tiết về các khoản đóng góp.{% endtrans %}
                     </div>
                 {% endif %}
                 <div class="block">
-                    Cảm ơn bạn đã tin tưởng chúng tôi. Hy vọng trong tương lai gần chúng ta có thể làm việc cùng nhau
+                    {% trans %}Cảm ơn bạn đã tin tưởng chúng tôi. Hy vọng trong tương lai gần chúng ta có thể làm việc cùng nhau{% endtrans %}
                 </div>
             </div>
             <div class="footer">
                 <p class="block">
-                    Thân,<br><br>
+                    {% trans %}Thân,{% endtrans %}
+                    <br><br>
                     Yoyo
                 </p>
                 <p class="block bottom text-center">
-                    Dự án của Viet Son NGUYEN
+                    {% trans %}Dự án của Viet Son NGUYEN {% endtrans %}
                 </p>
             </div>
         </div>

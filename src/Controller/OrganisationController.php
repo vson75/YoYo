@@ -80,7 +80,7 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
                     $token = $user->getToken();
                     $tokenCreateAt = $user->getTokencreateAt();
                     $template = 'email/password.html.twig';
-                    $subject = "Chào mừng bạn đã tới với YoYo - Tạo mật khẩu mới";
+                    $subject = $this->translator->trans('email.subject.NewOrganisationAndCreatePassword');
                     $mailer->SendMailPassword($user,$token,$tokenCreateAt,$template,$subject);
 
                     $user = $repo->findOneBy([

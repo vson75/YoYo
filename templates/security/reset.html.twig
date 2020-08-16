@@ -17,9 +17,6 @@
     {% endfor %}
     <div id="logreg-forms">
 
-
-        <div class="row">
-
             <div class="col-sm-12">
                 {{ form_start(resetForm) }}
 
@@ -28,12 +25,13 @@
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
                     {% trans %}Đăng Ký{% endtrans %}
                 </button>
+
+                <a href="{{ path('app_login') }}" id="forgot_pswd"> {% trans %}Quay lại trang đăng nhập{% endtrans %}</a>
                 {{ form_widget(resetForm) }}
                 {{ form_end(resetForm) }}
 
             </div>
 
-        </div>
     </div>
 {% endblock %}
 

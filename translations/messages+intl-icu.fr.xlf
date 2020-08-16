@@ -277,6 +277,384 @@
         <source>Không có kết quả tìm kiếm</source>
         <target>__Không có kết quả tìm kiếm</target>
       </trans-unit>
+      <trans-unit id="ievwJ8M" resname="Thay đổi thông tin tổ chức">
+        <source>Thay đổi thông tin tổ chức</source>
+        <target>__Thay đổi thông tin tổ chức</target>
+      </trans-unit>
+      <trans-unit id="BviUDxs" resname="Tạo tài khoản tổ chức">
+        <source>Tạo tài khoản tổ chức</source>
+        <target>__Tạo tài khoản tổ chức</target>
+      </trans-unit>
+      <trans-unit id="A6_lsA." resname="Tạo tài khoản cá nhân">
+        <source>Tạo tài khoản cá nhân</source>
+        <target>__Tạo tài khoản cá nhân</target>
+      </trans-unit>
+      <trans-unit id="_XBMdMp" resname="Dự án yêu thích">
+        <source>Dự án yêu thích</source>
+        <target>__Dự án yêu thích</target>
+      </trans-unit>
+      <trans-unit id="pF4s4et" resname="Hết hạn">
+        <source>Hết hạn</source>
+        <target>__Hết hạn</target>
+      </trans-unit>
+      <trans-unit id="ALrkWyi" resname="Thông tin tổ chức">
+        <source>Thông tin tổ chức</source>
+        <target>__Thông tin tổ chức</target>
+      </trans-unit>
+      <trans-unit id="R3T9jCU" resname="Dự án đã quyên góp">
+        <source>Dự án đã quyên góp</source>
+        <target>__Dự án đã quyên góp</target>
+      </trans-unit>
+      <trans-unit id="JNQQNw9" resname="Đóng góp cho dự án:">
+        <source>Đóng góp cho dự án:</source>
+        <target>__Đóng góp cho dự án:</target>
+      </trans-unit>
+      <trans-unit id="tIapku2" resname="Họ tên chủ thẻ">
+        <source>Họ tên chủ thẻ</source>
+        <target>__Họ tên chủ thẻ</target>
+      </trans-unit>
+      <trans-unit id="gQa5sO5" resname="Số thẻ tín dụng">
+        <source>Số thẻ tín dụng</source>
+        <target>__Số thẻ tín dụng</target>
+      </trans-unit>
+      <trans-unit id="CwKK8to" resname="Hạn thẻ">
+        <source>Hạn thẻ</source>
+        <target>__Hạn thẻ</target>
+      </trans-unit>
+      <trans-unit id="Gem2O8e" resname="CVC">
+        <source>CVC</source>
+        <target>__CVC</target>
+      </trans-unit>
+      <trans-unit id="2RQAU7n" resname="Chúng tôi đang kiểm tra thông tin ngân hàng, vui lòng không thoát khỏi trang">
+        <source>Chúng tôi đang kiểm tra thông tin ngân hàng, vui lòng không thoát khỏi trang</source>
+        <target>__Chúng tôi đang kiểm tra thông tin ngân hàng, vui lòng không thoát khỏi trang</target>
+      </trans-unit>
+      <trans-unit id="MJ89cne" resname="Dịch dự án sang các tiếng khác">
+        <source>Dịch dự án sang các tiếng khác</source>
+        <target>__Dịch dự án sang các tiếng khác</target>
+      </trans-unit>
+      <trans-unit id="rNalj.7" resname="Nội dung bài viết trước khi dịch">
+        <source>Nội dung bài viết trước khi dịch</source>
+        <target>__Nội dung bài viết trước khi dịch</target>
+      </trans-unit>
+      <trans-unit id="cRzD7CL" resname="Tên dự án:">
+        <source>Tên dự án:</source>
+        <target>__Tên dự án:</target>
+      </trans-unit>
+      <trans-unit id="qQWkfih" resname="Nội dung:">
+        <source>Nội dung:</source>
+        <target>__Nội dung:</target>
+      </trans-unit>
+      <trans-unit id="qD.eNZy" resname="Bản dịch">
+        <source>Bản dịch</source>
+        <target>__Bản dịch</target>
+      </trans-unit>
+      <trans-unit id="o5Jx.Mb" resname="Dịch bài viết">
+        <source>Dịch bài viết</source>
+        <target>__Dịch bài viết</target>
+      </trans-unit>
+      <trans-unit id="Mt3kGie" resname="Đăng ký tài khoản">
+        <source>Đăng ký tài khoản</source>
+        <target>__Đăng ký tài khoản</target>
+      </trans-unit>
+      <trans-unit id="jSO1qlu" resname="Tạo tài khoản với Facebook">
+        <source>Tạo tài khoản với Facebook</source>
+        <target>__Tạo tài khoản với Facebook</target>
+      </trans-unit>
+      <trans-unit id="m2wiCVb" resname="Hoặc đăng ký với tài khoản email của bạn">
+        <source>Hoặc đăng ký với tài khoản email của bạn</source>
+        <target>__Hoặc đăng ký với tài khoản email của bạn</target>
+      </trans-unit>
+      <trans-unit id="HP5idLH" resname="Quay trở lại">
+        <source>Quay trở lại</source>
+        <target>__Quay trở lại</target>
+      </trans-unit>
+      <trans-unit id="3sE7Ukh" resname="Quay lại trang đăng nhập">
+        <source>Quay lại trang đăng nhập</source>
+        <target>__Quay lại trang đăng nhập</target>
+      </trans-unit>
+      <trans-unit id="Sjc_if1" resname="Danh sách người sử dụng">
+        <source>Danh sách người sử dụng</source>
+        <target>__Danh sách người sử dụng</target>
+      </trans-unit>
+      <trans-unit id="bsZ8QaV" resname="Yêu cầu tạo tổ chức">
+        <source>Yêu cầu tạo tổ chức</source>
+        <target>__Yêu cầu tạo tổ chức</target>
+      </trans-unit>
+      <trans-unit id="kcaRC.E" resname="Parameter của trang web">
+        <source>Parameter của trang web</source>
+        <target>__Parameter của trang web</target>
+      </trans-unit>
+      <trans-unit id="A7ueBHZ" resname="Danh sách các tổ chức đang chờ được kiểm duyệt">
+        <source>Danh sách các tổ chức đang chờ được kiểm duyệt</source>
+        <target>__Danh sách các tổ chức đang chờ được kiểm duyệt</target>
+      </trans-unit>
+      <trans-unit id="0MzCs_z" resname="Tên tổ chức">
+        <source>Tên tổ chức</source>
+        <target>__Tên tổ chức</target>
+      </trans-unit>
+      <trans-unit id="tdI9t_x" resname="Email user">
+        <source>Email user</source>
+        <target>__Email user</target>
+      </trans-unit>
+      <trans-unit id="Ts9H6ji" resname="Kiểm duyệt">
+        <source>Kiểm duyệt</source>
+        <target>__Kiểm duyệt</target>
+      </trans-unit>
+      <trans-unit id="daq3LCz" resname="Yêu cầu thêm thông tin của tổ chức">
+        <source>Yêu cầu thêm thông tin của tổ chức</source>
+        <target>__Yêu cầu thêm thông tin của tổ chức</target>
+      </trans-unit>
+      <trans-unit id="JgQjXyj" resname="Yêu cầu thêm thông tin">
+        <source>Yêu cầu thêm thông tin</source>
+        <target>__Yêu cầu thêm thông tin</target>
+      </trans-unit>
+      <trans-unit id="aRnLFRn" resname="Bản nháp">
+        <source>Bản nháp</source>
+        <target>__Bản nháp</target>
+      </trans-unit>
+      <trans-unit id="EaXGpK." resname="Thông tin cần bổ sung">
+        <source>Thông tin cần bổ sung</source>
+        <target>__Thông tin cần bổ sung</target>
+      </trans-unit>
+      <trans-unit id="ahVVOnw" resname="Chuyển khoản">
+        <source>Chuyển khoản</source>
+        <target>__Chuyển khoản</target>
+      </trans-unit>
+      <trans-unit id="NRhJEvp" resname="Kết thúc">
+        <source>Kết thúc</source>
+        <target>__Kết thúc</target>
+      </trans-unit>
+      <trans-unit id="qOx.hVa" resname="Tạm ngừng">
+        <source>Tạm ngừng</source>
+        <target>__Tạm ngừng</target>
+      </trans-unit>
+      <trans-unit id="T0X1QJK" resname="Chờ Admin kiểm duyệt">
+        <source>Chờ Admin kiểm duyệt</source>
+        <target>__Chờ Admin kiểm duyệt</target>
+      </trans-unit>
+      <trans-unit id="UwHVYbk" resname="Thay đổi parameter của trang web">
+        <source>Thay đổi parameter của trang web</source>
+        <target>__Thay đổi parameter của trang web</target>
+      </trans-unit>
+      <trans-unit id="DXw6kiF" resname="Kiểm duyệt tổ chức">
+        <source>Kiểm duyệt tổ chức</source>
+        <target>__Kiểm duyệt tổ chức</target>
+      </trans-unit>
+      <trans-unit id="bTFnYQp" resname="Thông tin cơ bản của tổ chức">
+        <source>Thông tin cơ bản của tổ chức</source>
+        <target>__Thông tin cơ bản của tổ chức</target>
+      </trans-unit>
+      <trans-unit id="QIZQGS." resname="Duyệt thông tin">
+        <source>Duyệt thông tin</source>
+        <target>__Duyệt thông tin</target>
+      </trans-unit>
+      <trans-unit id="w_w_4OU" resname="Yêu cầu bổ sung">
+        <source>Yêu cầu bổ sung</source>
+        <target>__Yêu cầu bổ sung</target>
+      </trans-unit>
+      <trans-unit id="_VUi8r9" resname="Thông tin đã được kiểm duyệt">
+        <source>Thông tin đã được kiểm duyệt</source>
+        <target>__Thông tin đã được kiểm duyệt</target>
+      </trans-unit>
+      <trans-unit id="70tA6pn" resname="Tên tổ chức:">
+        <source>Tên tổ chức:</source>
+        <target>__Tên tổ chức:</target>
+      </trans-unit>
+      <trans-unit id="3ewnBOY" resname="Địa chỉ:">
+        <source>Địa chỉ:</source>
+        <target>__Địa chỉ:</target>
+      </trans-unit>
+      <trans-unit id="kaSLjkH" resname="Zipcode :">
+        <source>Zipcode :</source>
+        <target>__Zipcode :</target>
+      </trans-unit>
+      <trans-unit id="rJjyNEB" resname="Thành phố">
+        <source>Thành phố</source>
+        <target>__Thành phố</target>
+      </trans-unit>
+      <trans-unit id="yUxlYQ." resname="Quốc gia">
+        <source>Quốc gia</source>
+        <target>__Quốc gia</target>
+      </trans-unit>
+      <trans-unit id="BpQvDLX" resname="Số điện thoại liên lạc">
+        <source>Số điện thoại liên lạc</source>
+        <target>__Số điện thoại liên lạc</target>
+      </trans-unit>
+      <trans-unit id="renJtjD" resname="Danh sách các tài liệu cần kiểm chứng">
+        <source>Danh sách các tài liệu cần kiểm chứng</source>
+        <target>__Danh sách các tài liệu cần kiểm chứng</target>
+      </trans-unit>
+      <trans-unit id="jjzsiO5" resname="Quyết định của admin">
+        <source>Quyết định của admin</source>
+        <target>__Quyết định của admin</target>
+      </trans-unit>
+      <trans-unit id="l6uukC3" resname="Yêu cầu bổ sung thông tin">
+        <source>Yêu cầu bổ sung thông tin</source>
+        <target>__Yêu cầu bổ sung thông tin</target>
+      </trans-unit>
+      <trans-unit id="25o5nDh" resname="Không cho phép tạo tài khoản tổ chức">
+        <source>Không cho phép tạo tài khoản tổ chức</source>
+        <target>__Không cho phép tạo tài khoản tổ chức</target>
+      </trans-unit>
+      <trans-unit id="1wA.gPd" resname="Tài liệu">
+        <source>Tài liệu</source>
+        <target>__Tài liệu</target>
+      </trans-unit>
+      <trans-unit id="05FnV3W" resname="Profil của bạn không có tổ chức đính kèm">
+        <source>Profil của bạn không có tổ chức đính kèm</source>
+        <target>__Profil của bạn không có tổ chức đính kèm</target>
+      </trans-unit>
+      <trans-unit id="JJ3m9T5" resname="Địa chỉ">
+        <source>Địa chỉ</source>
+        <target>__Địa chỉ</target>
+      </trans-unit>
+      <trans-unit id="pgH4G8L" resname="ZipCode">
+        <source>ZipCode</source>
+        <target>__ZipCode</target>
+      </trans-unit>
+      <trans-unit id="XzgqlXU" resname="Số điện thoại">
+        <source>Số điện thoại</source>
+        <target>__Số điện thoại</target>
+      </trans-unit>
+      <trans-unit id="Z370Cse" resname="Chứng nhận tổ chức">
+        <source>Chứng nhận tổ chức</source>
+        <target>__Chứng nhận tổ chức</target>
+      </trans-unit>
+      <trans-unit id="Q.5b3g7" resname="Bạn không có Chứng nhận tổ chức trong hệ thống của chúng tôi">
+        <source>Bạn không có Chứng nhận tổ chức trong hệ thống của chúng tôi</source>
+        <target>__Bạn không có Chứng nhận tổ chức trong hệ thống của chúng tôi</target>
+      </trans-unit>
+      <trans-unit id="T2AhqFb" resname="Tài khoản ngân hàng">
+        <source>Tài khoản ngân hàng</source>
+        <target>__Tài khoản ngân hàng</target>
+      </trans-unit>
+      <trans-unit id="CAZ3cGr" resname="Bạn không có tài khoản ngân hàng trong hệ thống">
+        <source>Bạn không có tài khoản ngân hàng trong hệ thống</source>
+        <target>__Bạn không có tài khoản ngân hàng trong hệ thống</target>
+      </trans-unit>
+      <trans-unit id="VbN7dWQ" resname="Bằng khen">
+        <source>Bằng khen</source>
+        <target>__Bằng khen</target>
+      </trans-unit>
+      <trans-unit id="LRlS_ab" resname="Bạn không có bằng khen trong hệ thống">
+        <source>Bạn không có bằng khen trong hệ thống</source>
+        <target>__Bạn không có bằng khen trong hệ thống</target>
+      </trans-unit>
+      <trans-unit id="rjhxeCz" resname="Cập nhật tài liệu">
+        <source>Cập nhật tài liệu</source>
+        <target>__Cập nhật tài liệu</target>
+      </trans-unit>
+      <trans-unit id="CbXW3Re" resname="Tóm tắt các hoạt động">
+        <source>Tóm tắt các hoạt động</source>
+        <target>__Tóm tắt các hoạt động</target>
+      </trans-unit>
+      <trans-unit id="vYWLysY" resname="Tóm tắt các hoạt động của tôi">
+        <source>Tóm tắt các hoạt động của tôi</source>
+        <target>__Tóm tắt các hoạt động của tôi</target>
+      </trans-unit>
+      <trans-unit id="POznybx" resname="Số dự án đầu tư">
+        <source>Số dự án đầu tư</source>
+        <target>__Số dự án đầu tư</target>
+      </trans-unit>
+      <trans-unit id="6..JYii" resname="Số tiền đã góp">
+        <source>Số tiền đã góp</source>
+        <target>__Số tiền đã góp</target>
+      </trans-unit>
+      <trans-unit id="ibW78J1" resname="Tên dự án">
+        <source>Tên dự án</source>
+        <target>__Tên dự án</target>
+      </trans-unit>
+      <trans-unit id="1C1iLv3" resname="Số tiền bạn đã quyên góp">
+        <source>Số tiền bạn đã quyên góp</source>
+        <target>__Số tiền bạn đã quyên góp</target>
+      </trans-unit>
+      <trans-unit id="frsAa9I" resname="Phần trăm quyên góp được">
+        <source>Phần trăm quyên góp được</source>
+        <target>__Phần trăm quyên góp được</target>
+      </trans-unit>
+      <trans-unit id="KiYCmVf" resname="Mục tiêu quyên góp của dự án">
+        <source>Mục tiêu quyên góp của dự án</source>
+        <target>__Mục tiêu quyên góp của dự án</target>
+      </trans-unit>
+      <trans-unit id="eGOJvkk" resname="Thông tin về tổ chức">
+        <source>Thông tin về tổ chức</source>
+        <target>__Thông tin về tổ chức</target>
+      </trans-unit>
+      <trans-unit id="A1pktwf" resname="Tài liệu liên quan">
+        <source>Tài liệu liên quan</source>
+        <target>__Tài liệu liên quan</target>
+      </trans-unit>
+      <trans-unit id="Va65f9v" resname="Cập nhật thông tin tổ chức">
+        <source>Cập nhật thông tin tổ chức</source>
+        <target>__Cập nhật thông tin tổ chức</target>
+      </trans-unit>
+      <trans-unit id="cP8sWGA" resname="Các tài liệu liên quan tới tổ chức">
+        <source>Các tài liệu liên quan tới tổ chức</source>
+        <target>__Các tài liệu liên quan tới tổ chức</target>
+      </trans-unit>
+      <trans-unit id="WZvqzst" resname="Tạo organisation">
+        <source>Tạo organisation</source>
+        <target>__Tạo organisation</target>
+      </trans-unit>
+      <trans-unit id="fZE8s74" resname="Để đăng dự án lên trang của bọn mình, và nhằm đảm bảo tính minh bạch của thông tin, chúng tôi ưu tiên cho các tài khoản dưới danh nghĩa tổ chức được công nhận bời chính phủ.">
+        <source>Để đăng dự án lên trang của bọn mình, và nhằm đảm bảo tính minh bạch của thông tin, chúng tôi ưu tiên cho các tài khoản dưới danh nghĩa tổ chức được công nhận bời chính phủ.</source>
+        <target>__Để đăng dự án lên trang của bọn mình, và nhằm đảm bảo tính minh bạch của thông tin, chúng tôi ưu tiên cho các tài khoản dưới danh nghĩa tổ chức được công nhận bời chính phủ.</target>
+      </trans-unit>
+      <trans-unit id="OW81x3O" resname="Chúng tôi yêu cầu các bạn cung cấp cho chúng tôi các thông tin sau đây (Lưu ý các file đính kèm không được quá 2M)">
+        <source>Chúng tôi yêu cầu các bạn cung cấp cho chúng tôi các thông tin sau đây (Lưu ý các file đính kèm không được quá 2M)</source>
+        <target>__Chúng tôi yêu cầu các bạn cung cấp cho chúng tôi các thông tin sau đây (Lưu ý các file đính kèm không được quá 2M)</target>
+      </trans-unit>
+      <trans-unit id="E79Q3MW" resname="Địa chỉ email">
+        <source>Địa chỉ email</source>
+        <target>__Địa chỉ email</target>
+      </trans-unit>
+      <trans-unit id="HytLhkh" resname="Thêm/thay đổi tài liệu">
+        <source>Thêm/thay đổi tài liệu</source>
+        <target>__Thêm/thay đổi tài liệu</target>
+      </trans-unit>
+      <trans-unit id="yVsMlfj" resname="Thêm tài liệu">
+        <source>Thêm tài liệu</source>
+        <target>__Thêm tài liệu</target>
+      </trans-unit>
+      <trans-unit id="pEt8Se_" resname="Xoá bỏ tài liệu">
+        <source>Xoá bỏ tài liệu</source>
+        <target>__Xoá bỏ tài liệu</target>
+      </trans-unit>
+      <trans-unit id="Y_u3eoz" resname="Gửi tài liệu">
+        <source>Gửi tài liệu</source>
+        <target>__Gửi tài liệu</target>
+      </trans-unit>
+      <trans-unit id="iIZ54wp" resname="Gửi dự án cho ban quản trị">
+        <source>Gửi dự án cho ban quản trị</source>
+        <target>__Gửi dự án cho ban quản trị</target>
+      </trans-unit>
+      <trans-unit id="tATa9VO" resname="Chỉnh sửa thông tin dự án">
+        <source>Chỉnh sửa thông tin dự án</source>
+        <target>__Chỉnh sửa thông tin dự án</target>
+      </trans-unit>
+      <trans-unit id="P_okEJp" resname="Hết hạn quyên góp">
+        <source>Hết hạn quyên góp</source>
+        <target>__Hết hạn quyên góp</target>
+      </trans-unit>
+      <trans-unit id="_Brth9w" resname="Danh sách bằng khen và giấy chứng nhận của tổ chức">
+        <source>Danh sách bằng khen và giấy chứng nhận của tổ chức</source>
+        <target>__Danh sách bằng khen và giấy chứng nhận của tổ chức</target>
+      </trans-unit>
+      <trans-unit id="FgMnBpa" resname="Chào mừng bạn tới với">
+        <source>Chào mừng bạn tới với</source>
+        <target>Bienvenue à</target>
+      </trans-unit>
+      <trans-unit id="MX15UWs" resname="chúng tôi cảm ơn bạn vì đã&#10;                đăng ký tài khoản và chúng tôi mong chờ bạn sẽ cùng chúng tôi chung tay đóng&#10;                góp 1 chút gì đó cho Việt Nam.&#10;                Bạn nhân vào button duoi dây dê tao mât khâu moi.&#10;                Lưu ý: đường dẫn dưới đây chỉ có hiệu lực trước 24h.&#10;                Nếu qua 24h bạn vẫn chưa đăng ký,vui lòng chọn &quot;Quên mật khâu&quot; để tạo mật khẩu&#10;                mới">
+        <source>chúng tôi cảm ơn bạn vì đã
+                đăng ký tài khoản và chúng tôi mong chờ bạn sẽ cùng chúng tôi chung tay đóng
+                góp 1 chút gì đó cho Việt Nam.
+                Bạn nhân vào button duoi dây dê tao mât khâu moi.
+                Lưu ý: đường dẫn dưới đây chỉ có hiệu lực trước 24h.
+                Nếu qua 24h bạn vẫn chưa đăng ký,vui lòng chọn "Quên mật khâu" để tạo mật khẩu
+                mới</source>
+        <target>Merci de vous inscrire sur notre aplication.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

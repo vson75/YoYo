@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width">
-        <title>Tạm ngừng dự án {{ post_name }}</title>
+        <title>{% trans %}Tạm ngừng dự án{% endtrans %} {{ post_name }}</title>
     </head>
     <body>
     <div class="body">
@@ -15,28 +15,29 @@
                 </a>
             </div>
             <div class="content">
-                <h1 class="text-center">Thông tin về dự án của bạn</h1>
+                <h1 class="text-center">{% trans %}Thông tin về dự án của bạn{% endtrans %}</h1>
                 <p class="block">
-                    Chúng tôi xin phép tạm ngưng dự án: {{ post_name }} tại YoYo.
+                    {% trans %}Chúng tôi xin phép tạm ngưng dự án: {% endtrans %}{{ post_name }} {% trans %}tại YoYo.{% endtrans %}
 
                 </p>
                 <div class="block">
-                    Chúng tôi tạm dừng dự án của các bạn dưới các lý do dưới đây:
+                   {% trans %} Chúng tôi tạm dừng dự án của các bạn dưới các lý do dưới đây: {% endtrans %}
                     {{ raison|raw }}
                 </div>
 
                 <p class="block">
-                    Mong bạn hiểu và thông cảm cho chúng tôi. Nếu bạn có thắc mắc có thể
-                    liên hệ trực tiếp với chúng tôi.
+                    {% trans %}Mong bạn hiểu và thông cảm cho chúng tôi. Nếu bạn có thắc mắc có thể
+                    liên hệ trực tiếp với chúng tôi.{% endtrans %}
                 </p>
             </div>
             <div class="footer">
                 <p class="block">
-                    Thân,<br><br>
+                    {% trans %}Thân,{% endtrans %}
+                    <br><br>
                     Yoyo
                 </p>
                 <p class="block bottom text-center">
-                    Dự án của Viet Son NGUYEN
+                    {% trans %}Dự án của Viet Son NGUYEN{% endtrans %}
                 </p>
             </div>
         </div>

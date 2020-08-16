@@ -9,17 +9,20 @@ use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Mailer
 {
     private $mailer;
+    private $translator;
     private $admin_email;
 
 
-    public function __construct(MailerInterface $mailer, $admin_email)
+    public function __construct(MailerInterface $mailer, $admin_email, TranslatorInterface $translator)
     {
         $this->mailer = $mailer;
         $this->admin_email = $admin_email;
+        $this->translator = $translator;
 
     }
 
@@ -95,7 +98,7 @@ class Mailer
         $email = (new TemplatedEmail())
             ->from($this->admin_email)
             ->to($this->admin_email)
-            ->subject('New organisation was created/updated info')
+            ->subject($this->translator->trans('email.subject.AlertAdminNewOrganisation'))
             ->htmlTemplate('email/Alert_Admin_When_Creating_Organisation.html.twig')
             ->context([
                 'username'=> $username
@@ -110,7 +113,7 @@ class Mailer
             ->from($this->admin_email)
             ->to($user->getEmail())
             ->bcc($this->admin_email)
-            ->subject('Tổ chức đã được công nhận bởi YoYo')
+            ->subject($this->translator->trans('email.subject.CongratNewOrganisation'))
             ->htmlTemplate('email/WelcomeNewOrganisation.html.twig')
         ;
         $this->mailer->send($email);
@@ -121,7 +124,7 @@ class Mailer
             ->from($this->admin_email)
             ->to($user->getEmail())
             ->bcc($this->admin_email)
-            ->subject('Thông tin tổ chức đã được chuyển tới admin YoYo')
+            ->subject($this->translator->trans('email.subject.InfoOrganisationSentToAdmin'))
             ->htmlTemplate('email/ThankToCreateOrganisation.html.twig')
         ;
         $this->mailer->send($email);
@@ -138,9 +141,9 @@ class Mailer
                 'id' => $user->getId()
             ]);
         if($choice == "ask"){
-            $email->subject('Bổ sung thông tin cho tổ chức của bạn');
+            $email->subject($this->translator->trans('email.subject.CompleteInfoOrganisation'));
         }elseif ($choice == "stop"){
-            $email->subject('Chúng tôi không thể chứng nhận tổ chức của bạn ');
+            $email->subject($this->translator->trans('email.subject.CannotValidOrganisation'));
         }
 
         $this->mailer->send($email);

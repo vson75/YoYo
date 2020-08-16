@@ -332,10 +332,10 @@ class PostController extends AbstractController
             $this->addFlash('success', $message);
 
             $template='email/EmailCreateOrDonation.html.twig';
-            $subject ="Cảm ơn bạn đã tạo chủ đề mới";
-            $title ="YoYo - Tạo dự án mới";
-            $action = "tạo dự án mới";
-            $caption_link = "Bạn có thể xem dự án mới tạo tại đây: ";
+            $subject = $this->translator->trans('email.subject.thankToCreateNewProject');
+            $title = $this->translator->trans('email.title.CreateNewProject');
+            $action = $this->translator->trans('email.action.CreateNewProject');
+            $caption_link = $this->translator->trans('email.captionLink.checkproject').": ";
             $mailer->sendMailCreateOrDonationPost($user,$createNew,$template,$subject,$title,$action, $caption_link);
 
             $id_post = $createNew->getId();
@@ -391,10 +391,10 @@ class PostController extends AbstractController
             $em->flush();
 
             $template='email/EmailCreateOrDonation.html.twig';
-            $subject ="Dự án ".$post->getTitle()." đã được gửi tới ban quản trị";
+            $subject =$this->translator->trans('email.subject.project')." ".$post->getTitle()." ".$this->translator->trans('email.subject.sentToAdmin');
             $title ="";
-            $action = "gửi ban quản trị dự án: ";
-            $caption_link = "Chúng tôi sẽ nhanh chóng kiểm tra dự án của bạn trước khi cho phép đăng lên trang của chúng tôi ";
+            $action = $this->translator->trans('email.action.sendToAdmin');
+            $caption_link = $this->translator->trans('email.captionLink.CheckProjectBeforePublish');
             $mailer->sendMailCreateOrDonationPost($post->getUser(),$post,$template,$subject,$title,$action, $caption_link);
 
 
@@ -611,10 +611,10 @@ class PostController extends AbstractController
 
 
             $template='email/EmailCreateOrDonation.html.twig';
-            $subject ="Cảm ơn bạn đã quyên góp cho dự án ".$post->getTitle();
-            $title ="YoYo - quyên góp dự án";
-            $action = "quyên góp cho dự án: ";
-            $caption_link = "Bạn có thể xem dự án bạn mới quyên góp tại đây: ";
+            $subject = $this->translator->trans('email.subject.ThanktoFund')." ".$post->getTitle();
+            $title = $this->translator->trans('email.title.ThanktoFund');
+            $action = $this->translator->trans('email.action.fundproject').": ";
+            $caption_link = $this->translator->trans('email.captionLink.checkproject').": ";
             $mailer->sendMailCreateOrDonationPost($this->getUser(),$post,$template,$subject,$title,$action, $caption_link);
 
             //$this->addFlash('success', 'Cảm ơn bạn đã quyên góp tiền');
