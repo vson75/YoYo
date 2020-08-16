@@ -39,13 +39,26 @@ class PostRepository extends ServiceEntityRepository
 
     public function findPostByNewest()
     {
-       // dump($queryBuilder);die;
-        // use the function publishedAtIsNotNull
         $status_Collecting = PostStatus::POST_COLLECTING;
         $status_transfert_fund = PostStatus::POST_TRANSFERT_FUND;
          return   $this->publishedAtIsNotNull()
              ->andWhere('p.status = '.$status_Collecting.' OR p.status = '.$status_transfert_fund.'')
             ->orderBy('p.id', 'DESC')
+            ->setMaxResults(8)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+    public function findPostByFavorite($user)
+    {
+        $status_Collecting = PostStatus::POST_COLLECTING;
+        $status_transfert_fund = PostStatus::POST_TRANSFERT_FUND;
+        return   $this->publishedAtIsNotNull()
+            ->andWhere('p.status = '.$status_Collecting.' OR p.status = '.$status_transfert_fund.'')
+            ->andWhere('fav.user = :user')
+            ->andWhere('fav.isFavorite = 1')
+            ->innerJoin('p.favorites','fav')
+            ->setParameter('user', $user)
             ->setMaxResults(8)
             ->getQuery()
             ->getResult()

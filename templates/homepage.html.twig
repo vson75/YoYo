@@ -29,7 +29,27 @@
 
         </header>
 
-        <!-- Page Features -->
+        <!-- Favorite filter-->
+    {% if userInfo is not null %}
+    <div class="favorite">
+        {# check the url to show the icon #}
+        {% set request = app.request.requesturi %}
+
+        {% if request == '/' or request == '/?isFavorite=0' %}
+            <button class="button-favorite" onclick="location.href='?isFavorite=1'">
+                {% trans %}Dự án yêu thích{% endtrans %}
+                <i id="start_empty" class="far fa-star lg"></i>
+            </button>
+        {% else %}
+            <button class="button-favorite" onclick="location.href='?isFavorite=0'">
+                {% trans %}Dự án yêu thích{% endtrans %}
+                <i id="start_checked" class="fas fa-star lg"></i>
+            </button>
+        {% endif %}
+    </div>
+    {% endif %}
+
+
         <div class="row">
             {% for post in post %}
             <div class="col-lg-3 col-md-6 mb-4">

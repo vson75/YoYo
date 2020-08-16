@@ -129,7 +129,8 @@ class UploadService
             ->setDepositeDate(new \DateTime('now'))
             ->setMimeType($uploadedFile->getMimeType() ?? 'application/octet-stream')
             ->setDocumentType($document_type)
-            ->setRequestStatus($status);
+            ->setRequestStatus($status)
+            ->setIsDeleted(false);
 
         $this->em->persist($userDocument);
         $this->em->flush();
@@ -145,6 +146,10 @@ class UploadService
             throw new \Exception(sprintf('Error opening stream for "%s"', $path));
         }
         return $resource;
+    }
+
+    public function deleteDocument($documentName,$userID){
+        $this->filesystem->delete(self::Organisation_document_Upload_Download_Path.'/'.$userID.'/'.$documentName);
     }
 
 }

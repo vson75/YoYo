@@ -18,16 +18,16 @@
         <div id="textareaPostInfo">
             <div id="textarea">
                 <div id="textareawrapped">
-                    <h2 style="text-align: center">Original content</h2>
+                    <h2  class="texth2">{% trans %}Nội dung bài viết trước khi dịch{% endtrans %}</h2>
                     <div>
-                        <div class="row postInfo">
-                            Title
+                        <div class="row postInfo title">
+                            {% trans %}Tên dự án:{% endtrans %}
                         </div>
                         <div class="row postInfo">
                             {{ postInfo.title }}
                         </div>
-                        <div class="row postInfo">
-                            Content
+                        <div class="row postInfo title">
+                            {% trans %}Nội dung:{% endtrans %}
                         </div>
                         <div class="postInfo">
                             {{ postInfo.content|raw }}
@@ -40,11 +40,17 @@
             <div id="textareaTranslation">
                 <div id="textarea">
                     <div id="textareawrapped">
-                        <h2 style="text-align: center">Translation content</h2>
+                        <h2 class="texth2">{% trans %}Bản dịch{% endtrans %}</h2>
                         <div style="margin: 1em 1em 1em 1em;">
                             {{ form_start(form) }}
 
+                            {{ form_row(form.lang) }}
+
+                            {{ form_row(form.title) }}
+                            {{ form_row(form.content) }}
+                            <button class="btn btn-primary" type="submit">{% trans %}Dịch bài viết{% endtrans %}</button>
                             {{ form_end(form) }}
+
                         </div>
                     </div>
                 </div>

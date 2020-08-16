@@ -31,3 +31,12 @@ p{
     word-break: break-all;
 
 }
+
+.texth2{
+    text-align: center;
+    padding-top: 1rem;
+}
+
+.title{
+    text-decoration: underline black;
+}

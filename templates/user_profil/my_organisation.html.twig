@@ -121,11 +121,16 @@
                                     <label>{% trans %}Chứng nhận tổ chức {% endtrans %}</label>
                                 </div>
                                 <div class="col-md-6">
-                                    {{ certificate.originalFilename }}
+
                                     <span>
                                         <a href="{{ path('app_download_user_document', {
                                             id: certificate.id
-                                        }) }}"><span class="fa fa-download"></span></a>
+                                        }) }}" class="document">{{ certificate.originalFilename }}</a>
+                                    </span>
+                                    <span>
+                                        <a href="{{ path('app_delete_user_document',{
+                                            id: certificate.id
+                                        }) }}"><span class="fas fa-trash-alt"></span></a>
                                     </span>
                                 </div>
                             </div>
@@ -146,11 +151,16 @@
                                      <label>{% trans %}Tài khoản ngân hàng{% endtrans %}</label>
                                  </div>
                                  <div class="col-md-6">
-                                     {{ bank.originalFilename }}
+
                                      <span>
                                         <a href="{{ path('app_download_user_document', {
                                             id: bank.id
-                                        }) }}"><span class="fa fa-download"></span></a>
+                                        }) }}" class="document">{{ bank.originalFilename }}</a>
+                                    </span>
+                                     <span>
+                                        <a href="{{ path('app_delete_user_document', {
+                                            id: bank.id
+                                        }) }}"><span class="fas fa-trash-alt"></span></a>
                                     </span>
                                  </div>
                              </div>
@@ -172,11 +182,16 @@
                                         <label>{% trans %}Bằng khen{% endtrans %}</label>
                                     </div>
                                     <div class="col-md-6">
-                                        {{ award.originalFilename }}
+
                                         <span>
                                         <a href="{{ path('app_download_user_document', {
                                             id: award.id
-                                        }) }}"><span class="fa fa-download"></span></a>
+                                        }) }}" class="document">{{ award.originalFilename }}</a>
+                                    </span>
+                                        <span>
+                                        <a href="{{ path('app_delete_user_document',{
+                                            id: award.id
+                                        }) }}"><span class="fas fa-trash-alt"></span></a>
                                     </span>
                                     </div>
                                 </div>

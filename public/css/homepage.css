@@ -99,3 +99,16 @@
     color: red
 }
 
+.fa-star{
+    color: yellow;
+}
+.fa-star:hover{
+    color: yellow;
+}
+
+.button-favorite{
+    color: white;
+    border-style: none;
+    background-color: rgba(248, 135, 126, 0.73);
+    margin-bottom: 1em
+}

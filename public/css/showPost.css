@@ -116,6 +116,10 @@
 
 }
 
+.Headingtitle{
+    text-align: center;
+}
+
 #btn-transaction{
     background: rgba(255,95,103,0.89);
     border-radius: 3px;
@@ -130,6 +134,21 @@
 #btn-transaction:hover {
     cursor: pointer;
     background: rgba(255,75,89,0.89)
+}
+
+#btn-translate{
+    background: rgba(6, 71, 127, 0.15);
+    border-radius: 3px;
+    font-weight: 400;
+    padding: 5px 8px;
+    float: right;
+    display: inline-block;
+    margin: 0 1rem 1rem;
+    color: white;
+}
+
+#btn-translate:hover {
+    cursor: pointer;
 }
 
 #btn-expirePost{
@@ -318,3 +337,4 @@ body {
         width: 100%;
     }
 }
+

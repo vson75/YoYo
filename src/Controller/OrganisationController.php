@@ -20,10 +20,17 @@ use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\AbstractController
 {
+    private $translator;
 
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
 
     /**
      * @Route("/create_organisation", name="app_create_organisation")
@@ -36,7 +43,8 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
         ]);
        // dd($requestInfo);
         if($requestInfo){
-            $this->addFlash('echec', "Bạn đã tạo tài khoản tổ chức, 1 tài khoản chỉ có thể tạo 1 tổ chức.");
+            $message = $this->translator->trans('message.organisation.OnlyOneOrganisationByUser');
+            $this->addFlash('echec', $message);
             return $this->redirectToRoute('app_homepage');
         }
         $form = $this->createForm(CreateOrganisationType::class);
@@ -53,7 +61,8 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
                 ]);
 
                 if(!empty($checkEmail)){
-                    $this->addFlash("echec","Email này đã được đăng ký trong hệ thống của chúng tôi. Bạn có thể tạo password mới bằng cách ấn vào quên mật khẩu");
+                    $message = $this->translator->trans('message.organisation.EmailExisted');
+                    $this->addFlash("echec",$message);
                     return $this->redirectToRoute("app_create_organisation");
                 }else{
 
@@ -140,7 +149,8 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
             $mailer->sendMailAlertToAdminWhenCreatingOrganisation($user->getUsername());
             $mailer->ThankToCreateOrganisation($user);
 
-            $this->addFlash('success','Yêu cầu tạo tài khoản cho phép đăng dự án của bạn đã gửi tới chúng tôi. Chúng tôi sẽ kiểm tra và gửi phản hồi lại cho bạn trong thời gian 24h');
+            $message = $this->translator->trans('message.organisation.CreateOrganisationSuccess');
+            $this->addFlash('success',$message);
             return $this->redirectToRoute('app_homepage');
         }
 
@@ -161,7 +171,8 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
             'id' => $id
         ]);
         if($this->getUser()->getId() != $id){
-            $this->addFlash("echec", "Xin lỗi bạn. Bạn không được quyền truy cập vào trang này.");
+            $message = $this->translator->trans('message.organisation.notAuthor');
+            $this->addFlash("echec", $message);
             return $this->redirectToRoute("app_homepage");
         }else{
 
@@ -204,7 +215,9 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
 
 
                 if(in_array("ROLE_ORGANISATION",$arrayRole)){
-                    $this->addFlash("success", "Thông tin của tổ chức đã được thay đổi thành công");
+
+                    $message = $this->translator->trans('message.organisation.InfoChangedSuccess');
+                    $this->addFlash("success", $message);
                     return $this->redirectToRoute('app_edit_organisation_info', [
                         'id' => $id
                     ]);
@@ -212,7 +225,9 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
                     $user->setAskOrganisation(true);
                     $mailer->sendMailAlertToAdminWhenCreatingOrganisation($user->getUsername());
                     $mailer->ThankToCreateOrganisation($user);
-                    $this->addFlash("success", "Thông tin của bạn đã cập nhật thành công và được gửi cho chúng tôi. Cảm ơn bạn");
+
+                    $message = $this->translator->trans('message.organisation.sendInfoToAdmin');
+                    $this->addFlash("success", $message);
                     return $this->redirectToRoute("app_homepage");
                 }
 
@@ -240,7 +255,8 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
             'id' => $id
         ]);
         if($this->getUser()->getId() != $id){
-            $this->addFlash("echec", "Xin lỗi bạn. Bạn không được quyền truy cập vào trang này.");
+            $message = $this->translator->trans('message.organisation.notAuthor');
+            $this->addFlash("echec", $message);
             return $this->redirectToRoute("app_homepage");
         }
 
@@ -281,7 +297,8 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
                     }
 
                 }else{
-                    $this->addFlash("echec", "Bạn cần đính kèm file và chọn dạng tài liệu bạn muốn thay đổi cho tài liệu");
+                    $message = $this->translator->trans('message.organisation.fileAndFormatNeeded');
+                    $this->addFlash("echec", $message);
                     return $this->redirectToRoute("app_edit_document_organisation", [
                         'id' => $id
                     ]);
@@ -303,13 +320,16 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
 
 
             if(in_array("ROLE_ORGANISATION",$arrayRole)){
-                $this->addFlash('success','Cảm ơn bạn. Các tài liệu liên quan tới tổ chức đã được lưu lại trên hệ thống');
+                $message = $this->translator->trans('message.organisation.InfoChangedSuccess');
+                $this->addFlash('success',$message);
                 return $this->redirectToRoute('app_my_organisation');
             }else{
                 $user->setAskOrganisation(true);
                 $mailer->sendMailAlertToAdminWhenCreatingOrganisation($user->getUsername());
                 $mailer->ThankToCreateOrganisation($user);
-                $this->addFlash("success", "Thông tin của bạn đã cập nhật thành công và được gửi cho chúng tôi. Cảm ơn bạn");
+
+                $message = $this->translator->trans('message.organisation.sendInfoToAdmin');
+                $this->addFlash("success", $message);
                 return $this->redirectToRoute('app_edit_organisation_info', [
                     'id' => $id
                 ]);
@@ -347,11 +367,35 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
 
             return $response;
         }else{
-            $this->addFlash("echec","Bạn không có quyền tải tài liệu này");
+            $message = $this->translator->trans('message.organisation.notAuthor');
+            $this->addFlash("echec",$message);
+            return $this->redirectToRoute("app_homepage");
+        }
+    }
+
+    /**
+     * @Route("/delete/userDocument/{id}", name="app_delete_user_document")
+     */
+    public function DeleteDocument(RequestOrganisationDocument $requestOrganisationDocument, UploadService $uploadService, EntityManagerInterface $em){
+
+        if($requestOrganisationDocument->getUser() == $this->getUser() || in_array("ROLE_ADMIN",$this->getUser()->getRoles())){
+                //dd($requestOrganisationDocument);
+
+                $uploadService->deleteDocument($requestOrganisationDocument->getFilename(),$this->getUser()->getId());
+                $requestOrganisationDocument->setIsDeleted(true);
+                $em->persist($requestOrganisationDocument);
+                $em->flush();
+
+                $message = $this->translator->trans('message.organisation.documentDeleted');
+                $this->addFlash("success", $message);
+                return $this->redirectToRoute('app_my_organisation');
+        }else{
+            $message = $this->translator->trans('message.organisation.notAuthor');
+            $this->addFlash("echec",$message);
             return $this->redirectToRoute("app_homepage");
         }
 
+        }
 
 
-    }
 }

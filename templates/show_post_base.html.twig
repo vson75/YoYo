@@ -10,8 +10,34 @@
 
 {% block show_post_content %}
 <div class="container">
+
     <div>
-        <h1 style="text-align: center"><span>{{ postInfo.title }}</span></h1>
+
+
+        {# Test the lang of user. If the post have the translate, use the translate information. If not, use the default lang if the post #}
+        <div class="Headingtitle">
+            {% if app.request.getLocale() == 'en' %}
+                {% if  postTranslateEN is not null %}
+                    <h1 style="text-align: center"><span>{{ postTranslateEN.title }}</span></h1>
+                {% else %}
+                    <h1 style="text-align: center"><span>{{ postInfo.title }}</span></h1>
+                {% endif %}
+            {% elseif app.request.getLocale() == 'fr'  %}
+                {% if  postTranslateFR is not null %}
+                    <h1 style="text-align: center"><span>{{ postTranslateFR.title }}</span></h1>
+                {% else %}
+                    <h1 style="text-align: center"><span>{{ postInfo.title }}</span></h1>
+                {% endif %}
+            {% else %}
+                <div>
+                    <h1 style="text-align: center"><span>{{ postInfo.title }}</span> </h1>
+                </div>
+            {% endif %}
+
+
+        </div>
+
+
         {% block admin_post %}
 
         {% endblock %}
@@ -90,9 +116,30 @@
 
 
                 <!-- Post Content -->
-                <p>{{ postInfo.content|markdown }}</p>    
 
-            <!-- button modify -->
+            {# Test the lang of user. If the post have the translate, use the translate information. If not, use the default lang if the post #}
+            {% if app.request.getLocale() == 'en' %}
+                {% if  postTranslateEN is not null %}
+                    <p>{{ postTranslateEN.content|markdown }}</p>
+                {% else %}
+                    <p>{{ postInfo.content|markdown }}</p>
+                {% endif %}
+            {% elseif app.request.getLocale() == 'fr'  %}
+                {% if  postTranslateFR is not null %}
+                    <p>{{ postTranslateFR.content|markdown }}</p>
+                {% else %}
+                    <p>{{ postInfo.content|markdown }}</p>
+                {% endif %}
+            {% else %}
+                <p>{{ postInfo.content|markdown }}</p>
+            {% endif %}
+
+            {% if userInfo == postInfo.user %}
+                <div id="btn-translate">
+                    <a href="{{ path('app_post_translation', {uniquekey: postInfo.uniquekey, lang: 'en'}) }}"><span>{% trans %}Dịch bài viết{% endtrans %}</span></a>
+
+                </div>
+            {% endif %}
 
         </div>
 

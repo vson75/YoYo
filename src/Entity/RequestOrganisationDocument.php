@@ -54,6 +54,11 @@ class RequestOrganisationDocument
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isDeleted;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -153,5 +158,17 @@ class RequestOrganisationDocument
     public function getUploadsDownloadDocumentPath(): string
     {
         return UploadService::Organisation_document_Upload_Download_Path.$this->getUser()->getId().'/'.$this->getFilename();
+    }
+
+    public function getIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(?bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
+
+        return $this;
     }
 }

@@ -35,8 +35,7 @@ use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
-
-
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 
 /**
@@ -44,6 +43,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UserProfilController extends AbstractController
 {
+
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
 
     /**
      * @Route("/profil", name="app_profil")
@@ -110,6 +116,7 @@ class UserProfilController extends AbstractController
 
                 $em->flush();
 
+                $message = $this->translator->trans('message.userProfil.changeSuccess');
                 $this->addFlash('success', 'Thay doi thanh cong');
 
                 return $this->redirectToRoute('app_profil');

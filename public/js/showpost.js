@@ -26,7 +26,6 @@ function checkfavorite(){
         cache: false,
         url: '/ajax/add_favorite/'+uniquekey+'/1',
         method: 'POST',
-        async: false,
     })
 
 }
@@ -40,7 +39,6 @@ function uncheckFavorite(){
         cache: false,
         url: '/ajax/add_favorite/'+uniquekey+'/0',
         method: 'POST',
-        async: false,
     })
 }
 

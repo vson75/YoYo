@@ -395,7 +395,7 @@ class Post
 
         $percentage = $amountCollected/$targetAmount * 100;
 
-        return $percentage;
+        return round($percentage,2);
     }
 
     /**

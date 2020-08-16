@@ -32,32 +32,43 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Stripe\{Stripe, PaymentIntent};
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PostController extends AbstractController
 {
     private $security;
     use TargetPathTrait;
+    private $translator;
 
-    public function __construct(Security $security)
+    public function __construct(Security $security, TranslatorInterface $translator)
     {
         $this->security = $security;
+        $this->translator = $translator;
     }
 
     /**
      * @Route("/", name="app_homepage")
      */
-    public function homepage(EntityManagerInterface $em, TransactionRepository $transactionRepository, Request $request){
+    public function homepage(EntityManagerInterface $em, Request $request){
 
         $repository = $em->getRepository(Post::class);
-        $post = $repository->findPostByNewest();
         $userInfo = $this->getUser();
+      //  dd($userInfo);
+        $q = $request->query->get('isFavorite');
+      //var_dump($q);
 
-        $locale = $request->getLocale();
-        //dd($locale);
-
-       // dump($post);die;
-       // dd($post->getFinishAt());
-      
+        if(is_null($userInfo)){
+            $post = $repository->findPostByNewest();
+        }else{
+            if(is_null($q)){
+                $post = $repository->findPostByNewest();
+            }
+            elseif($q === '0'){
+                $post = $repository->findPostByNewest();
+            }else{
+                $post = $repository->findPostByFavorite($userInfo);
+            }
+        }
 
         return $this->render('homepage.html.twig',[
                 'post' => $post,
@@ -66,6 +77,7 @@ class PostController extends AbstractController
         );
     }
 
+
     /**
      * @Route("/post/{uniquekey}", name="show_post")
      * @param MarkdownHelper $markdownHelper
@@ -73,9 +85,28 @@ class PostController extends AbstractController
      */
     public function show($uniquekey, MarkdownHelper $markdownHelper, EntityManagerInterface $em, Request $request, TransactionRepository $transactionRepository){
 
+        // find the post
         $repository = $em->getRepository(Post::class);
         $postInfo = $repository->findOneBy([
             'uniquekey'=> $uniquekey
+        ]);
+
+        // search if the post have a translation
+        $en = $em->getRepository(WebsiteLanguage::class)->findOneBy([
+            'id' => WebsiteLanguage::lang_en
+        ]);
+        $fr = $em->getRepository(WebsiteLanguage::class)->findOneBy([
+            'id' => WebsiteLanguage::lang_fr
+        ]);
+
+        $repoPostTranslation = $em->getRepository(PostTranslation::class);
+        $postTranslateEN = $repoPostTranslation->findOneBy([
+           'post' => $postInfo,
+            'lang' => $en
+        ]);
+        $postTranslateFR = $repoPostTranslation->findOneBy([
+            'post' => $postInfo,
+            'lang' => $fr
         ]);
 
         if (is_null($postInfo)) {
@@ -107,6 +138,7 @@ class PostController extends AbstractController
 
         // save the old URL to redirecte after login
         $this->saveTargetPath($request->getSession(),'main', $request->getUri());
+
 
         // comment section
 
@@ -155,6 +187,8 @@ class PostController extends AbstractController
 
         return $this->render('post/show_post.html.twig',[
                 'postInfo' => $postInfo,
+                'postTranslateEN' => $postTranslateEN,
+                'postTranslateFR' => $postTranslateFR,
                 'datediff' => $datediff,
                 'comment'=> $comment,
                 'commentForm' => $form->createView(),
@@ -294,7 +328,8 @@ class PostController extends AbstractController
           //  dd($createNew);
             $em->flush();
 
-            $this->addFlash('success', 'Cảm ơn bạn đã tạo chủ để này. Bạn có thể gửi ngay dự án cho chúng tôi để chúng tôi kiểm duyệt');
+            $message = $this->translator->trans('message.post.thankToCreatePost');
+            $this->addFlash('success', $message);
 
             $template='email/EmailCreateOrDonation.html.twig';
             $subject ="Cảm ơn bạn đã tạo chủ đề mới";
@@ -362,11 +397,13 @@ class PostController extends AbstractController
             $caption_link = "Chúng tôi sẽ nhanh chóng kiểm tra dự án của bạn trước khi cho phép đăng lên trang của chúng tôi ";
             $mailer->sendMailCreateOrDonationPost($post->getUser(),$post,$template,$subject,$title,$action, $caption_link);
 
-            $this->addFlash('success', 'Dự án của bạn đã được gửi tới ban quản trị. Chúng tôi sẽ kiểm duyệt dự án của bạn trước khi cho phép đăng lên trang của chúng tôi');
+
+            $message = $this->translator->trans('message.post.confirmSentPost');
+            $this->addFlash('success', $message);
 
         }else{
-
-            $this->addFlash('echec', 'Dự án của bạn không được phép gửi tới chúng tôi');
+            $message = $this->translator->trans('message.post.PostCannotSent');
+            $this->addFlash('echec', $message);
 
         }
 
@@ -399,7 +436,9 @@ class PostController extends AbstractController
 
             $em->persist($updatePost);
             $em->flush();
-            $this->addFlash('success', 'Sửa đổi thành công');
+
+            $message = $this->translator->trans('message.post.changedSuccess');
+            $this->addFlash('success', $message);
 
             return $this->redirectToRoute('show_post',[
                 'uniquekey' => $uniquekey,
@@ -499,7 +538,9 @@ class PostController extends AbstractController
 
 
         } else {
-            $this->addFlash('echec', 'Something wrong with your paiement, the valid form is not correct.');
+
+            $message = $this->translator->trans('message.post.PaymentInvalid');
+            $this->addFlash('echec', $message);
             return $this->redirectToRoute('show_post', ['uniquekey' => $post->getUniqueKey()]);
         }
         
@@ -612,12 +653,15 @@ class PostController extends AbstractController
                 $newExpiredDate = $form->getData();
                 $em->persist($newExpiredDate);
                 $em->flush();
-                $this->addFlash("success", "Dự án của bạn đã gia hạn thành công");
+
+                $message = $this->translator->trans('message.post.extendPostSuccess');
+                $this->addFlash("success", $message);
                 return $this->redirectToRoute('show_post',['uniquekey'=>$uniquekey]);
             }
 
         }else{
-           $this->addFlash('echec', 'Sorry you are not the author of this project, you cant extend this project');
+           $message = $this->translator->trans('message.post.notAuthor');
+           $this->addFlash('echec', $message);
            return $this->redirectToRoute('app_homepage');
         }
 
@@ -650,10 +694,13 @@ class PostController extends AbstractController
             $postInfo->setStatus($postStep);
             $em->persist($postInfo);
             $em->flush();
-            $this->addFlash("success", "Chúng tôi sẽ bắt đầu quá trình chuyển khoản. Bạn sẽ nhận được các thông tin chi tiết cho mỗi lần chuyển khoản cũng như danh sách đã ủng hộ cho dự án của bạn.");
+
+            $message = $this->translator->trans('message.post.StartedTransfertFund');
+            $this->addFlash("success", $message);
             return $this->redirectToRoute('show_post',['uniquekey'=>$uniquekey]);
         }else{
-            $this->addFlash('echec', 'Sorry you are not the author of this project, you cant decide to transfert fund this project');
+            $message = $this->translator->trans('message.post.notAuthor');
+            $this->addFlash('echec', $message);
             return $this->redirectToRoute('app_homepage');
         }
     }
@@ -680,13 +727,12 @@ class PostController extends AbstractController
                 'id' => WebsiteLanguage::lang_fr
             ]);
         }
+
         $repoTranslation = $em->getRepository(PostTranslation::class);
         $postTranslation = $repoTranslation->findOneBy([
             'post' => $post,
             'lang' => $langToTranslate
         ]);
-
-        // if null : create new. If not: update
         if(is_null($postTranslation)){
             $form = $this->createForm(TranslationPostType::class);
             $form->handleRequest($request);
@@ -695,7 +741,31 @@ class PostController extends AbstractController
             $form->handleRequest($request);
         }
 
-        $langPost = $post->getLang();
+        // check if user is a author of the post
+        if($this->getUser() == $post->getUser()){
+            // if null : create new. If not: update
+
+            if($form->isSubmitted() && $form->isValid()){
+                $trad = $form->getData();
+                $trad->settitle($form['title']->getData())
+                    ->setContent($form['content']->getData())
+                    ->setPost($post)
+                    ->setLang($langToTranslate);
+
+
+                $em->persist($trad);
+                $em->flush();
+                $message = $this->translator->trans('message.post.translateOK');
+                $this->addFlash("success",$message);
+                return $this->redirectToRoute('show_post', ['uniquekey' => $uniquekey]);
+            }
+        }else{
+            $message = $this->translator->trans('message.post.notAuthor');
+            $this->addFlash("echec",$message);
+            return $this->redirectToRoute('show_post', ['uniquekey' => $uniquekey]);
+
+        }
+
 
         return $this->render('post/translation_post.html.twig',[
             'userInfo' => $this->getUser(),

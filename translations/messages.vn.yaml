@@ -20,7 +20,45 @@ form:
     ZipCode: Mã vùng
     City: Thành phố
 
+  TranslationPost:
+    lang: Ngôn ngữ bạn muốn dịch
+    langEN: Tiếng Anh
+    langFR: Tiếng Pháp
+    content: Nội dung
+    title: Tên dự án
 
 
+message:
+  post:
+      translateOK: Bài viết đã được dịch thành công
+      notAuthor: Bạn không phải là tác giả của dự án này. Bạn không có quyền sửa đổi dự án
+      thankToCreatePost: Cảm ơn bạn đã tạo chủ để này. Bạn có thể gửi ngay dự án cho chúng tôi để chúng tôi kiểm duyệt
+      confirmSentPost: Dự án của bạn đã được gửi tới ban quản trị. Chúng tôi sẽ kiểm duyệt dự án của bạn trước khi cho phép đăng lên trang của chúng tôi
+      PostCannotSent: Dự án của bạn không được phép gửi tới chúng tôi
+      changedSuccess: Sửa đổi thành công
+      PaymentInvalid: Dữ liệu  ngân hàng của bạn không chính xác
+      extendPostSuccess: Dự án của bạn đã gia hạn thành công
+      StartedTransfertFund: Chúng tôi sẽ bắt đầu quá trình chuyển khoản. Bạn sẽ nhận được các thông tin chi tiết cho mỗi lần chuyển khoản cũng như danh sách đã ủng hộ cho dự án của bạn.
+
+  organisation:
+      notAuthor: Bạn không phải là người của tổ chức này. Bạn không thể thay đổi các thông tin của tổ chức
+      documentDeleted: Thông tin đã được xoá khỏi hệ thống
+      OnlyOneOrganisationByUser: Bạn đã tạo tài khoản tổ chức, 1 tài khoản chỉ có thể tạo 1 tổ chức.
+      EmailExisted: Email này đã được đăng ký trong hệ thống của chúng tôi. Bạn có thể tạo password mới bằng cách ấn vào quên mật khẩu
+      CreateOrganisationSuccess: Yêu cầu tạo tài khoản cho phép đăng dự án của bạn đã gửi tới chúng tôi. Chúng tôi sẽ kiểm tra và gửi phản hồi lại cho bạn trong thời gian 24h
+      InfoChangedSuccess: Thông tin của tổ chức đã được thay đổi thành công
+      sendInfoToAdmin: Thông tin của bạn đã cập nhật thành công và được gửi cho chúng tôi. Cảm ơn bạn
+      fileAndFormatNeeded: Bạn cần đính kèm file và chọn dạng tài liệu bạn muốn thay đổi cho tài liệu
+
+  security:
+      ExistedEmail: Email của bạn đã được sử dụng. Bạn có thể reset password để tạo mật khẩu mới
+      CreateNewAccount: Cảm ơn bạn đã đăng ký. Chúng tôi đã gửi tới bạn 1 email để xác nhận lại tài khoản của bạn
+      CongratulationNewAccount: Chúc mừng bạn ! Bạn có thể đăng nhập với mật khẩu vừa chọn
+      WrongLinkPassword: Đường link chọn mật khẩu mới không tồn tại hoặc đã quá hạn kể từ khi chúng tôi gửi mail. Bạn vui lòng ấn vào quên mật khẩu để tạo đường link mới
+      resetPassword: Chúng tôi đã gửi cho bạn email để thay đổi mật khẩu
+      EmailNotExist: Tài khoản email của bạn không tồn tại trong hệ thống của chúng tôi. Vui lòng tạo tài khoản mới.
+
+  userProfil:
+      changeSuccess: Thay đổi thành công
 
 

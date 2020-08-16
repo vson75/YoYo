@@ -15,17 +15,22 @@ class TranslationPostType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', TextType::class)
-            ->add('content', CKEditorType::class, array(
+            ->add('title', TextType::class, [
+                'label' => 'form.TranslationPost.title'
+            ])
+            ->add('content', CKEditorType::class, [
+                'label' => 'form.TranslationPost.content',
                 'config' => [
                     'uiColor' => '#ffffff',
                     'toolbar' => 'my_toolbar_1',
-                    ],)
+                    ],]
             )
             ->add('lang', ChoiceType::class,[
+                'mapped' => false,
+                'label' => 'form.TranslationPost.lang',
                 'choices'  => [
-                    'EN' => 'en',
-                    'FR' => 'fr'
+                    'form.TranslationPost.langEN' => 'en',
+                    'form.TranslationPost.langFR' => 'fr'
             ],
                 ])
         ;

@@ -19,11 +19,19 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 
 class SecurityController extends AbstractController
 {
+
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * @Route("/login", name="app_login")
      */
@@ -75,7 +83,9 @@ class SecurityController extends AbstractController
             ]);
        //  dd(!empty($checkEmail));
             if(!empty($checkEmail)){
-                $this->addFlash('notice', 'Email của bạn đã được sử dụng. Bạn có thể reset password để tạo mật khẩu mới');
+
+                $message = $this->translator->trans('message.security.ExistedEmail');
+                $this->addFlash('notice', $message);
                 return $this->render('security/register.html.twig', [
                     'registrationForm' => $form->createView(),
                 ]);
@@ -95,7 +105,8 @@ class SecurityController extends AbstractController
                 $subject = "Chào ".$user->getFirstname()." tới với YoYo - Tạo mật khẩu mới";
                 $mailer->SendMailPassword($user,$token,$tokenCreateAt,$template,$subject);
 
-                $this->addFlash('success','Cam on ban da dang ky, 1 email da duoc gui toi de ban hoan tat dang ky cua minh');
+                $message = $this->translator->trans('message.security.CreateNewAccount');
+                $this->addFlash('success',$message);
 
                 //method allow to redirect in the page if authentificator sucess
                 return $this->redirectToRoute('app_login');
@@ -148,7 +159,8 @@ class SecurityController extends AbstractController
                     $em->persist($user);
                     $em->flush();
 
-                    $this->addFlash('success','Chúc mừng bạn ! Bạn có thể đăng nhập với mật khẩu vừa chọn');
+                    $message = $this->translator->trans('message.security.CongratulationNewAccount');
+                    $this->addFlash('success',$message);
 
                 //method allow to redirect in the page if authentificator sucess
                 return $this->redirectToRoute('app_login');
@@ -156,7 +168,8 @@ class SecurityController extends AbstractController
             }
 
         }else{
-            $this->addFlash('echec','duong dân thay doi mât khâu khong ton tai hoac tai khoan cua ban da qua thoi gian kich hoat cho phep (5h)');
+            $message = $this->translator->trans('message.security.WrongLinkPassword');
+            $this->addFlash('echec',$message);
             return $this->redirectToRoute('app_homepage');
         }
 
@@ -195,19 +208,21 @@ class SecurityController extends AbstractController
 
                 $tokenCreateAt = $user->getTokencreateAt();
 
-                $this->addFlash('success','Chung toi se gui toi EMail cua ban duong link the thay doi mat khâu');
+
 
                 $template = 'email/password.html.twig';
                 $subject = "Thay đổi mật khẩu tại YoYo";
                 $mailer->SendMailPassword($checkUserEmail, $token, $tokenCreateAt,$template,$subject);
 
-
+                $message = $this->translator->trans('message.security.resetPassword');
+                $this->addFlash('success',$message);
                 //method allow to redirect in the page if authentificator sucess
                 return $this->redirectToRoute("app_homepage");
 
             }else{
 
-                $this->addFlash('echec', 'Email cua ban khong tôn tai trong hê thong cua chung toi');
+                $message = $this->translator->trans('message.security.EmailNotExist');
+                $this->addFlash('echec', $message);
                 return $this->render('security/register.html.twig', [
                     'resetForm' => $form->createView(),
                 ]);

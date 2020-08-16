@@ -8,11 +8,13 @@ use App\Entity\Favorite;
 use App\Entity\Post;
 use App\Entity\PostSearch;
 use App\Entity\PostStatus;
+use App\Entity\PostTranslation;
 use App\Entity\RequestOrganisationDocument;
 use App\Entity\RequestOrganisationInfo;
 use App\Entity\RequestStatus;
 use App\Entity\User;
 use App\Entity\UserDocument;
+use App\Entity\WebsiteLanguage;
 use App\Form\AdminParameterType;
 use App\Form\PostSearchType;
 use App\Form\StopPostType;
@@ -102,6 +104,23 @@ class AdminController extends AbstractController
             'uniquekey'=> $uniquekey
         ]);
 
+        // search if the post have a translation
+        $en = $em->getRepository(WebsiteLanguage::class)->findOneBy([
+            'id' => WebsiteLanguage::lang_en
+        ]);
+        $fr = $em->getRepository(WebsiteLanguage::class)->findOneBy([
+            'id' => WebsiteLanguage::lang_fr
+        ]);
+        $repoPostTranslation = $em->getRepository(PostTranslation::class);
+        $postTranslateEN = $repoPostTranslation->findOneBy([
+            'post' => $postInfo,
+            'lang' => $en
+        ]);
+        $postTranslateFR = $repoPostTranslation->findOneBy([
+            'post' => $postInfo,
+            'lang' => $fr
+        ]);
+
         if (is_null($postInfo)) {
             throw $this->createNotFoundException('The Post is not exist');
         }
@@ -142,6 +161,8 @@ class AdminController extends AbstractController
 
         return $this->render('admin/post_admin/show_post.html.twig', [
             'postInfo' => $postInfo,
+            'postTranslateEN' => $postTranslateEN,
+            'postTranslateFR' => $postTranslateFR,
             'nb_participant' => $nb_participant,
             'totalAmount' => $totalAmount,
             'TransactionThisPost' => $TransactionThisPost,

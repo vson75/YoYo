@@ -16,11 +16,13 @@
         </div>
     {% endfor %}
     <div id="logreg-forms">
-
-
+        <h1 class="h3 mb-3 font-weight-normal" style="text-align: center; margin-top: 1rem"> {% trans %}Đăng ký tài khoản{% endtrans %}</h1>
+        <div class="social-login">
+            <button class="btn facebook-btn social-btn" type="button" onclick="location.href='{{ path('connect_facebook_start') }}'"><span><i class="fab fa-facebook-f"></i> {% trans %}Tạo tài khoản với Facebook{% endtrans %}</span> </button>
+        </div>
+        <p style="text-align:center">{% trans %} Hoặc đăng ký với tài khoản email của bạn {% endtrans %} </p>
         <div class="row">
 
-            <div class="col-sm-12">
                 {{ form_start(registrationForm) }}
 
                 {{ form_widget(registrationForm.firstname) }}
@@ -34,7 +36,7 @@
                 {{ form_widget(registrationForm) }}
                 {{ form_end(registrationForm) }}
 
-            </div>
+
 
         </div>
     </div>

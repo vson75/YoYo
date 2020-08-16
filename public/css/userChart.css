@@ -52,6 +52,10 @@
     padding: 8px;
 }
 
+#project{
+    width: 100%;
+}
+
 #project td, #project th {
     border: 1px solid #ddd;
     padding: 8px;
@@ -69,4 +73,18 @@
     text-align: left;
     background-color: #4CAF50;
     color: white;
+}
+
+
+.img-icon{
+    float: left;
+    margin-right: 1em;
+}
+
+table{
+    margin: 0 auto;
+}
+
+.pagination{
+    float: right;
 }
