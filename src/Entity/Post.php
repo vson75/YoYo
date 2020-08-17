@@ -339,13 +339,13 @@ class Post
     public function getTransactionSum(){
 
             $amount = $this->getTransactions()->getValues();
-         //dd(count($amount));
+         //dd($amount);
             $total =0;
 
             for ($i=0; $i< count($amount); $i++) {
-               //var_dump($amount[$i]->getUser());
-                //var_dump($amount[$i]->getAmount());
-                $total += $amount[$i]->getAmount();
+               // get Amount After Fees instead of total amount
+                $total += $amount[$i]->getamountAfterFees();
+           //     dd($total);
 
             }
             return $total;
@@ -391,6 +391,7 @@ class Post
 
     public function getPercentageAdvancement(){
         $amountCollected = $this->getTransactionSum();
+      //  dump($amountCollected);
         $targetAmount = $this->getTargetAmount();
 
         $percentage = $amountCollected/$targetAmount * 100;

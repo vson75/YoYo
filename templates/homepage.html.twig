@@ -77,7 +77,8 @@
                          {% endif %}
                     </div>
 
-                    {% set percent_advancement = post.getTransactionSum/post.targetAmount*100 %}
+                    {% set percent_advancement = post.getPercentageAdvancement %}
+
                     {% set  percent_for_css = 90 -  percent_advancement%}
 
                     <div class="card-body" style="position: relative;">
