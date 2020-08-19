@@ -119,9 +119,9 @@
                 amount =   parseFloat(document.getElementById("payment_amount").value.replace(",", "."));
                 fees = (management_fees * amount) + fixedFees;
                 receive_amount = amount - fees.toFixed(2);
-              //  console.log(fees);
+
                 document.getElementById("calculate_fees").innerHTML = '- ' + fees.toFixed(2);
-                document.getElementById("receive_amount").innerHTML = receive_amount;
+                document.getElementById("receive_amount").innerHTML = receive_amount.toFixed(2);
 
             });
         });

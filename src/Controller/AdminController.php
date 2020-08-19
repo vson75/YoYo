@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\AdminParameter;
 use App\Entity\DocumentType;
 use App\Entity\Favorite;
+use App\Entity\ParameterType;
 use App\Entity\Post;
 use App\Entity\PostSearch;
 use App\Entity\PostStatus;
@@ -14,7 +15,8 @@ use App\Entity\RequestOrganisationInfo;
 use App\Entity\RequestStatus;
 use App\Entity\User;
 use App\Entity\WebsiteLanguage;
-use App\Form\AdminParameterType;
+use App\Form\AdminFeesParameterType;
+use App\Form\AdminInfoParameterType;
 use App\Form\PostSearchType;
 use App\Form\StopPostType;
 use App\Repository\PostRepository;
@@ -519,20 +521,20 @@ class AdminController extends AbstractController
 
 
     /**
-     * @Route("/admin/modify_parameter", name="app_admin_parameter")
+     * @Route("/admin/modify_fees_parameter", name="app_admin_fees_parameter")
      */
-    public function AdminModifyParameter(Request $request, EntityManagerInterface $em){
-            $existedParameter = $em->getRepository(AdminParameter::class)->findLastestParamId();
-        //  dd($existedParameter);
+    public function AdminModifyFees(Request $request, EntityManagerInterface $em){
+            $existedParameter = $em->getRepository(AdminParameter::class)->findLastestId();
+       // dd($existedParameter);
             if(is_null($existedParameter)){
-                $form = $this->createForm(AdminParameterType::class);
+            //dd("azeaze");
+                $form = $this->createForm(AdminFeesParameterType::class);
             }else{
                 //$existedParameter = $em->getRepository(AdminParameter::class)->findAll();
-                $form = $this->createForm(AdminParameterType::class,$existedParameter);
+                $form = $this->createForm(AdminFeesParameterType::class,$existedParameter);
             }
 
-            $form->handleRequest($request);
-
+        $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             $parameter = $form->getData();
             $em->persist($parameter);
@@ -542,7 +544,36 @@ class AdminController extends AbstractController
             return $this->redirectToRoute("app_admin_overview");
         }
 
-        return $this->render('admin/parameter.html.twig',[
+
+        return $this->render('admin/feesParameter.html.twig',[
+            'form' => $form->createView(),
+            'userInfo' => $this->getUser()
+        ]);
+    }
+
+    /**
+     * @Route("/admin/modify_info_app", name="app_admin_info_parameter")
+     */
+    public function AdminModifyInfoApp(Request $request, EntityManagerInterface $em){
+        $existedParameter = $em->getRepository(AdminParameter::class)->findLastestId();
+        //dd($existedParameter);
+        if(is_null($existedParameter)){
+            $form = $this->createForm(AdminInfoParameterType::class);
+        }else{
+            $form = $this->createForm(AdminInfoParameterType::class,$existedParameter);
+        }
+
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            $parameter = $form->getData();
+            $em->persist($parameter);
+            $em->flush();
+
+            $this->addFlash("success","Info App saved");
+            return $this->redirectToRoute("app_admin_overview");
+        }
+
+        return $this->render('admin/InfoParameter.html.twig',[
             'form' => $form->createView(),
             'userInfo' => $this->getUser()
         ]);

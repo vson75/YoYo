@@ -473,14 +473,14 @@ class PostController extends AbstractController
             throw $this->createNotFoundException('The Post is not exist');
         }
 
-        $managementFees = $em->getRepository(AdminParameter::class)->findLastestParamId();
+        $managementFees = $em->getRepository(AdminParameter::class)->findLastestId();
 
 
         return $this->render('post/funding_step_1.html.twig', [
             'userInfo' => $user,
             'financeForm' => $financeForm->createView(),
             'postInfo' => $postInfo,
-            'ManagementFees' => $managementFees->getManagementFees(),
+            'ManagementFees' => $managementFees->getvariableFees(),
             'FixedFees' => $managementFees->getFixedFees()
         ]);
     }

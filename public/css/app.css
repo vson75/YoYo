@@ -110,6 +110,25 @@ main{
     flex: 1;
 }
 
+#page-container {
+    position: relative;
+    min-height: 100vh;
+    min-width: 100vw;
+}
+
+#content-wrap {
+    padding-bottom: 20rem;    /* Footer height */
+}
+
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 20rem;            /* Footer height */
+}
+
+
 footer{
     color: white;
     width: 100%;

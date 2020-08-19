@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\AdminParameter;
+use App\Entity\ParameterType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,13 +20,13 @@ class AdminParameterRepository extends ServiceEntityRepository
         parent::__construct($registry, AdminParameter::class);
     }
 
-    public function findLastestParamId(){
+    public function findLastestId(){
+
         return $this->createQueryBuilder('a')
-            ->andWhere('a.managementFees is not NULL')
             ->orderBy('a.id', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
-            ->getSingleResult()
+            ->getOneOrNullResult()
             ;
     }
     // /**

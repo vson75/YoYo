@@ -87,32 +87,33 @@
 
 </nav>
 
-{% for message in app.flashes('success') %}
-    <div class="container" style="margin-top: 1.25rem;">
-        <div class="alert alert-success">
-            {{ message }}
+    <div id="page-container">
+
+    {% for message in app.flashes('success') %}
+        <div class="container" style="margin-top: 1.25rem;">
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
         </div>
-    </div>
 
-{% endfor %}
-{% for message in app.flashes('echec') %}
-    <div class="container" style="margin-top: 1.25rem;">
-        <div class="alert alert-danger">
-            {{ message }}
+    {% endfor %}
+    {% for message in app.flashes('echec') %}
+        <div class="container" style="margin-top: 1.25rem;">
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
         </div>
-    </div>
 
-{% endfor %}
+    {% endfor %}
+        <div id="content-wrap">
+            {% block body %}
 
-    {% block body %}
-
-    {% endblock %}
-
+            {% endblock %}
+        </div>
 
 
-{#
 
- <footer>
+ <footer id="footer">
     <div class="footer-middle">
 
             <div class="row" style="margin-left: 10%;margin-right: 10%">
@@ -194,30 +195,28 @@
     </div>
     </footer>
 
-#}
-
-
+    </div>
 
 
 <!-- Footer -->
 </article>
 
-{% block javascripts %}
-    <script
-            src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-    <script>
-        $('.custom-file-input').on('change', function(event) {
-            var inputFile = event.currentTarget;
-            $(inputFile).parent()
-                .find('.custom-file-label')
-                .html(inputFile.files[0].name);
-        });
-    </script>
-{% endblock %}
-</body>
+        {% block javascripts %}
+            <script
+                    src="https://code.jquery.com/jquery-3.4.1.min.js"
+                    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+                    crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+            <script>
+                $('.custom-file-input').on('change', function(event) {
+                    var inputFile = event.currentTarget;
+                    $(inputFile).parent()
+                        .find('.custom-file-label')
+                        .html(inputFile.files[0].name);
+                });
+            </script>
+        {% endblock %}
+    </body>
 
 </html>

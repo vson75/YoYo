@@ -9,12 +9,12 @@ use Symfony\Component\Form\Extension\Core\Type\PercentType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AdminParameterType extends AbstractType
+class AdminFeesParameterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('managementFees', PercentType::class)
+            ->add('variableFees', PercentType::class)
             ->add('fixedFees', MoneyType::class)
         ;
     }

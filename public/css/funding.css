@@ -105,6 +105,8 @@ span.price {
 }
 
 .img_funding{
+    max-width: 750px;
+    max-height: 500px;
     width: 100%;
     height: 100%;
 }
