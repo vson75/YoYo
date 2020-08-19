@@ -504,9 +504,6 @@ class PostController extends AbstractController
         ]);
 
 
-
-        //dd($financeForm->getData());
-
         if ($financeForm->isSubmitted() && $financeForm->isValid()) {
             $donationAmount = $financeForm->getData()['amount'];
             $givingAmount = $financeForm->getData()['giveForSite'];
@@ -517,10 +514,10 @@ class PostController extends AbstractController
             $amount = $donationAmount + $givingAmount;
             //dd($amount);
 
-            $paramAdmin = $em->getRepository(AdminParameter::class)->findLastestParamId();
-            $percentManagementFees = $paramAdmin->getManagementFees() * $donationAmount;
+            $paramAdmin = $em->getRepository(AdminParameter::class)->findLastestId();
+            $variableFees = $paramAdmin->getvariableFees() * $donationAmount;
             $fixedFees = $paramAdmin->getFixedFees();
-            $totalFees = $percentManagementFees + $fixedFees;
+            $totalFees = $variableFees + $fixedFees;
             $donationAfterFees = $donationAmount - $totalFees;
 
             $stripe_pk_key = $this->getParameter('stripe_pk_key');
@@ -579,10 +576,10 @@ class PostController extends AbstractController
         );
          */
         $repoAdminParameter = $em->getRepository(AdminParameter::class);
-        $AdminParameter = $repoAdminParameter->findLastestParamId();
-        $percentManagementFees = $AdminParameter->getmanagementFees();
+        $AdminParameter = $repoAdminParameter->findLastestId();
+        $variableFees = $AdminParameter->getvariableFees();
         $fixedFees = $AdminParameter->getfixedFees();
-        $fees = ($amount-$give) *$percentManagementFees + $fixedFees;
+        $fees = ($amount-$give) *$variableFees + $fixedFees;
 
 
         if ($this->isCsrfTokenValid('funding_step', $submittedToken)) {
@@ -604,8 +601,6 @@ class PostController extends AbstractController
             }else{
                 $transaction->setAnonymousDonation(0);
             }
-            //dd($transaction);
-
             $em->persist($transaction);
             $em->flush();
 
@@ -617,12 +612,10 @@ class PostController extends AbstractController
             $caption_link = $this->translator->trans('email.captionLink.checkproject').": ";
             $mailer->sendMailCreateOrDonationPost($this->getUser(),$post,$template,$subject,$title,$action, $caption_link);
 
-            //$this->addFlash('success', 'Cảm ơn bạn đã quyên góp tiền');
             return $this->json([
                 'transaction' => $transaction
             ]);
         }else{
-         //   $logger->log('500','Token is not valid in paiement Step 2');
             return $this->redirectToRoute('app_homepage');
         }
 
