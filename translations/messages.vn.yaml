@@ -61,6 +61,10 @@ message:
   userProfil:
       changeSuccess: Thay đổi thành công
 
+
+  global:
+    contactUsOK: Email đã gửi thành công. Cảm ơn bạn
+
 email:
   subject:
     changePassword: Thay đổi mật khẩu

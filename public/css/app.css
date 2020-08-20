@@ -3,7 +3,9 @@ html, body {
     height: 100vh;
 }
 
-
+h1{
+    text-align: center;
+}
 
 body {
     font-family: spartan;

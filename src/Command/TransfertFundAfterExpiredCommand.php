@@ -156,13 +156,12 @@ class TransfertFundAfterExpiredCommand extends Command
                 $sheet->getColumnDimension('C')->setAutoSize(true);
 
 
-                // find information of not anonymous transaction to Add in excel
                 $arrayTransaction = $this->transactionRepository->getNotAnonymousByPost($expiredPost);
 
 
                 for ($i=0; $i < count($arrayTransaction); $i++) {
                     $col = $i + 6;
-                    // add data in excel file
+
                     $donatorInfo = $arrayTransaction[$i]->getUser()->getFirstname().' '.$arrayTransaction[$i]->getUser()->getLastname();
                     $sheet->setCellValue('A'.$col, $donatorInfo);
                     $sheet->setCellValue('B'.$col, $arrayTransaction[$i]->getAmount());
@@ -171,7 +170,6 @@ class TransfertFundAfterExpiredCommand extends Command
                     $sheet->getStyle('A'.$col)->applyFromArray($styleArrayContent);
                     $sheet->getStyle('B'.$col)->applyFromArray($styleArrayContent);
                     $sheet->getStyle('C'.$col)->applyFromArray($styleArrayContent);
-                  //  $io->success($arrayTransaction[$i]->getUser()->getFirstname());
 
                 }
 
@@ -194,8 +192,7 @@ class TransfertFundAfterExpiredCommand extends Command
                 $this->mailer->sendMailAfterExpiredPost($userId,$expiredPost,$fileName);
 
             }else{
-                // if we aren't collect our target amount
-                // send mail to organisateur, they can chose to continue or renew their post
+
                 $this->mailer->sendMailAfterExpiredPost($userId,$expiredPost,null);
              //   $io->success($expiredPost->getId());
 

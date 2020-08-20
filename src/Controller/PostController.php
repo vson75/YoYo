@@ -54,6 +54,7 @@ class PostController extends AbstractController
         $repository = $em->getRepository(Post::class);
         $userInfo = $this->getUser();
       //  dd($userInfo);
+
         $q = $request->query->get('isFavorite');
       //var_dump($q);
 

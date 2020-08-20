@@ -21,4 +21,5 @@ return [
     Liip\ImagineBundle\LiipImagineBundle::class => ['all' => true],
     Oneup\FlysystemBundle\OneupFlysystemBundle::class => ['all' => true],
     CMEN\GoogleChartsBundle\CMENGoogleChartsBundle::class => ['all' => true],
+    Beelab\Recaptcha2Bundle\BeelabRecaptcha2Bundle::class => ['all' => true],
 ];

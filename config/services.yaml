@@ -14,6 +14,7 @@ parameters:
     stripe_pk_key: '%env(STRIPE_PK_KEY)%'
     stripe_sk_key: '%env(STRIPE_SK_KEY)%'
 
+    google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
 
 services:
     # default configuration for services in *this* file

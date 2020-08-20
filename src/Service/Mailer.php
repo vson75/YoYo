@@ -28,7 +28,7 @@ class Mailer
 
     public function SendMailPassword(User $user,$token, $tokenCreateAt, $template, $subject){
         $email = (new TemplatedEmail())
-            ->from('YoYo@gmail.com')
+            ->from($this->admin_email)
             ->to($user->getEmail())
             ->subject($subject)
             ->htmlTemplate($template)
@@ -43,7 +43,7 @@ class Mailer
 
     public function sendMailCreateOrDonationPost(User $user, Post $post, $template, $subject,$title, $action, $caption_link){
         $email = (new TemplatedEmail())
-            ->from('YoYo@gmail.com')
+            ->from($this->admin_email)
             ->to($user->getEmail())
             ->subject($subject)
             ->htmlTemplate($template)
@@ -60,7 +60,7 @@ class Mailer
 
     public function sendMailAdminStopOrPublishedPost(User $user, Post $post, $template, $subject,$raison){
         $email = (new TemplatedEmail())
-            ->from('YoYo@gmail.com')
+            ->from($this->admin_email)
             ->to($user->getEmail())
             ->subject($subject)
             ->htmlTemplate($template)
@@ -75,7 +75,7 @@ class Mailer
 
     public function sendMailAfterExpiredPost(User $user, Post $post,?string $excelFile){
         $email = (new TemplatedEmail())
-            ->from('YoYo@gmail.com')
+            ->from($this->admin_email)
             ->to($user->getEmail())
             ->subject('Dự án của bạn tại YoYo đã đến hạn chót')
             ->htmlTemplate('email/EmailExpiredPost.html.twig');
@@ -146,6 +146,20 @@ class Mailer
             $email->subject($this->translator->trans('email.subject.CannotValidOrganisation'));
         }
 
+        $this->mailer->send($email);
+    }
+
+    public function contactUs($subject, $content, $username, $phonenumber){
+        $email = (new TemplatedEmail())
+            ->from($this->admin_email)
+            ->to($this->admin_email)
+            ->htmlTemplate('email/contactUs.html.twig')
+            ->subject($subject)
+            ->context([
+                'content'=> $content,
+                'username' => $username,
+                'phoneNumber' => $phonenumber,
+            ]);
         $this->mailer->send($email);
     }
 

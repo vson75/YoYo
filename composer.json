@@ -6,6 +6,8 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "antishov/doctrine-extensions-bundle": "^1.4",
+        "beelab/recaptcha2-bundle": "^2.3",
+        "captcha-com/symfony-captcha-bundle": "4.*",
         "cmen/google-charts-bundle": "^3.2",
         "doctrine/annotations": "^1.10",
         "friendsofsymfony/ckeditor-bundle": "^2.2",

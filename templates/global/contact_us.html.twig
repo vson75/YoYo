@@ -1,0 +1,38 @@
+{% extends 'content_base.html.twig' %}
+
+{% block title %}
+{% trans %} Liên hệ chúng tôi {% endtrans %}
+{% endblock %}
+
+{% block content_body %}
+    <h1>{% trans %} Liên hệ chúng tôi {% endtrans %}</h1>
+
+
+    {{ form_start(form) }}
+    <div class="container">
+
+            {{ form_row(form.firstandlastname) }}
+
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.userEmail) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.PhoneNumber) }}
+            </div>
+        </div>
+
+        {{ form_row(form.subject) }}
+        {{ form_row(form.content) }}
+        {{ form_row(form.captcha) }}
+        <button type="submit" class="btn btn-primary">{% trans %}Liên hệ chúng tôi {% endtrans %}</button>
+    </div>
+
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+    <script src="//www.google.com/recaptcha/api.js?hl={{ app.request.locale }}"></script>
+
+{% endblock %}
