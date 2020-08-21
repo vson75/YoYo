@@ -36,11 +36,6 @@
 
 
         </div>
-
-
-        {% block admin_post %}
-
-        {% endblock %}
     </div>
 
     <div class="row">
@@ -140,7 +135,39 @@
 
                 </div>
             {% endif %}
+            {% block admin_post %}
 
+                {% if is_granted("ROLE_ADMIN") %}
+                    <div class="admin-section">
+                        {% if postInfo.status.id == statusArray['POST_WAITING_VALIDATION'] %}
+                            <div class="btn btn-success btn-admin"
+                                 onclick="location.href='{{ path('admin_allow_to_collecting', {uniquekey: postInfo.uniquekey}) }}'">
+                                <span>{% trans %} Cho phép đăng dự án {% endtrans %}</span>
+
+                            </div>
+
+                            <div class="btn btn-danger btn-admin btn-stop" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopPost'}) }}'">
+                                <span>{% trans %} Tạm ngừng dự án {% endtrans %}</span>
+                            </div>
+                            <div id="btn-translate" ><a href="{{ path('app_post_admin') }}">{% trans %}Quay lại trang Admin dự án {% endtrans %}</a></div>
+                        {% endif %}
+                        {% if postInfo.status.id == statusArray['POST_COLLECTING'] %}
+                            <div class="btn btn-warning btn-admin" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopFund'}) }}'">
+                                <span>{% trans %}Dừng quyên góp dự án{% endtrans %}</span>
+                            </div>
+
+                            <div class="btn btn-danger btn-admin btn-stop" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopPost'}) }}'">
+                                <span>{% trans %} Tạm ngừng dự án {% endtrans %}</span>
+                            </div>
+                            <div id="btn-translate" ><a href="{{ path('app_post_admin') }}">{% trans %}Quay lại trang Admin dự án {% endtrans %}</a></div>
+
+                        {% endif %}
+
+                    </div>
+                {% endif %}
+
+
+            {% endblock %}
         </div>
 
         <!-- Sidebar card collect. example: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_profile_card -->
@@ -161,6 +188,8 @@
                 {% else %}
                     <p><span><i class="far fa-clock fa-lg"></i></span> <span>{% trans %}Còn lại {% endtrans %} <strong>0</strong> {% trans %} ngày{% endtrans %}</span></p>
                 {% endif %}
+
+
                 {% if postInfo.status.id == statusArray['POST_DRAFT'] or postInfo.status.id == statusArray['POST_WAITING_INFO'] %}
                     {% if userInfo == postInfo.user %}
                     <div id="btn-transaction" onclick="location.href='{{ path('app_submit_post', {uniquekey: postInfo.uniquekey}) }}'">
@@ -174,9 +203,9 @@
                     </div>
                     {% endif %}
 
-                {% elseif postInfo.status.id != statusArray['POST_SUBMIT_TO_ADMIN'] %}
+                {% elseif postInfo.status.id != statusArray['POST_WAITING_VALIDATION'] and postInfo.status.id != statusArray['POST_STOP'] %}
 
-                {% if datediff > 0 %}
+                {% if datediff >= 0 %}
 
                 <div id="btn-transaction" onclick="location.href='{{ path('app_payment', {uniquekey: postInfo.uniquekey}) }}'">
                     <span>{% trans %}Quyên góp{% endtrans %}</span>
@@ -319,6 +348,7 @@
 
 
     </div>
+    <div class="col-md-4 col-xs-4"></div>
 </div>
 
 </div>
@@ -326,8 +356,7 @@
 {% endblock %}
 
 
-
-    {% endblock %}
+{% endblock %}
 
     {% block javascripts %}
         {{ parent() }}

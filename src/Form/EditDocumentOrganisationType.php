@@ -139,81 +139,81 @@ class EditDocumentOrganisationType extends AbstractType
             ->add('DocType0', ChoiceType::class, [
                 'required' => true,
                 'choices'  => [
-                    'Certificate Organisation' => 'Certificate_organisation',
-                    'Bank account Information' => 'Bank_account_information',
-                    'Award justification' => 'Awards_justification',
+                    'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
+                    'form.documentOrganisation.BankAccount' => 'Bank_account_information',
+                    'form.documentOrganisation.Award' => 'Awards_justification',
                 ],
             ])
             ->add('DocType1', ChoiceType::class, [
                 'required' => false,
                 'choices'  => [
-                    'Certificate Organisation' => 'Certificate_organisation',
-                    'Bank account Information' => 'Bank_account_information',
-                    'Award justification' => 'Awards_justification',
+                    'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
+                    'form.documentOrganisation.BankAccount' => 'Bank_account_information',
+                    'form.documentOrganisation.Award' => 'Awards_justification',
                 ],
             ])
             ->add('DocType2', ChoiceType::class, [
                 'required' => false,
                 'choices'  => [
-                    'Certificate Organisation' => 'Certificate_organisation',
-                    'Bank account Information' => 'Bank_account_information',
-                    'Award justification' => 'Awards_justification',
+                    'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
+                    'form.documentOrganisation.BankAccount' => 'Bank_account_information',
+                    'form.documentOrganisation.Award' => 'Awards_justification',
                 ],
             ])
             ->add('DocType3', ChoiceType::class, [
                 'required' => false,
                 'choices'  => [
-                    'Certificate Organisation' => 'Certificate_organisation',
-                    'Bank account Information' => 'Bank_account_information',
-                    'Award justification' => 'Awards_justification',
+                    'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
+                    'form.documentOrganisation.BankAccount' => 'Bank_account_information',
+                    'form.documentOrganisation.Award' => 'Awards_justification',
                 ],
             ])
             ->add('DocType4', ChoiceType::class, [
                 'required' => false,
                 'choices'  => [
-                    'Certificate Organisation' => 'Certificate_organisation',
-                    'Bank account Information' => 'Bank_account_information',
-                    'Award justification' => 'Awards_justification',
+                    'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
+                    'form.documentOrganisation.BankAccount' => 'Bank_account_information',
+                    'form.documentOrganisation.Award' => 'Awards_justification',
                 ],
             ])
             ->add('DocType5', ChoiceType::class, [
                 'required' => false,
                 'choices'  => [
-                    'Certificate Organisation' => 'Certificate_organisation',
-                    'Bank account Information' => 'Bank_account_information',
-                    'Award justification' => 'Awards_justification',
+                    'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
+                    'form.documentOrganisation.BankAccount' => 'Bank_account_information',
+                    'form.documentOrganisation.Award' => 'Awards_justification',
                 ],
             ])
             ->add('DocType6', ChoiceType::class, [
                 'required' => false,
                 'choices'  => [
-                    'Certificate Organisation' => 'Certificate_organisation',
-                    'Bank account Information' => 'Bank_account_information',
-                    'Award justification' => 'Awards_justification',
+                    'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
+                    'form.documentOrganisation.BankAccount' => 'Bank_account_information',
+                    'form.documentOrganisation.Award' => 'Awards_justification',
                 ],
             ])
             ->add('DocType7', ChoiceType::class, [
                 'required' => false,
                 'choices'  => [
-                    'Certificate Organisation' => 'Certificate_organisation',
-                    'Bank account Information' => 'Bank_account_information',
-                    'Award justification' => 'Awards_justification',
+                    'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
+                    'form.documentOrganisation.BankAccount' => 'Bank_account_information',
+                    'form.documentOrganisation.Award' => 'Awards_justification',
                 ],
             ])
             ->add('DocType8', ChoiceType::class, [
                 'required' => false,
                 'choices'  => [
-                    'Certificate Organisation' => 'Certificate_organisation',
-                    'Bank account Information' => 'Bank_account_information',
-                    'Award justification' => 'Awards_justification',
+                    'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
+                    'form.documentOrganisation.BankAccount' => 'Bank_account_information',
+                    'form.documentOrganisation.Award' => 'Awards_justification',
                 ],
             ])
             ->add('DocType9', ChoiceType::class, [
                 'required' => false,
                 'choices'  => [
-                    'Certificate Organisation' => 'Certificate_organisation',
-                    'Bank account Information' => 'Bank_account_information',
-                    'Award justification' => 'Awards_justification',
+                    'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
+                    'form.documentOrganisation.BankAccount' => 'Bank_account_information',
+                    'form.documentOrganisation.Award' => 'Awards_justification',
                 ],
             ])
         ;

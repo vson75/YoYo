@@ -6,6 +6,9 @@ form:
 
   documentOrganisation:
     help: Dạng file hình ảnh
+    CertifOrganisation: Giấy chứng nhận tổ chức
+    BankAccount: Tài khoản ngân hàng
+    Award: Bằng khen
 
   CreateOrganisation:
     fileFormat: Dạng file hình ảnh
@@ -26,6 +29,61 @@ form:
     langFR: Tiếng Pháp
     content: Nội dung
     title: Tên dự án
+
+  UserProfile:
+    iconFile: Ảnh đại diện
+    iconFileHelp: File dạng ảnh. Không quá 2M
+
+  StopPost:
+    Raison: Lý do
+    RaisonPlaceholder: Điền lý do để gửi cho chủ dự án
+
+  ResetPassword:
+    Email: Email của bạn
+
+
+  PostSearch:
+    PostTitlePlaceholder: Tên dự án
+    StatusPlaceholder: Quá trình
+    Draft: Bản nháp
+    WaitingValidation: Chờ phê duyệt
+    WaitingInfo: Bổ sung thông tin
+    Collecting: Trong quá trình quyên góp
+    TransfertFund: Đã chuyển khoản
+    Close: Kết thúc
+    Stop: Tạm dừng
+
+  PostCreation:
+    title: Tên dự án
+    titlePlaceholder: Dự án trẻ nghèo vùng cao
+    imageFilePost: Ảnh nền của dự án
+    imageFilePostPlaceholder: Dạng file hình ảnh
+    content: Nội dung dự án
+    finishAt: Hạn cuối quyên góp
+    finishAtHelp: Nếu bạn chưa có ngày cụ thể, hệ thống sẽ để mặc định là 30 ngày. Bạn có thể gia hạn sau
+    finishAtPlaceholder: Chọn hạn chót
+    targetAmount: Số tiền bạn muốn quyên góp
+    targetAmountPlaceholder: 1500
+
+  ExtendPost:
+    ExtendPost: Gia hạn dự án
+
+  CreateOrResetPassword:
+    PasswordNotMatch: Mật khẩu không giống nhau
+    Password: Mật khẩu
+    PasswordRepeat: Nhập lại mật khẩu
+
+  ContactUs:
+    UserEmail: Email của bạn
+    Name: Họ và tên
+    PhoneNumber: Số điện thoại
+    Subject: Tiêu đề
+    Content: Nội dung
+
+  Comment:
+    contentPlaceholder: Chia sẻ cảm nghĩ của bạn về dự án
+
+
 
 
 message:
@@ -93,4 +151,10 @@ email:
   captionLink:
     checkproject: Bạn có thể xem dự án bạn mới quyên góp tại đây
     CheckProjectBeforePublish: Chúng tôi sẽ nhanh chóng kiểm tra dự án của bạn trước khi cho phép đăng lên trang của chúng tôi
+
+
+template:
+  StopPost:
+    StopPost: Ngừng dự án
+    StopFund: Tạm ngừng quyên góp của dự án
 

@@ -20,21 +20,21 @@ class PostSearchType extends AbstractType
                 'required' => false,
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Tên dự án'
+                    'placeholder' => 'form.PostSearch.PostTitlePlaceholder'
                 ]
             ])
             ->add('status', ChoiceType::class, [
                 'required' => false,
                 'label' => false,
-                'placeholder' => 'Quá trình',
+                'placeholder' => 'form.PostSearch.StatusPlaceholder',
                 'choices' => [
-                    'Bản nháp' => PostStatus::POST_DRAFT,
-                    'Đã gửi ban quản trị' => PostStatus::POST_SUBMIT_TO_ADMIN,
-                    'thông tin cần bổ sung' => PostStatus::POST_WAITING_INFO,
-                    'Quyên góp' => PostStatus::POST_COLLECTING,
-                    'Chuyển khoản' => PostStatus::POST_TRANSFERT_FUND,
-                    'Kết thúc' => PostStatus::POST_CLOSE,
-                    'Tạm ngừng' => PostStatus::POST_STOP
+                    'form.PostSearch.Draft' => PostStatus::POST_DRAFT,
+                    'form.PostSearch.WaitingValidation' => PostStatus::POST_WAITING_VALIDATION,
+                    'form.PostSearch.WaitingInfo' => PostStatus::POST_WAITING_INFO,
+                    'form.PostSearch.Collecting' => PostStatus::POST_COLLECTING,
+                    'form.PostSearch.TransfertFund' => PostStatus::POST_TRANSFERT_FUND,
+                    'form.PostSearch.Close' => PostStatus::POST_CLOSE,
+                    'form.PostSearch.Stop' => PostStatus::POST_STOP
 
                 ]
             ])

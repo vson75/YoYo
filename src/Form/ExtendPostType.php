@@ -16,7 +16,7 @@ class ExtendPostType extends AbstractType
             ->add('finishAt', DateType::class,[
                 'widget' => 'single_text',
                 'required' => true,
-                'label' => 'Gia hạn dự án'
+                'label' => 'form.ExtendPost.ExtendPost'
             ])
         ;
     }

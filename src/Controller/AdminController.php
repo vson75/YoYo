@@ -70,8 +70,6 @@ class AdminController extends AbstractController
         // get query find_post parameter. like $_GET
         $q = $request->query->get('q');
 
-
-@
         $search = new PostSearch();
         $form = $this->createForm(PostSearchType::class, $search);
         $form->handleRequest($request);
@@ -99,106 +97,31 @@ class AdminController extends AbstractController
     }
 
     /**
-     *@Route("/admin/post_detail/{uniquekey}", name="admin_show_post")
+     * @Route("/admin/stopPost/{uniquekey}/{action<stopPost|stopFund>}", name="admin_stop_post")
      */
-    public function detailPost($uniquekey,EntityManagerInterface $em, TransactionRepository $transactionRepository){
-
-        $user = $this->getUser();
-        $repository = $em->getRepository(Post::class);
-        $postInfo = $repository->findOneBy([
-            'uniquekey'=> $uniquekey
-        ]);
-
-        // search if the post have a translation
-        $en = $em->getRepository(WebsiteLanguage::class)->findOneBy([
-            'id' => WebsiteLanguage::lang_en
-        ]);
-        $fr = $em->getRepository(WebsiteLanguage::class)->findOneBy([
-            'id' => WebsiteLanguage::lang_fr
-        ]);
-        $repoPostTranslation = $em->getRepository(PostTranslation::class);
-        $postTranslateEN = $repoPostTranslation->findOneBy([
-            'post' => $postInfo,
-            'lang' => $en
-        ]);
-        $postTranslateFR = $repoPostTranslation->findOneBy([
-            'post' => $postInfo,
-            'lang' => $fr
-        ]);
-
-        if (is_null($postInfo)) {
-            throw $this->createNotFoundException('The Post is not exist');
-        }
-        $nb_participant = $transactionRepository->getNumberParticipantbyPost($postInfo->getId());
-        $totalAmount = round($transactionRepository->getTotalAmountbyPost($postInfo->getId()),2);
-        $TransactionThisPost = $transactionRepository->getTransactionbyPost($postInfo->getId());
-
-        $datediff = date_diff($postInfo->getFinishAt(),new \DateTime('now'));
-        $datediff = $datediff->format('%d');
-
-        $postStatus = new \ReflectionClass('App\Entity\PostStatus');
-        $statusArray = $postStatus->getConstants();
-
-
-        $userFavorite = $em->getRepository(Favorite::class)->findOneBy([
-            'user' => $this->getUser(),
-            'post' => $postInfo
-        ]);
-        if(is_null($userFavorite)){
-            $favorite = null;
-        }else{
-            $favorite = $userFavorite->getisFavorite();
-        }
-
-        $userEmail = $postInfo->getUser()->getUsername();
-        $repository = $em->getRepository(User::class);
-        $userInfo = $repository->findOneBy(['email' => $userEmail]);
-        $organisationInfo = $em->getRepository(RequestOrganisationInfo::class)->findOneBy([
-            'user' => $userInfo
-        ]);
-
-        $certificate = $em->getRepository(RequestOrganisationDocument::class)->findLastDocumentByUserIdAndTypeDoc($userInfo, DocumentType::Certificate_organisation);
-        $bankAccount =  $em->getRepository(RequestOrganisationDocument::class)->findLastDocumentByUserIdAndTypeDoc($userInfo, DocumentType::Bank_account_information);
-        $awards = $em->getRepository(RequestOrganisationDocument::class)->findAllDocumentByUserId($userInfo, DocumentType::Awards_justification);
-        //  dd($certificate->getDocumentPath());
-
-
-
-        return $this->render('admin/post_admin/show_post.html.twig', [
-            'postInfo' => $postInfo,
-            'postTranslateEN' => $postTranslateEN,
-            'postTranslateFR' => $postTranslateFR,
-            'nb_participant' => $nb_participant,
-            'totalAmount' => $totalAmount,
-            'TransactionThisPost' => $TransactionThisPost,
-            'userInfo' => $user,
-            'datediff' => $datediff,
-            'statusArray' => $statusArray,
-            'userFavorite' => $favorite,
-            'organisationInfo' => $organisationInfo,
-            'certificate' => $certificate,
-            'bank'  => $bankAccount,
-            'awards' => $awards
-        ]);
-    }
-
-    /**
-     * @Route("/admin/stopPost/{uniquekey}", name="admin_stop_post")
-     */
-    public function stopPost($uniquekey, EntityManagerInterface $em, Request $request, Mailer $mailer){
+    public function stopPost($uniquekey, $action, EntityManagerInterface $em, Request $request, Mailer $mailer){
 
         $form = $this->createForm(StopPostType::class);
         $form->handleRequest($request);
+       // dd($action);
+        $repo_status = $em->getRepository(PostStatus::class);
+
+        if($action = 'stopPost'){
+            $status = $repo_status->findOneBy([
+                'id' => PostStatus::POST_STOP
+            ]);
+            $title = $this->translator->trans('template.StopPost.StopPost');
+        }elseif ($action = 'stopFund'){
+            $status = $repo_status->findOneBy([
+                'id' => PostStatus::POST_TRANSFERT_FUND
+            ]);
+            $title = $this->translator->trans('template.StopPost.StopFund');
+        }
 
         if($form->isSubmitted() && $form->isValid()){
             $repo = $em->getRepository(Post::class);
             $post = $repo->findOneBy([
                 'uniquekey' => $uniquekey,
-            ]);
-            // dd(PostStatus::POST_STOP);
-            $repo_status = $em->getRepository(PostStatus::class);
-            $status = $repo_status->findOneBy([
-                'id' => PostStatus::POST_STOP
             ]);
             $post->setStatus($status);
 
@@ -214,13 +137,14 @@ class AdminController extends AbstractController
             $mailer->sendMailAdminStopOrPublishedPost($user_post,$post,$template,$subject,$context);
 
             $this->addFlash('success', 'Post status changed');
-            return $this->redirectToRoute('admin_show_post', [
+            return $this->redirectToRoute('show_post', [
                 'uniquekey' => $uniquekey
             ]);
         }
 
         return $this->render('admin/post_admin/stop_post.html.twig',[
             'post' => $form->createView(),
+            'title' => $title,
             'userInfo' => $this->getUser()
         ]);
 
@@ -245,7 +169,7 @@ class AdminController extends AbstractController
 
 
         $this->addFlash('success', 'Post status changed');
-        return $this->redirectToRoute('admin_show_post', [
+        return $this->redirectToRoute('show_post', [
             'uniquekey' => $uniquekey
         ]);
     }

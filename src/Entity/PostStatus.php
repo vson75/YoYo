@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PostStatus
 {
     public const POST_DRAFT = 1;
-    public const POST_SUBMIT_TO_ADMIN = 2;
+    public const POST_WAITING_VALIDATION = 2;
     public const POST_WAITING_INFO = 3;
     public const POST_COLLECTING = 4;
     public const POST_TRANSFERT_FUND = 5;

@@ -17,7 +17,7 @@ class CommentFormType extends AbstractType
             ->add('content', TextareaType::class, [
                 'label'=>false,
                 'attr'=>[
-                    'placeholder'=>'bạn muốn chia sẻ gì không ? '
+                    'placeholder'=>'form.Comment.contentPlaceholder'
                 ]
             ])
         ;

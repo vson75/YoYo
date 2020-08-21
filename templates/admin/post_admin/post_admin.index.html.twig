@@ -46,7 +46,6 @@
 
                     <th>{% trans %} Quá trình {% endtrans %}</th>
                     {% if is_granted('ROLE_ADMIN') %}
-                    <th>{% trans %} Quyết định {% endtrans %}</th>
                     {% endif %}
                 </tr>
                 </thead>
@@ -90,15 +89,7 @@
                                 {% trans %} Chờ Admin kiểm duyệt{% endtrans %}
                             {% endif %}
                         </td>
-                        {% if is_granted('ROLE_ADMIN') %}
-                        <td>
-                            <a href="" class="btn btn-primary"><i class="fas fa-check"></i></a>
-                    
-                            <a href="" class="btn btn-danger"> <i class="fas fa-minus-circle"></i></a>
-                            <a href="{{ path('admin_show_post', {uniquekey: postInfo.uniquekey}) }}" class="btn btn-warning"> <i class="fas fa-search"></i></a>
-             
-                        </td>
-                        {% endif %}
+
                     </tr>
                 {% else %}
                     <tr>

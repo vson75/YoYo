@@ -14,7 +14,7 @@ class ResetPasswordType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'attr' => ['placeholder' => 'Email của bạn'],
+                'attr' => ['placeholder' => 'form.ResetPassword.Email'],
             ]);
     }
 

@@ -16,7 +16,8 @@ class UserProfileFormType extends AbstractType
     {
         $builder
             ->add('iconFile',FileType::class, [
-                'label' => 'Ảnh đại diện',
+                'label' => 'form.UserProfile.iconFile',
+                'help' => 'form.UserProfile.iconFileHelp',
                 'mapped'=> false,
                 'required'=>false,
                 'constraints'=>[
@@ -26,10 +27,10 @@ class UserProfileFormType extends AbstractType
                 ]
             ])
             ->add('firstname', TextType::class, [
-                'label' => 'Họ'
+                'label' => 'form.userRegistration.firstname'
             ])
             ->add('lastname', TextType::class, [
-                'label' => 'Tên'
+                'label' => 'form.userRegistration.lastname'
             ])
         ;
     }

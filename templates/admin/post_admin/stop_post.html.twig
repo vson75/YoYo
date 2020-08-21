@@ -1,16 +1,16 @@
 {% extends 'content_base.html.twig' %}
 
+{% block title %}
+{{title}}
+{% endblock %}
+
 
 {% block content_body %}
+        <h1>{{ title }}</h1>
         {{ form_start(post) }}
-        {{ form_row(post.Raison, {
-                label: 'Lý do tạm ngưng dự án',
-                attr: {
-                        'placeholder': 'Điền lý do để gửi cho chủ dự án'
-                }
-        }) }}
+        {{ form_row(post.Raison) }}
 
-        <button type="submit" class="btn btn-primary">{% trans %} Tạm dừng dự án{% endtrans %}</button>
+        <button type="submit" class="btn btn-primary">{% trans %}Gửi cho chủ dự án {% endtrans %}</button>
         {{ form_end(post) }}
 
 {% endblock %}

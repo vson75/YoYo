@@ -26,11 +26,18 @@ class PostFormType extends AbstractType
         $builder
             ->add('title',TextType::class, [
                 'required' => true,
-                'label'=> false
+                'label'=> 'form.PostCreation.title',
+                'attr' => [
+                    'placeholder' => 'form.PostCreation.titlePlaceholder'
+                ]
             ])
             ->add('imageFile',FileType::class, [
+                'label' => 'form.PostCreation.imageFilePost' ,
                 'mapped'=> false,
                 'required'=>false,
+                'attr' => [
+                    'placeholder' => 'form.PostCreation.imageFilePostPlaceholder'
+                ],
                 'constraints'=>[
                     new Image([
                         'maxSize' => '5M'
@@ -38,6 +45,7 @@ class PostFormType extends AbstractType
                 ]
             ])
             ->add('content', CKEditorType::class, array(
+                'label' => 'form.PostCreation.content',
                 'config' => array(
                     'uiColor' => '#ffffff',
                     'toolbar' => 'my_toolbar_1',
@@ -46,11 +54,18 @@ class PostFormType extends AbstractType
             ->add('finishAt', DateType::class, [
                 'widget' => 'single_text',
                 'required' => false,
-                'label' => 'Hạn chót bạn muốn quyên góp tiền',
-                'help' => 'Nếu bạn chưa có ngày cụ thể, hệ thống sẽ để mặc định là 30 ngày. Bạn có thể gia hạn sau'
+                'label' => 'form.PostCreation.finishAt',
+                'help' => 'form.PostCreation.finishAtHelp',
+                'attr' => [
+                    'placeholder' => 'form.PostCreation.finishAtPlaceholder'
+                ]
             ])
             ->add('targetAmount', MoneyType::class, [
-                'label' => 'Số tiền bạn muốn quyên góp được'
+                'required' => true,
+                'label' => 'form.PostCreation.targetAmount',
+                    'attr' => [
+                        'placeholder' => 'form.PostCreation.targetAmountPlaceholder'
+                    ]
             ]
             )
         ;

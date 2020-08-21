@@ -385,7 +385,7 @@ class PostController extends AbstractController
 
         if( $post->getStatus() == $draft || $post->getStatus() == $waitingInfo){
             $submit_admin = $repo->findOneBy([
-                'id' => PostStatus::POST_SUBMIT_TO_ADMIN
+                'id' => PostStatus::POST_WAITING_VALIDATION
             ]);
             $postNewStatus = $post->setStatus($submit_admin);
             $em->persist($postNewStatus);

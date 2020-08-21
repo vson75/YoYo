@@ -13,7 +13,12 @@ class StopPostType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('Raison', CKEditorType::class)
+            ->add('Raison', CKEditorType::class, [
+                'label' => 'form.StopPost.Raison',
+                'attr' => [
+                    'placeholder' => 'form.StopPost.RaisonPlaceholder'
+                ]
+            ])
         ;
     }
 

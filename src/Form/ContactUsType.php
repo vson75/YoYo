@@ -15,11 +15,21 @@ class ContactUsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('userEmail', EmailType::class)
-            ->add('firstandlastname', TextType::class)
-            ->add('PhoneNumber', TextType::class)
-            ->add('subject', TextType::class)
-            ->add('content', CKEditorType::class)
+            ->add('userEmail', EmailType::class, [
+                'label' => 'form.ContactUs.UserEmail'
+            ])
+            ->add('firstandlastname', TextType::class, [
+                'label' => 'form.ContactUs.Name'
+            ])
+            ->add('PhoneNumber', TextType::class, [
+                'label' => 'form.ContactUs.PhoneNumber'
+            ])
+            ->add('subject', TextType::class, [
+                'label' => 'form.ContactUs.Subject'
+            ])
+            ->add('content', CKEditorType::class, [
+                'label' => 'form.ContactUs.Content'
+            ])
             ->add('captcha', RecaptchaType::class)
         ;
     }

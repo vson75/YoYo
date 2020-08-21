@@ -16,11 +16,11 @@ class CreateOrResetPasswordType extends AbstractType
         $builder
             ->add('password', RepeatedType::class,[
                 'type' => PasswordType::class,
-                'invalid_message' => 'The password fields must match.',
+                'invalid_message' => 'form.CreateOrResetPassword.PasswordNotMatch',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
-                'first_options'  => ['attr' => ['placeholder' => 'Mật khẩu']],
-                'second_options' => ['attr' => ['placeholder' => 'nhập lại mật khẩu'
+                'first_options'  => ['attr' => ['placeholder' => 'form.CreateOrResetPassword.Password']],
+                'second_options' => ['attr' => ['placeholder' => 'form.CreateOrResetPassword.PasswordRepeat'
                 ]],
             ])
         ;

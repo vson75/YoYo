@@ -6,9 +6,10 @@
 
 {% block content_body %}
     {{ include('post/CreateOrEditPost.html.twig', {
-        button_text: 'Tạo mới',
-        action_title: 'Tạo dự án mới',
-        title_post: 'Tạo 1 dự án mới'})
+        button_text: ('Tạo dự án mới'|trans),
+        action_title: ('Tạo dự án mới'|trans),
+        title_post: ('Tạo dự án mới'|trans)
+    })
     }}
 
 {% endblock %}

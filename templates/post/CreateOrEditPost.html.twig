@@ -10,28 +10,13 @@
         <hr>
     {% endif %}
 
-    {{ form_row(postForm.title, {
-        attr: {
-            'placeholder': 'Tên dự án'
-        }
-    }) }}
+    {{ form_row(postForm.title) }}
 
-    {{ form_row(postForm.content, {
-        label: 'Nội dung chi tiết'
-    }) }}
+    {{ form_row(postForm.content) }}
 
     <div class="form-group" style="width: 30%;">
-        {{ form_row(postForm.imageFile, {
-            label: 'Ảnh đại diện',
-            attr: {
-                'placeholder': 'Đính kèm ảnh vào đây'
-            }
-        }) }}
-        {{ form_row(postForm.finishAt, {
-            attr: {
-                'placeholder': 'Chọn hạn chót'
-            }
-        }) }}
+        {{ form_row(postForm.imageFile) }}
+        {{ form_row(postForm.finishAt) }}
         {{ form_row(postForm.targetAmount) }}
 
     </div>
