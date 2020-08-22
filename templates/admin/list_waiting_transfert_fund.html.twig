@@ -1,0 +1,33 @@
+{% extends 'content_base.html.twig' %}
+
+{% block title %}
+    {% trans %}Kiểm duyệt dự án {% endtrans %}
+{% endblock %}
+
+{% block content_body %}
+    <div>
+        <h1>{% trans %} Danh sách dự án đang chờ được kiểm duyệt {% endtrans %}</h1>
+        <table class="table table-striped">
+            <tr>
+                <th>{% trans %} Dự án{% endtrans %}</th>
+                <th>{% trans %} Người tạo  {% endtrans %}</th>
+                <th>{% trans %} Số tiền quyên góp được {% endtrans %}</th>
+                <th>{% trans %} Mục tiêu quyên góp {% endtrans %}</th>
+                <th>{% trans %}Chuyển khoản {% endtrans %}</th>
+            </tr>
+            {% for list_post in pagination %}
+                <tr>
+                    <td>{{ list_post.title }}</td>
+                    <td>{{ list_post.user.firstname }} {{ list_post.user.lastname }}</td>
+                    <td>{{ list_post.getTransactionSum}}</td>
+                    <td>{{ list_post.targetAmount }}</td>
+                    <td> <button class="btn btn-primary" onclick="location.href='{{ path('show_post', {uniquekey: list_post.uniquekey}) }}'">{% trans %} Kiểm duyệt{% endtrans %}</button></td>
+                </tr>
+
+            {% endfor %}
+        </table>
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+{% endblock %}
+

@@ -46,7 +46,7 @@ class PostRepository extends ServiceEntityRepository
         $status_transfert_fund = PostStatus::POST_TRANSFERT_FUND;
 
          return   $this->publishedAtIsNotNull()
-             ->andWhere('p.status = '.$status_Collecting.' OR p.status = '.$status_transfert_fund.' or p.status= '.$status_finish_collect.' ')
+            ->andWhere('p.status = '.$status_Collecting.' ')
             ->orderBy('p.id', 'DESC')
             ->setMaxResults(8)
             ->getQuery()
@@ -54,21 +54,38 @@ class PostRepository extends ServiceEntityRepository
             ;
     }
 
-    public function findPostByFavorite($user)
+    public function findPostFinishCollect(){
+        $status_finish_collect = PostStatus::POST_FINISH_COLLECTING;
+        $status_transfert_fund = PostStatus::POST_TRANSFERT_FUND;
+
+        return   $this->publishedAtIsNotNull()
+            ->andWhere('p.status = '.$status_finish_collect.' or p.status = '.$status_transfert_fund.'')
+            ->orderBy('p.id', 'DESC')
+            ->setMaxResults(4)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function findPostByFavorite($user, bool $collecting)
     {
         $status_Collecting = PostStatus::POST_COLLECTING;
         $status_finish_collect = PostStatus::POST_FINISH_COLLECTING;
         $status_transfert_fund = PostStatus::POST_TRANSFERT_FUND;
 
-        return   $this->publishedAtIsNotNull()
-            ->andWhere('p.status = '.$status_Collecting.' OR p.status = '.$status_transfert_fund.' or p.status= '.$status_finish_collect.' ')
-            ->andWhere('fav.user = :user')
-            ->andWhere('fav.isFavorite = 1')
-            ->innerJoin('p.favorites','fav')
-            ->setParameter('user', $user)
-            ->setMaxResults(8)
-            ->getQuery()
-            ->getResult()
+        $qb= $this->publishedAtIsNotNull();
+        if($collecting){
+            $qb->andWhere('p.status = '.$status_Collecting.' ');
+        }else{
+            $qb->andWhere('p.status = '.$status_finish_collect.' or p.status = '.$status_transfert_fund.'');
+        }
+        return   $qb->andWhere('fav.user = :user')
+                    ->andWhere('fav.isFavorite = 1')
+                    ->innerJoin('p.favorites','fav')
+                    ->setParameter('user', $user)
+                    ->setMaxResults(8)
+                    ->getQuery()
+                    ->getResult()
             ;
     }
 
@@ -135,6 +152,27 @@ class PostRepository extends ServiceEntityRepository
             ->getResult()
         ;
 
+    }
+
+    public function findAllPostByStatus($status_collecting){
+       // $status_collecting = PostStatus::POST_WAITING_VALIDATION;
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.status = :status')
+            ->setParameter('status', $status_collecting)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function countDistinctPostByStatus($status_collecting){
+        //$status_collecting = PostStatus::POST_WAITING_VALIDATION;
+        return $this->createQueryBuilder('p')
+            ->select('count( distinct p.id)')
+            ->andWhere('p.status = :status')
+            ->setParameter('status', $status_collecting)
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
     }
 
 

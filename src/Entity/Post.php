@@ -104,6 +104,16 @@ class Post
      */
     private $postTranslations;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $userValidator;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $dateValidation;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -469,6 +479,30 @@ class Post
                 $postTranslation->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUserValidator(): ?User
+    {
+        return $this->userValidator;
+    }
+
+    public function setUserValidator(?User $userValidator): self
+    {
+        $this->userValidator = $userValidator;
+
+        return $this;
+    }
+
+    public function getDateValidation(): ?\DateTimeInterface
+    {
+        return $this->dateValidation;
+    }
+
+    public function setDateValidation(?\DateTimeInterface $dateValidation): self
+    {
+        $this->dateValidation = $dateValidation;
 
         return $this;
     }

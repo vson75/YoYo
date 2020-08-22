@@ -57,22 +57,31 @@ class PostController extends AbstractController
 
         $q = $request->query->get('isFavorite');
       //var_dump($q);
-
+        //show post by newest with the status = Collectinf or filter favorite
         if(is_null($userInfo)){
             $post = $repository->findPostByNewest();
+            //show post by newest with status = Finish collect OR Transfering Fund
+            $postFinishCollect = $repository->findPostFinishCollect();
         }else{
-            if(is_null($q)){
+            if(is_null($q) or $q === '0'){
                 $post = $repository->findPostByNewest();
-            }
-            elseif($q === '0'){
-                $post = $repository->findPostByNewest();
+                $postFinishCollect = $repository->findPostFinishCollect();
             }else{
-                $post = $repository->findPostByFavorite($userInfo);
+                $post = $repository->findPostByFavorite($userInfo,true);
+                $postFinishCollect = $repository->findPostByFavorite($userInfo,false);
             }
         }
 
+
+        //get the list of Status
+        $postStatus = new \ReflectionClass('App\Entity\PostStatus');
+        $statusArray = $postStatus->getConstants();
+
+
         return $this->render('homepage.html.twig',[
                 'post' => $post,
+                'postFinishCollect' => $postFinishCollect,
+                'status' => $statusArray,
                 'userInfo'=> $userInfo,
             ]
         );

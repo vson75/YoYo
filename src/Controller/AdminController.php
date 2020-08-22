@@ -52,14 +52,56 @@ class AdminController extends AbstractController
      * @Route("/admin/overview", name="app_admin_overview")
      * @IsGranted("ROLE_ADMIN")
      */
-    public function index(UserRepository $userRepository)
+    public function index(UserRepository $userRepository, EntityManagerInterface $em)
     {
         $number_waiting_validate_organisation = $userRepository->NumberWaitingOrganisation();
+        $PostRepo = $em->getRepository(Post::class);
+        $nb_waiting_validation_post = $PostRepo->countDistinctPostByStatus(PostStatus::POST_WAITING_VALIDATION);
+        $nb_waiting_transfert_fund = $PostRepo->countDistinctPostByStatus(PostStatus::POST_TRANSFERT_FUND);
+      //  dd($nb_waiting_validation_post);
         return $this->render('admin/overview.html.twig',[
                 'userInfo' => $this->getUser(),
-                'nbWaitingOrganisation' => $number_waiting_validate_organisation
+                'nbWaitingOrganisation' => $number_waiting_validate_organisation,
+                'nbWaitingPost' => $nb_waiting_validation_post,
+                'nbWaitingTransfertFund' => $nb_waiting_transfert_fund
             ]
         );
+    }
+
+    /**
+     * @Route("/admin/list_waiting_validation_post", name="app_admin_list_waiting_post")
+     */
+    public function listWaitingValidatePost(EntityManagerInterface $em, PaginatorInterface $paginator, Request $request){
+        $repo = $em->getRepository(Post::class);
+        $WaitingValidation = $repo->findAllPostByStatus(PostStatus::POST_WAITING_VALIDATION);
+        $pagination = $paginator->paginate(
+            $WaitingValidation, /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            10/*limit per page*/
+        );
+
+        return $this->render('admin/list_waiting_validation_post.html.twig', [
+            'pagination' => $pagination,
+            'userInfo' => $this->getUser(),
+        ]);
+    }
+
+    /**
+     * @Route("/admin/list_waiting_transfert_fund", name="app_admin_list_waiting_transfert_fund")
+     */
+    public function listWaitingTransfertFund(EntityManagerInterface $em, PaginatorInterface $paginator, Request $request){
+        $repo = $em->getRepository(Post::class);
+        $WaitingValidation = $repo->findAllPostByStatus(PostStatus::POST_TRANSFERT_FUND);
+        $pagination = $paginator->paginate(
+            $WaitingValidation, /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            10/*limit per page*/
+        );
+
+        return $this->render('admin/list_waiting_transfert_fund.html.twig', [
+            'pagination' => $pagination,
+            'userInfo' => $this->getUser(),
+        ]);
     }
 
     /**
@@ -163,7 +205,9 @@ class AdminController extends AbstractController
         $status = $repo_status->findOneBy([
             'id' => PostStatus::POST_COLLECTING
         ]);
-        $post->setStatus($status);
+        $post->setStatus($status)
+             ->setUserValidator($this->getUser())
+             ->setDateValidation(new \DateTime('now'));
 
         $em->flush();
 

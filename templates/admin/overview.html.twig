@@ -1,18 +1,8 @@
 {% extends 'content_base.html.twig' %}
 {% block stylesheets %}
 {{ parent() }}
-  <style>
-      .dot {
-          height: 30px;
-          width: 30px;
-          background-color: red;
-          color: white;
 
-          border-radius: 50%;
-          display: inline-block;
-      }
-  </style>
-
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 
 {% endblock %}
 {% block title %}
@@ -21,6 +11,7 @@
 
 {% block content_body %}
         <h1 style="text-align: center"> {% trans %} Trang quản trị {% endtrans %}</h1>
+    <hr>
     <div class="row">
         <div class="col">
             <button class="btn btn-lg btn-primary btn-block form-control" onclick="location.href='{{ path('app_post_admin') }}'">
@@ -29,22 +20,39 @@
         </div>
 
         <div class="col">
-            <button class="btn btn-lg btn-primary btn-block form-control" onclick="location.href='{{ path('app_homepage') }}'">
-                {% trans %}Danh sách người sử dụng{% endtrans %}
-            </button>
-        </div>
-        <div class="col">
             <button class="btn btn-lg btn-primary btn-block form-control" onclick="location.href='{{ path('app_list_validate_organisation') }}'">
                 {% trans %}Yêu cầu tạo tổ chức{% endtrans %}
                 {% if nbWaitingOrganisation != 0 %}
-                <div class="dot">{{ nbWaitingOrganisation }}</div>
+                    <div class="dot">{{ nbWaitingOrganisation }}</div>
                 {% endif %}
             </button>
-
+        </div>
+        <div class="col">
+            <button class="btn btn-lg btn-primary btn-block form-control" onclick="location.href='{{ path('app_admin_list_waiting_post') }}'">
+                {% trans %}Dự án chờ phê duyệt{% endtrans %}
+                {% if nbWaitingPost != 0 %}
+                    <div class="dot">{{ nbWaitingPost }}</div>
+                {% endif %}
+            </button>
         </div>
 
     </div>
-    <div class="row" style="padding-top: 10px">
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-lg btn-primary btn-block form-control" onclick="location.href='{{ path('app_admin_list_waiting_transfert_fund') }}'">
+                {% trans %}Dự án chờ chuyển khoản{% endtrans %}
+                {% if nbWaitingTransfertFund != 0 %}
+                    <div class="dot">{{ nbWaitingTransfertFund }}</div>
+                {% endif %}
+            </button>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+    <hr>
+    <h1>{% trans %}Setting trang web{% endtrans %}</h1>
+    <div class="row">
         <div class="col">
             <button class="btn btn-lg btn-primary btn-block form-control" onclick="location.href='{{ path('app_admin_fees_parameter') }}'">
                 {% trans %}Setting chi phí app{% endtrans %}

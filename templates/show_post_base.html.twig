@@ -149,7 +149,7 @@
                             <div class="btn btn-danger btn-admin btn-stop" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopPost'}) }}'">
                                 <span>{% trans %} Tạm ngừng dự án {% endtrans %}</span>
                             </div>
-                            <div id="btn-translate" ><a href="{{ path('app_post_admin') }}">{% trans %}Quay lại trang Admin dự án {% endtrans %}</a></div>
+                            <div id="btn-translate" ><a href="{{ path('app_admin_list_waiting_post') }}">{% trans %}Quay lại trang Admin dự án {% endtrans %}</a></div>
                         {% endif %}
                         {% if postInfo.status.id == statusArray['POST_COLLECTING'] %}
                             <div class="btn btn-warning btn-admin" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopFund'}) }}'">
@@ -159,7 +159,7 @@
                             <div class="btn btn-danger btn-admin btn-stop" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopPost'}) }}'">
                                 <span>{% trans %} Tạm ngừng dự án {% endtrans %}</span>
                             </div>
-                            <div id="btn-translate" ><a href="{{ path('app_post_admin') }}">{% trans %}Quay lại trang Admin dự án {% endtrans %}</a></div>
+                            <div id="btn-translate" ><a href="{{ path('app_admin_list_waiting_post') }}">{% trans %}Quay lại trang Admin dự án {% endtrans %}</a></div>
 
                         {% endif %}
 

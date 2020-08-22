@@ -1,0 +1,13 @@
+.dot {
+    height: 30px;
+    width: 30px;
+    background-color: red;
+    color: white;
+
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.row{
+    padding-top: 10px
+}
