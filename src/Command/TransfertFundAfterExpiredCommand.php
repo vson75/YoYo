@@ -53,18 +53,20 @@ class TransfertFundAfterExpiredCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
+        // find Expired project after 1 day finishAt
         $expiredPost = $this->postRepository->findAllExpiredDate();
-
 
         $output->writeln([
             '============'
         ]);
+
         foreach ($expiredPost as $expiredPost){
 
             $userId = $expiredPost->getUser();
 
             $amountCollected = $expiredPost->getTransactionSum();
             $targetAmount = $expiredPost->getTargetAmount();
+
 
 
             // if Amount collected greater then target amount
@@ -74,7 +76,7 @@ class TransfertFundAfterExpiredCommand extends Command
 
                 $repo = $this->em->getRepository(PostStatus::class);
                 $postStep = $repo->findOneBy([
-                    'id' => PostStatus::POST_TRANSFERT_FUND
+                    'id' => PostStatus::POST_FINISH_COLLECTING
                 ]);
                 $expiredPost->setStatus($postStep);
                 $this->em->persist($expiredPost);
@@ -189,12 +191,23 @@ class TransfertFundAfterExpiredCommand extends Command
                 // Create the excel file in the tmp directory of the system
                 $writer->save($fileName);
 
-                $this->mailer->sendMailAfterExpiredPost($userId,$expiredPost,$fileName);
+                $this->mailer->sendMailToAuthorWhenFinishedPost($userId,$expiredPost,$fileName);
 
+                // get list distinct of the donator :
+
+                $ArrayUserDonate = $this->transactionRepository->findDistinctDonatorByPost($expiredPost);
+
+                foreach ($ArrayUserDonate as $userId){
+                    $output->writeln($userId);
+                    $user = $this->em->getRepository(User::class)->findOneBy([
+                        'id' => $userId
+                    ]);
+
+                    $this->mailer->sendMailToAllFundedUser($user, $expiredPost);
+                }
             }else{
 
-                $this->mailer->sendMailAfterExpiredPost($userId,$expiredPost,null);
-             //   $io->success($expiredPost->getId());
+                $this->mailer->sendMailToAuthorWhenFinishedPost($userId,$expiredPost,null);
 
             }
 

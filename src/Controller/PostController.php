@@ -671,7 +671,7 @@ class PostController extends AbstractController
      * @param EntityManagerInterface $em
      * @Route("/transfert_fund/post/{uniquekey}", name="app_transfert_fund")
      */
-    public function transfertFundPost(EntityManagerInterface $em, $uniquekey, Request $request){
+    public function transfertFundPost(EntityManagerInterface $em, $uniquekey){
         $repository = $em->getRepository(Post::class);
         $postInfo = $repository->findOneBy([
             'uniquekey'=> $uniquekey

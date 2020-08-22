@@ -123,6 +123,16 @@ class TransactionRepository extends ServiceEntityRepository
             ;
     }
 
+    public function findDistinctDonatorByPost($val){
+        return $this->createQueryBuilder('t')
+            ->select('DISTINCT IDENTITY(t.user)')
+            ->andWhere('t.post = :val')
+            ->setParameter('val', $val)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 
 
     // /**

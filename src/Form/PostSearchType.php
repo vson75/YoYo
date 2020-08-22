@@ -32,6 +32,7 @@ class PostSearchType extends AbstractType
                     'form.PostSearch.WaitingValidation' => PostStatus::POST_WAITING_VALIDATION,
                     'form.PostSearch.WaitingInfo' => PostStatus::POST_WAITING_INFO,
                     'form.PostSearch.Collecting' => PostStatus::POST_COLLECTING,
+                    'form.PostSearch.FinishCollect' => PostStatus::POST_FINISH_COLLECTING,
                     'form.PostSearch.TransfertFund' => PostStatus::POST_TRANSFERT_FUND,
                     'form.PostSearch.Close' => PostStatus::POST_CLOSE,
                     'form.PostSearch.Stop' => PostStatus::POST_STOP

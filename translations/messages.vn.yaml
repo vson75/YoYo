@@ -138,6 +138,9 @@ email:
     CompleteInfoOrganisation: Yêu cầu bổ sung thông tin cho tổ chức của bạn
     CannotValidOrganisation: Chúng tôi không thể chứng nhận tổ chức của bạn
     stopProject: Tạm ngưng dự án của bạn
+    FinishPost: Quá trình quyên góp của dự án
+    finish: đã kết thúc
+    WarningUserPostFinish: Giai đoạn quyên góp cho dự án
 
   title:
     ThanktoFund: quyên góp dự án

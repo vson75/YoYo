@@ -17,6 +17,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PostRepository extends ServiceEntityRepository
 {
+
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Post::class);
@@ -40,21 +42,26 @@ class PostRepository extends ServiceEntityRepository
     public function findPostByNewest()
     {
         $status_Collecting = PostStatus::POST_COLLECTING;
+        $status_finish_collect = PostStatus::POST_FINISH_COLLECTING;
         $status_transfert_fund = PostStatus::POST_TRANSFERT_FUND;
+
          return   $this->publishedAtIsNotNull()
-             ->andWhere('p.status = '.$status_Collecting.' OR p.status = '.$status_transfert_fund.'')
+             ->andWhere('p.status = '.$status_Collecting.' OR p.status = '.$status_transfert_fund.' or p.status= '.$status_finish_collect.' ')
             ->orderBy('p.id', 'DESC')
             ->setMaxResults(8)
             ->getQuery()
             ->getResult()
             ;
     }
+
     public function findPostByFavorite($user)
     {
         $status_Collecting = PostStatus::POST_COLLECTING;
+        $status_finish_collect = PostStatus::POST_FINISH_COLLECTING;
         $status_transfert_fund = PostStatus::POST_TRANSFERT_FUND;
+
         return   $this->publishedAtIsNotNull()
-            ->andWhere('p.status = '.$status_Collecting.' OR p.status = '.$status_transfert_fund.'')
+            ->andWhere('p.status = '.$status_Collecting.' OR p.status = '.$status_transfert_fund.' or p.status= '.$status_finish_collect.' ')
             ->andWhere('fav.user = :user')
             ->andWhere('fav.isFavorite = 1')
             ->innerJoin('p.favorites','fav')
@@ -114,7 +121,11 @@ class PostRepository extends ServiceEntityRepository
         $status_collecting = PostStatus::POST_COLLECTING;
 
         $date_now = new \DateTime("now");
+        //add 1 day after the finish At
+        $date_now = $date_now->modify('+1 day');
         $date_now = $date_now->format("yy-m-d");
+
+
         return $this->createQueryBuilder('p')
             ->andWhere('p.finishAt = :date_now')
             ->andWhere('p.status = :status')
@@ -125,6 +136,7 @@ class PostRepository extends ServiceEntityRepository
         ;
 
     }
+
 
 
     // /**

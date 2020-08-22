@@ -113,7 +113,7 @@ class AdminController extends AbstractController
             $title = $this->translator->trans('template.StopPost.StopPost');
         }elseif ($action = 'stopFund'){
             $status = $repo_status->findOneBy([
-                'id' => PostStatus::POST_TRANSFERT_FUND
+                'id' => PostStatus::POST_FINISH_COLLECTING
             ]);
             $title = $this->translator->trans('template.StopPost.StopFund');
         }
