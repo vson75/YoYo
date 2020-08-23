@@ -7,7 +7,6 @@ namespace App\Service;
 use App\Entity\Post;
 use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -177,6 +176,21 @@ class Mailer
                 'username' => $username,
                 'phoneNumber' => $phonenumber,
             ]);
+        $this->mailer->send($email);
+    }
+
+    public function AlertAuthorAfterTransferFund(User $user, Post $post, $path){
+        $email = (new TemplatedEmail())
+            ->from($this->admin_email)
+            ->to($user->getEmail())
+            ->htmlTemplate('email/alert_author_after_transfer_fund.html.twig')
+            ->subject($this->translator->trans('email.subject.AlertAuthorAfterTransferFund').': '.$post->getTitle())
+            ->attachFromPath($path)
+            ->context([
+                'post'=> $post,
+                'user' => $user
+            ])
+        ;
         $this->mailer->send($email);
     }
 

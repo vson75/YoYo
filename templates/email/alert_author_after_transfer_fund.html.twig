@@ -1,0 +1,43 @@
+{% apply inline_css(source('@styles/email.css')) %}
+    <!doctype html>
+    <html lang="vn">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title></title>
+    </head>
+    <body>
+    <div class="body">
+        <div class="container">
+            <div class="header text-center">
+                <a href="{{ url('app_homepage') }}">
+                    <img src="{{ absolute_url(asset('images/logo.png')) }}" class="logo" alt="Logo">
+                </a>
+            </div>
+            <div class="content">
+                <h1 class="text-center"> {% trans %}Xác nhận chuyển khoản {% endtrans %}</h1>
+                <div class="block">
+                    {% trans %}Xin chào{% endtrans %} {{ user.firstname }} {{ user.lastname }},
+                </div>
+                <div class="block">
+                    {% trans %}Chúng tôi đã chuyển khoản cho dự án{% endtrans %} {{ post.title }}. {% trans %}Bạn sẽ thấy trong tập đính kèm của Email thông tin chi tiết của chuyển khoản.{% endtrans %}
+                </div>
+                <div class="block">
+                    {% trans %}Cảm ơn bạn đã tin tưởng chúng tôi.{% endtrans %}
+                </div>
+            </div>
+            <div class="footer">
+                <p class="block">
+                    {% trans %}Thân,{% endtrans %}
+                    <br><br>
+                    Yoyo
+                </p>
+                <p class="block bottom text-center">
+                    {% trans %}Dự án cua Viet Son NGUYEN{% endtrans %}
+                </p>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
+{% endapply %}

@@ -83,7 +83,10 @@ form:
   Comment:
     contentPlaceholder: Chia sẻ cảm nghĩ của bạn về dự án
 
-
+  ConfirmTransferFund:
+    proofOfTransaction: Giấy chứng nhận chuyển khoản
+    proofOfTransactionPlaceholder: Giấy chứng nhận chuyển khoản
+    proofOfTransactionHelp: Dạng File PDF hoặc ảnh
 
 
 message:
@@ -119,6 +122,8 @@ message:
   userProfil:
       changeSuccess: Thay đổi thành công
 
+  admin:
+    confirmTransferFund: Email xác nhận chuyển tiền đã gửi tới chủ dự án.
 
   global:
     contactUsOK: Email đã gửi thành công. Cảm ơn bạn
@@ -141,6 +146,7 @@ email:
     FinishPost: Quá trình quyên góp của dự án
     finish: đã kết thúc
     WarningUserPostFinish: Giai đoạn quyên góp cho dự án
+    AlertAuthorAfterTransferFund: Xác nhận chuyển khoản cho dự án
 
   title:
     ThanktoFund: quyên góp dự án

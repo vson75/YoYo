@@ -1,0 +1,62 @@
+{% extends 'content_base.html.twig' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block content_body %}
+    <h3 style="text-align: center">{% trans %}Xác nhận chuyển khoản dự án: {% endtrans %}{{ post.title }}</h3>
+    <div class="row">
+        <div class="col-md-7 col-xs-7 col-sm-7 col-lg-7">
+            {% if post.imagePath == '/post/image/' %}
+                <div>
+                    <img class="img_funding" src="{{ post.DefaultImagePath | imagine_filter('card_imagePost_FundingStep') }}" alt="" >
+                </div>
+
+
+            {% else %}
+                <div>
+                    <img class="img_funding" src="{{ post.imagePath| imagine_filter('card_imagePost_FundingStep') }}" alt="" >
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-5 col-xs-5 col-sm-5 col-lg-5">
+            <div class="row">
+                <div class="col">
+                    Mục tiêu quyên góp được
+                </div>
+                <div class="col">
+                    {{ post.targetAmount }} EUR
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    Số tiền quyên góp được
+                </div>
+                <div class="col">
+                    {{ post.transactionSum }} EUR
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}">{% trans %}Xem lại thông tin dự án{% endtrans %}</a>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{ form_start(form) }}
+                    {{ form_row((form.proofOfTransaction)) }}
+                    <button class="btn btn-primary" type="submit">
+                        <span>{% trans %}Gửi chủ dự án{% endtrans %}</span>
+                    </button>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+{% endblock %}
+

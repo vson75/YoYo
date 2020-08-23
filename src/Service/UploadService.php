@@ -5,6 +5,8 @@ namespace App\Service;
 
 
 use App\Entity\DocumentType;
+use App\Entity\Post;
+use App\Entity\PostDocument;
 use App\Entity\RequestOrganisationDocument;
 use App\Entity\RequestStatus;
 use App\Entity\User;
@@ -22,6 +24,7 @@ class UploadService
     const User_icon = '/user/icon';
     const Organisation_document_Upload_Download_Path = '/user/documents_request/';
     const Organisation_document_path = 'uploads/user/documents_request/';
+    const Post_Proof_Transfer_Fund = '/post/';
 
     private $filesystem;
     private $em;
@@ -150,6 +153,25 @@ class UploadService
 
     public function deleteDocument($documentName,$userID){
         $this->filesystem->delete(self::Organisation_document_Upload_Download_Path.'/'.$userID.'/'.$documentName);
+    }
+
+    public function uploadProofOfTransferFund(UploadedFile $uploadedFile, Post $post){
+        $destination = self::Post_Proof_Transfer_Fund.$post->getId();
+        $origineFilename = pathinfo($uploadedFile->getClientOriginalName(),PATHINFO_FILENAME);
+        $newFilename = Urlizer::urlize($origineFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
+
+        $stream = fopen($uploadedFile->getPathname(), 'r');
+        $result = $this->privateUploadsFilesystem->writeStream($destination.'/'.$newFilename,$stream);
+        if ($result === false) {
+            throw new \Exception(sprintf('Could not write uploaded file "%s"', $newFilename));
+        }
+
+        if (is_resource($stream)) {
+            fclose($stream);
+        }
+
+        return $newFilename;
+
     }
 
 }

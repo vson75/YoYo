@@ -13,7 +13,7 @@
                 <th>{% trans %} Người tạo  {% endtrans %}</th>
                 <th>{% trans %} Số tiền quyên góp được {% endtrans %}</th>
                 <th>{% trans %} Mục tiêu quyên góp {% endtrans %}</th>
-                <th>{% trans %}Chuyển khoản {% endtrans %}</th>
+                <th>{% trans %}Xác nhận chuyển khoản{% endtrans %}</th>
             </tr>
             {% for list_post in pagination %}
                 <tr>
@@ -21,7 +21,7 @@
                     <td>{{ list_post.user.firstname }} {{ list_post.user.lastname }}</td>
                     <td>{{ list_post.getTransactionSum}}</td>
                     <td>{{ list_post.targetAmount }}</td>
-                    <td> <button class="btn btn-primary" onclick="location.href='{{ path('show_post', {uniquekey: list_post.uniquekey}) }}'">{% trans %} Kiểm duyệt{% endtrans %}</button></td>
+                    <td> <button class="btn btn-primary" onclick="location.href='{{ path('app_admin_confirmTransfertFund', {uniquekey: list_post.uniquekey}) }}'">{% trans %}Xác nhận chuyển khoản{% endtrans %}</button></td>
                 </tr>
 
             {% endfor %}

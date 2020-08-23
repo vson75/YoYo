@@ -18,6 +18,7 @@ class DocumentType
     public const Certificate_organisation = 3;
     public const Bank_account_information = 4;
     public const Awards_justification = 5;
+    public const Proof_Of_Transfer_Fund = 6;
 
 
 

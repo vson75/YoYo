@@ -7,6 +7,7 @@ use App\Entity\DocumentType;
 use App\Entity\Favorite;
 use App\Entity\ParameterType;
 use App\Entity\Post;
+use App\Entity\PostDocument;
 use App\Entity\PostSearch;
 use App\Entity\PostStatus;
 use App\Entity\PostTranslation;
@@ -17,6 +18,7 @@ use App\Entity\User;
 use App\Entity\WebsiteLanguage;
 use App\Form\AdminFeesParameterType;
 use App\Form\AdminInfoParameterType;
+use App\Form\ConfirmTransferFundType;
 use App\Form\PostSearchType;
 use App\Form\StopPostType;
 use App\Repository\PostRepository;
@@ -26,8 +28,11 @@ use App\Repository\RequestStatusRepository;
 use App\Repository\TransactionRepository;
 use App\Repository\UserRepository;
 use App\Service\Mailer;
+use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Entity;
 use Knp\Component\Pager\PaginatorInterface;
+use League\Flysystem\FilesystemInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,13 +62,13 @@ class AdminController extends AbstractController
         $number_waiting_validate_organisation = $userRepository->NumberWaitingOrganisation();
         $PostRepo = $em->getRepository(Post::class);
         $nb_waiting_validation_post = $PostRepo->countDistinctPostByStatus(PostStatus::POST_WAITING_VALIDATION);
-        $nb_waiting_transfert_fund = $PostRepo->countDistinctPostByStatus(PostStatus::POST_TRANSFERT_FUND);
+        $nb_finished_project = $PostRepo->countDistinctPostByStatus(PostStatus::POST_FINISH_COLLECTING);
       //  dd($nb_waiting_validation_post);
         return $this->render('admin/overview.html.twig',[
                 'userInfo' => $this->getUser(),
                 'nbWaitingOrganisation' => $number_waiting_validate_organisation,
                 'nbWaitingPost' => $nb_waiting_validation_post,
-                'nbWaitingTransfertFund' => $nb_waiting_transfert_fund
+                'nb_finished_project' => $nb_finished_project
             ]
         );
     }
@@ -91,7 +96,7 @@ class AdminController extends AbstractController
      */
     public function listWaitingTransfertFund(EntityManagerInterface $em, PaginatorInterface $paginator, Request $request){
         $repo = $em->getRepository(Post::class);
-        $WaitingValidation = $repo->findAllPostByStatus(PostStatus::POST_TRANSFERT_FUND);
+        $WaitingValidation = $repo->findAllPostByStatus(PostStatus::POST_FINISH_COLLECTING);
         $pagination = $paginator->paginate(
             $WaitingValidation, /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
@@ -547,5 +552,62 @@ class AdminController extends AbstractController
         ]);
     }
 
+    /**
+     * @param EntityManagerInterface $em
+     * @Route("/admin/confirm_transfert_fund/{uniquekey}", name="app_admin_confirmTransfertFund")
+     */
+    public function confirmTransfertFund($uniquekey, EntityManagerInterface $em, Request $request, UploadService $uploadService, Mailer $mailer){
+
+        $repo = $em->getRepository(Post::class);
+        $post = $repo->findOneBy([
+            'uniquekey' => $uniquekey
+        ]);
+        $form = $this->createForm(ConfirmTransferFundType::class);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+
+            $uploadService->uploadProofOfTransferFund($form['proofOfTransaction']->getData(),$post);
+            //query find DocumentType with ID
+            $docType = $em->getRepository(DocumentType::class)->findOneBy([
+                'id' => DocumentType::Proof_Of_Transfer_Fund
+            ]);
+
+            // create new line in DB for the document
+            $proofTransfer = new PostDocument();
+            $proofTransfer->setFilename($uploadService->uploadProofOfTransferFund($form['proofOfTransaction']->getData(),$post))
+                ->setPost($post)
+                ->setOriginalFilename(pathinfo($form['proofOfTransaction']->getData()->getClientOriginalName(),PATHINFO_FILENAME))
+                ->setDocumentType($docType)
+                ->setMimeType($form['proofOfTransaction']->getData()->getMimeType() ?? 'application/octet-stream')
+                ->setDepositeDate(new \DateTime('now'));
+
+            $em->persist($proofTransfer);
+            $em->flush();
+
+            // Send mail to the Author and attach the Proof of transfer in the mail
+            $privatePath = $this->getParameter('private_upload_file');
+            $path = $privatePath.$proofTransfer->getProofOfTransfer();
+            //dd($proofTransfer->getMimeType());
+            $mailer->AlertAuthorAfterTransferFund($post->getUser(),$post,$path);
+
+
+            // Change the Status of the Post
+            $statusTransferFund = $em->getRepository(PostStatus::class)->findOneBy([
+                'id' => PostStatus::POST_TRANSFERT_FUND
+            ]);
+            $post->setStatus($statusTransferFund);
+
+            //return in the List of waiting transfer
+            $message = $this->translator->trans('message.admin.confirmTransferFund');
+            $this->addFlash('success', $message);
+            return $this->redirectToRoute('app_admin_list_waiting_transfert_fund');
+        }
+
+        return $this->render('admin/confirm_transfert_fund.html.twig',[
+            'userInfo' => $this->getUser(),
+            'form' => $form->createView(),
+            'post' => $post
+        ]);
+    }
 
 }

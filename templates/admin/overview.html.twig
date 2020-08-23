@@ -41,8 +41,8 @@
         <div class="col">
             <button class="btn btn-lg btn-primary btn-block form-control" onclick="location.href='{{ path('app_admin_list_waiting_transfert_fund') }}'">
                 {% trans %}Dự án chờ chuyển khoản{% endtrans %}
-                {% if nbWaitingTransfertFund != 0 %}
-                    <div class="dot">{{ nbWaitingTransfertFund }}</div>
+                {% if nb_finished_project != 0 %}
+                    <div class="dot">{{ nb_finished_project }}</div>
                 {% endif %}
             </button>
         </div>

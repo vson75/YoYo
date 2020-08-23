@@ -13,6 +13,8 @@ parameters:
     uploads_base_url: '%env(SITE_BASE_URL)%/%uploads_dir_name%'
     stripe_pk_key: '%env(STRIPE_PK_KEY)%'
     stripe_sk_key: '%env(STRIPE_SK_KEY)%'
+    private_upload_file: '%kernel.project_dir%/var/uploads' #Test
+    public_upload_file: '%kernel.project_dir%/public/%uploads_dir_name%'
 
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
 
