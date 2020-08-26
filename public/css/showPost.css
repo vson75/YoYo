@@ -13,7 +13,6 @@
 
 }
 
-
 .img-post{
     height:100%;
     max-height:400px;
@@ -41,10 +40,14 @@
 .showpost{
     box-shadow: 2px 3px 9px 4px rgba(0,0,0,0.04);
     background-color: #fff;
-    padding: 1rem 1rem 0rem;
+    padding: 1rem 1rem 1rem;
     margin-bottom: 1.25rem;
     -webkit-box-shadow: 0 1px 4px rgba(115,115,155,.5);
     position: relative;
+}
+
+.content{
+    overflow-wrap: break-word;
 }
 
 .card {
@@ -52,10 +55,12 @@
     box-shadow: 2px 3px 9px 4px rgba(0,0,0,0.04);
     text-align: center;
     font-family: arial;
-    /*border-color: orangered; */
     margin-left: 1%;
-    position: fixed;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 4rem;
     background-color: white;
+
 }
 
 .card-document{
@@ -63,10 +68,11 @@
     box-shadow: 2px 3px 9px 4px rgba(0,0,0,0.04);
     text-align: center;
     font-family: arial;
-    /*border-color: orangered; */
     margin-left: 1%;
-    position: fixed;
-    margin-top: 20em;
+    margin-top: 1em;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 23rem;
     background-color: white;
 }
 
@@ -91,6 +97,7 @@
 
 .admin-section{
     margin: auto;
+    text-align: center;
 }
 
 
@@ -138,9 +145,9 @@
     border-radius: 3px;
     font-weight: 400;
     padding: 5px 8px;
-    float: right;
+    /*float: right;*/
+    right: 2rem;
     display: inline-block;
-    margin: 0 1rem 1rem;
     color: white;
 }
 
@@ -212,9 +219,9 @@ body {
     padding: 0 3px
 }
 
-.icone-user{
-    max-width: 70px;
-    max-height: 70px;
+.icon-user{
+    max-width: 50px;
+    max-height: 50px;
 }
 
 

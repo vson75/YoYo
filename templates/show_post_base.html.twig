@@ -38,19 +38,45 @@
         </div>
     </div>
 
+    {% if is_granted("ROLE_ADMIN") %}
+        <div class="admin-section">
+            {% if postInfo.status.id == statusArray['POST_WAITING_VALIDATION'] %}
+                <div class="btn btn-success btn-admin"
+                     onclick="location.href='{{ path('admin_allow_to_collecting', {uniquekey: postInfo.uniquekey}) }}'">
+                    <span>{% trans %} Cho phép đăng dự án {% endtrans %}</span>
+
+                </div>
+
+                <div class="btn btn-danger btn-admin btn-stop" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopPost'}) }}'">
+                    <span>{% trans %} Tạm ngừng dự án {% endtrans %}</span>
+                </div>
+            {% endif %}
+            {% if postInfo.status.id == statusArray['POST_COLLECTING'] %}
+                <div class="btn btn-warning btn-admin" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopFund'}) }}'">
+                    <span>{% trans %}Dừng quyên góp dự án{% endtrans %}</span>
+                </div>
+
+                <div class="btn btn-danger btn-admin btn-stop" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopPost'}) }}'">
+                    <span>{% trans %} Tạm ngừng dự án {% endtrans %}</span>
+                </div>
+
+            {% endif %}
+
+        </div>
+    {% endif %}
     <!-- content div -->
     <div class="row">
 
         <!-- Post Content Column -->
-        <div class="col-md-8 col-xs-8 showpost">
-
-            <!-- Preview Image -->
-            <div>
-            {% if postInfo.imagePath == '/post/image/' %}
-                    <img class="img-fluid rounded-custom img-post" src="{{ postInfo.DefaultImagePath | imagine_filter('card_thumbnail_showpost') }}" alt="">
-            {% else %}
-                    <img class="img-fluid rounded-custom img-post" src="{{ postInfo.imagePath| imagine_filter('card_thumbnail_showpost') }}" alt="">
-            {% endif %}
+        <div class="col-md-8 col-xs-8">
+            <div class="showpost">
+                <!-- Preview Image -->
+                <div>
+                    {% if postInfo.imagePath == '/post/image/' %}
+                        <img class="img-fluid rounded-custom img-post" src="{{ postInfo.DefaultImagePath | imagine_filter('card_thumbnail_showpost') }}" alt="">
+                    {% else %}
+                        <img class="img-fluid rounded-custom img-post" src="{{ postInfo.imagePath| imagine_filter('card_thumbnail_showpost') }}" alt="">
+                    {% endif %}
                     <div class="authorInfo rounded-custom">
                         {% if postInfo.user.requestOrganisationInfo is not null %}
                             {% trans %}Tạo bởi: {% endtrans %} {{ postInfo.user.requestOrganisationInfo.OrganisationName }}
@@ -58,127 +84,179 @@
                             {% trans %}Tạo bởi: {% endtrans %} {{ postInfo.user.firstname }} {{ postInfo.user.lastname }}
                         {% endif %}
                     </div>
-                {% if is_granted('ROLE_USER') == true %}
-                {% if userFavorite is null or userFavorite == false %}
-                    <div class="favorite">
-                        <i id="start_empty" class="far fa-star" style="display: flex" onclick="checkfavorite()"></i>
-                        <i id="start_checked" class="fas fa-star" style="display: none" onclick="uncheckFavorite()"></i>
-                    </div>
-                {% else %}
-                <div class="favorite">
-                    <i id="start_empty" class="far fa-star" style="display: none" onclick="checkfavorite()"></i>
-                    <i id="start_checked" class="fas fa-star" style="display: flex" onclick="uncheckFavorite()"></i>
-                </div>
-                {% endif %}
-                {% endif %}
-            </div>
-
-            {% set percent_advancement = totalAmount/postInfo.targetAmount*100 %}
-            {% set  percent_for_css = 98 -  percent_advancement%}
-
-
-            <div style="position: relative; margin-top: 0;">
-                <div class="custom_progress">
-                    <div class="progress">
-                        
-
-                        {% if totalAmount is null %}
-                        <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-count" style="right: 97%;">
-                                0%
+                    {% if is_granted('ROLE_USER') == true %}
+                        {% if userFavorite is null or userFavorite == false %}
+                            <div class="favorite">
+                                <i id="start_empty" class="far fa-star" style="display: flex" onclick="checkfavorite()"></i>
+                                <i id="start_checked" class="fas fa-star" style="display: none" onclick="uncheckFavorite()"></i>
                             </div>
-                        </div>
-                       
-                        {% elseif percent_advancement < 100 %}
+                        {% else %}
+                            <div class="favorite">
+                                <i id="start_empty" class="far fa-star" style="display: none" onclick="checkfavorite()"></i>
+                                <i id="start_checked" class="fas fa-star" style="display: flex" onclick="uncheckFavorite()"></i>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
 
-                        <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                {% set percent_advancement = totalAmount/postInfo.targetAmount*100 %}
+                {% set  percent_for_css = 98 -  percent_advancement%}
+
+
+                <div style="position: relative; margin-top: 0;">
+                    <div class="custom_progress">
+                        <div class="progress">
+
+
+                            {% if totalAmount is null %}
+                                <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-count" style="right: 97%;">
+                                        0%
+                                    </div>
+                                </div>
+
+                            {% elseif percent_advancement < 100 %}
+
+                                <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                             <span class="progress-count" style="right: {{percent_for_css}}%;">
                                 {{percent_advancement|round(0,'floor')}}%
                             </span>
-                        </div>
-                        {% else %}
-                        <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            {% else %}
+                                <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                             <span class="progress-count" style="right: -1%;">
                                 {{percent_advancement|round(0,'floor')}}%
                             </span>
+                                </div>
+                            {% endif %}
+
+
                         </div>
-                        {% endif %}
-
-
                     </div>
+
                 </div>
-       
-            </div>
 
 
                 <!-- Post Content -->
-
-            {# Test the lang of user. If the post have the translate, use the translate information. If not, use the default lang if the post #}
-            {% if app.request.getLocale() == 'en' %}
-                {% if  postTranslateEN is not null %}
-                    <p>{{ postTranslateEN.content|markdown }}</p>
-                {% else %}
-                    <p>{{ postInfo.content|markdown }}</p>
-                {% endif %}
-            {% elseif app.request.getLocale() == 'fr'  %}
-                {% if  postTranslateFR is not null %}
-                    <p>{{ postTranslateFR.content|markdown }}</p>
-                {% else %}
-                    <p>{{ postInfo.content|markdown }}</p>
-                {% endif %}
-            {% else %}
-                <p>{{ postInfo.content|markdown }}</p>
-            {% endif %}
-
-            {% if userInfo == postInfo.user %}
-                <div id="btn-translate">
-                    <a href="{{ path('app_post_translation', {uniquekey: postInfo.uniquekey, lang: 'en'}) }}"><span>{% trans %}Dịch bài viết{% endtrans %}</span></a>
+                <div class="content">
+                    {# Test the lang of user. If the post have the translate, use the translate information. If not, use the default lang if the post #}
+                    {% if app.request.getLocale() == 'en' %}
+                        {% if  postTranslateEN is not null %}
+                            <p>{{ postTranslateEN.content|markdown }}</p>
+                        {% else %}
+                            <p>{{ postInfo.content|markdown }}</p>
+                        {% endif %}
+                    {% elseif app.request.getLocale() == 'fr'  %}
+                        {% if  postTranslateFR is not null %}
+                            <p>{{ postTranslateFR.content|markdown }}</p>
+                        {% else %}
+                            <p>{{ postInfo.content|markdown }}</p>
+                        {% endif %}
+                    {% else %}
+                        <p>{{ postInfo.content|markdown }}</p>
+                    {% endif %}
 
                 </div>
-            {% endif %}
-            {% block admin_post %}
 
-                {% if is_granted("ROLE_ADMIN") %}
-                    <div class="admin-section">
-                        {% if postInfo.status.id == statusArray['POST_WAITING_VALIDATION'] %}
-                            <div class="btn btn-success btn-admin"
-                                 onclick="location.href='{{ path('admin_allow_to_collecting', {uniquekey: postInfo.uniquekey}) }}'">
-                                <span>{% trans %} Cho phép đăng dự án {% endtrans %}</span>
-
-                            </div>
-
-                            <div class="btn btn-danger btn-admin btn-stop" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopPost'}) }}'">
-                                <span>{% trans %} Tạm ngừng dự án {% endtrans %}</span>
-                            </div>
-                            <div id="btn-translate" ><a href="{{ path('app_admin_list_waiting_post') }}">{% trans %}Quay lại trang Admin dự án {% endtrans %}</a></div>
-                        {% endif %}
-                        {% if postInfo.status.id == statusArray['POST_COLLECTING'] %}
-                            <div class="btn btn-warning btn-admin" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopFund'}) }}'">
-                                <span>{% trans %}Dừng quyên góp dự án{% endtrans %}</span>
-                            </div>
-
-                            <div class="btn btn-danger btn-admin btn-stop" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopPost'}) }}'">
-                                <span>{% trans %} Tạm ngừng dự án {% endtrans %}</span>
-                            </div>
-                            <div id="btn-translate" ><a href="{{ path('app_admin_list_waiting_post') }}">{% trans %}Quay lại trang Admin dự án {% endtrans %}</a></div>
-
-                        {% endif %}
-
+                {% if userInfo == postInfo.user %}
+                    <div id="btn-translate">
+                        <a href="{{ path('app_post_translation', {uniquekey: postInfo.uniquekey, lang: 'en'}) }}"><span>{% trans %}Dịch bài viết{% endtrans %}</span></a>
                     </div>
                 {% endif %}
+                {% block admin_post %}
 
 
-            {% endblock %}
 
-            <div>
-
+                {% endblock %}
             </div>
+            {% block comment %}
+            <div class="showpost">
+                <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pills-listParticipant-tab" data-toggle="pill" href="#pills-listParticipant" role="tab" aria-controls="pills-listParticipant" aria-selected="true">{% trans %}Danh sách tham gia{% endtrans %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-comment-tab" data-toggle="pill" href="#pills-comment" role="tab" aria-controls="pills-comment" aria-selected="false">{% trans %}Gửi lời động viên{% endtrans %}</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-listParticipant" role="tabpanel" aria-labelledby="pills-listParticipant-tab">
+
+
+                        <div class="col-md-12 row" style="margin: 0.5rem 0 0.5rem; padding: 5px;">
+                            {% if TotalAnonymous is not null %}
+                                <img class="d-flex mr-3 rounded-circle icon-user" style="margin: 0.7rem 0 0.5rem" src="{{ asset('uploads/user icon.png') }}"  alt="">
+                                <div class="media-body">
+                                    <small class="mt-0">{% trans %}Ẩn danh {% endtrans %}</small>
+                                    <br>
+                                    <div  style="white-space: pre-wrap;">{{ TotalAnonymous }} €</div>
+                                </div>
+
+                            {% endif %}
+
+                            {% for donation in ArrayDonation %}
+                                {% set upload_directory = "uploads/user/icon/#{donation.user.Id}/" %}
+
+
+                                <div class="media col-md-4 col-sm-6" style="margin: 0.5rem 0 0.5rem">
+
+                                    {% if  donation.user.imagePath == upload_directory %}
+                                        <img class="d-flex mr-3 rounded-circle icon-user" src="{{ asset('uploads/user/icon/default_icon.png') }}">
+                                    {% else %}
+                                        <img class="d-flex mr-3 rounded-circle icon-user" src="{{ asset(donation.user.imagePath) }}">
+                                    {% endif %}
+                                    <div class="media-body">
+                                        <small class="mt-0">{{ donation.user.firstname }} {{ donation.user.lastname }}</small>
+                                        <br>
+                                        <div  style="white-space: pre-wrap;">{{ donation.amountAfterFees|round(2, 'floor')  }} €</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="tab-pane fade" id="pills-comment" role="tabpanel" aria-labelledby="pills-comment-tab">
+
+                        <div style="margin-top: 1.25rem;margin-bottom: 1.25rem;">
+                            {% if is_granted('ROLE_USER') %}
+                                {{ include('comment/addComment.html.twig') }}
+                            {% else %}
+                                <div style="text-align: center">
+                                    <span>{% trans %}Vui lòng đăng nhập để comment {% endtrans %}</span>
+                                    <br>
+                                    <button onclick="location.href='{{ path('app_login') }}'">{% trans %}Đăng nhập{% endtrans %}</button>
+                                </div>
+
+                            {% endif %}
+                        </div>
+
+                        {% for c in comment %}
+                            {% if c.isDeleted == false %}
+                                <!-- Single Comment -->
+                                <div class="media mb-4">
+                                    <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+                                    <div class="media-body">
+                                        <small class="mt-0">{{ c.user.firstname }} {{ c.user.lastname }}</small>
+                                        <br>
+                                        <div  style="white-space: pre-wrap;">{{ c.content }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
         </div>
 
         <!-- Sidebar card collect. example: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_profile_card -->
         <div class="col-md-4 col-xs-4">
 
-            <div class="card col-md-3">
+            <div class="card">
                 {% if totalAmount is null %}
                 <p><h1>0 € </h1> <span><small> {% trans %} quyên góp được trên {% endtrans %} {{postInfo.targetAmount}} €</small></span></p>
                 {% else %}
@@ -242,7 +320,7 @@
             {% if certificate is not null or awards is not empty %}
             {# Check if we have a echec/success message #}
 
-            <div class="card-document col-md-3">
+            <div class="card-document">
 
                 {% trans %}Danh sách bằng khen và giấy chứng nhận của tổ chức {% endtrans %}
 
@@ -273,89 +351,6 @@
         <img class="modal-content" id="img01">
         <div id="caption"></div>
     </div>
-{% endblock %}
-
-{% block comment %}
-<div class="row">
-    <div class="col-md-8 col-xs-8 showpost">
-        <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="pills-listParticipant-tab" data-toggle="pill" href="#pills-listParticipant" role="tab" aria-controls="pills-listParticipant" aria-selected="true">{% trans %}Danh sách tham gia{% endtrans %}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="pills-comment-tab" data-toggle="pill" href="#pills-comment" role="tab" aria-controls="pills-comment" aria-selected="false">{% trans %}Gửi lời động viên{% endtrans %}</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade show active" id="pills-listParticipant" role="tabpanel" aria-labelledby="pills-listParticipant-tab">
-
-
-                    <div class="col-md-12 row" style="margin: 0.5rem 0 0.5rem; padding: 5px;">
-                        {% if TotalAnonymous is not null %}
-
-                            <img class="d-flex mr-3 rounded-circle icone-user" style="margin: 0.7rem 0 0.5rem" src="{{ asset('uploads/user icon.png') }}"  alt="">
-                            <div class="media-body">
-                                <small class="mt-0">{% trans %}Ẩn danh {% endtrans %}</small>
-                                <br>
-                                <div  style="white-space: pre-wrap;">{{ TotalAnonymous }} €</div>
-                            </div>
-
-                        {% endif %}
-
-                        {% for donation in ArrayDonation %}
-
-                        <div class="media col-md-4" style="margin: 0.5rem 0 0.5rem">
-                            <img class="d-flex mr-3 rounded-circle icone-user" src="http://placehold.it/50x50" alt="">
-                            <div class="media-body">
-                                <small class="mt-0">{{ donation.user.firstname }} {{ donation.user.lastname }}</small>
-                                <br>
-                                <div  style="white-space: pre-wrap;">{{ donation.amountAfterFees|round(2, 'floor')  }} €</div>
-                            </div>
-                        </div>
-                        {% endfor %}
-
-
-                    </div>
-
-                </div>
-
-
-            <div class="tab-pane fade" id="pills-comment" role="tabpanel" aria-labelledby="pills-comment-tab">
-
-                <div style="margin-top: 1.25rem;margin-bottom: 1.25rem;">
-                    {% if is_granted('ROLE_USER') %}
-                    {{ include('comment/addComment.html.twig') }}
-                    {% else %}
-                        <div style="text-align: center">
-                            <span>{% trans %}Vui lòng đăng nhập để comment {% endtrans %}</span>
-                            <br>
-                            <button onclick="location.href='{{ path('app_login') }}'">{% trans %}Đăng nhập{% endtrans %}</button>
-                        </div>
-
-                    {% endif %}
-                </div>
-
-                {% for c in comment %}
-                    {% if c.isDeleted == false %}
-                        <!-- Single Comment -->
-                        <div class="media mb-4">
-                            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-                            <div class="media-body">
-                                <small class="mt-0">{{ c.user.firstname }} {{ c.user.lastname }}</small>
-                                <br>
-                                <div  style="white-space: pre-wrap;">{{ c.content }}</div>
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 col-xs-4"></div>
-</div>
-
-</div>
-
 {% endblock %}
 
 
