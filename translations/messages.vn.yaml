@@ -87,6 +87,10 @@ form:
     proofOfTransaction: Giấy chứng nhận chuyển khoản
     proofOfTransactionPlaceholder: Giấy chứng nhận chuyển khoản
     proofOfTransactionHelp: Dạng File PDF hoặc ảnh
+  
+  ReceivedFund:
+    proofOfReveived: Chứng nhận đã nhận tiền
+    proofOfReveivedHelp: Dạng file hình ảnh hoặc PDF
 
 
 message:
@@ -124,9 +128,11 @@ message:
 
   admin:
     confirmTransferFund: Email xác nhận chuyển tiền đã gửi tới chủ dự án.
+    confirmReceivedFund: Xác nhận chủ dự án đã nhận được tiền
 
   global:
     contactUsOK: Email đã gửi thành công. Cảm ơn bạn
+    postNotExiste: Dự án của bạn không tồn tại trong hệ thống của chúng tôi. Vui lòng kiểm tra lại thông tin của dự án.
 
 email:
   subject:

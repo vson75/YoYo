@@ -62,6 +62,11 @@
 
             {% endif %}
 
+            {% if postInfo.status.id == statusArray['POST_TRANSFERT_FUND'] %}
+            <div class="btn btn-primary btn-admin" onclick="location.href='{{ path('app_admin_confirmReceivedFund', {uniquekey: postInfo.uniquekey}) }}'">
+                <span>{% trans %}Chủ dự án đã nhận tiền{% endtrans %}</span>
+            </div>
+            {% endif %}
         </div>
     {% endif %}
     <!-- content div -->

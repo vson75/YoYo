@@ -20,6 +20,7 @@ use App\Form\AdminFeesParameterType;
 use App\Form\AdminInfoParameterType;
 use App\Form\ConfirmTransferFundType;
 use App\Form\PostSearchType;
+use App\Form\ReceivedFundType;
 use App\Form\StopPostType;
 use App\Repository\PostRepository;
 use App\Repository\RequestOrganisationDocumentRepository;
@@ -566,15 +567,20 @@ class AdminController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
 
-            $uploadService->uploadProofOfTransferFund($form['proofOfTransaction']->getData(),$post);
-            //query find DocumentType with ID
             $docType = $em->getRepository(DocumentType::class)->findOneBy([
                 'id' => DocumentType::Proof_Of_Transfer_Fund
             ]);
+            //upload proof of transfer in private document
+            $uploadService->uploadPrivateProofBank($form['proofOfTransaction']->getData(),$post,DocumentType::Proof_Of_Transfer_Fund);
+
+            // get the filename of the uploaded document (because the upload method return the newFilename)
+            $filename = $uploadService->uploadPrivateProofBank($form['proofOfTransaction']->getData(),$post, DocumentType::Proof_Of_Transfer_Fund);
+            //query find DocumentType with ID
+
 
             // create new line in DB for the document
             $proofTransfer = new PostDocument();
-            $proofTransfer->setFilename($uploadService->uploadProofOfTransferFund($form['proofOfTransaction']->getData(),$post))
+            $proofTransfer->setFilename($filename)
                 ->setPost($post)
                 ->setOriginalFilename(pathinfo($form['proofOfTransaction']->getData()->getClientOriginalName(),PATHINFO_FILENAME))
                 ->setDocumentType($docType)
@@ -604,6 +610,65 @@ class AdminController extends AbstractController
         }
 
         return $this->render('admin/confirm_transfert_fund.html.twig',[
+            'userInfo' => $this->getUser(),
+            'form' => $form->createView(),
+            'post' => $post
+        ]);
+    }
+
+    /**
+     * @Route("/admin/confirm_received_fund/{uniquekey}", name="app_admin_confirmReceivedFund")
+     */
+    public function confirmReceivedFund($uniquekey, EntityManagerInterface $em, Post $post, Request $request, UploadService $uploadService){
+        $repo = $em->getRepository(Post::class);
+        $post = $repo->findOneBy([
+            'uniquekey' => $uniquekey
+        ]);
+        
+        $form = $this->createForm(ReceivedFundType::class);
+        $form->handleRequest($request);
+        
+        if(!is_null($post)){
+            if($form->isSubmitted() && $form->isValid()){
+                $docType = $em->getRepository(DocumentType::class)->findOneBy([
+                    'id' => DocumentType::Proof_Of_Received_Fund
+                ]);
+                //upload proof of transfer in private document
+                $uploadService->uploadPrivateProofBank($form['proofOfReveived']->getData(),$post,DocumentType::Proof_Of_Received_Fund);
+
+                // get the filename of the uploaded document (because the upload method return the newFilename)
+                $filename = $uploadService->uploadPrivateProofBank($form['proofOfReveived']->getData(),$post, DocumentType::Proof_Of_Received_Fund);
+                //query find DocumentType with ID
+
+
+                // create new line in DB for the document
+                $proofTransfer = new PostDocument();
+                $proofTransfer->setFilename($filename)
+                    ->setPost($post)
+                    ->setOriginalFilename(pathinfo($form['proofOfReveived']->getData()->getClientOriginalName(),PATHINFO_FILENAME))
+                    ->setDocumentType($docType)
+                    ->setMimeType($form['proofOfReveived']->getData()->getMimeType() ?? 'application/octet-stream')
+                    ->setDepositeDate(new \DateTime('now'));
+
+                $em->persist($proofTransfer);
+                $em->flush();
+
+                $message = $this->translator->trans('message.admin.confirmReceivedFund');
+                $this->addFlash('success', $message);
+                return $this->redirectToRoute('show_post', [
+                    'uniquekey' => $uniquekey
+                ]);
+
+            }
+        }else{
+            $message = $this->translator->trans('message.global.postNotExiste');
+            $this->addFlash('success', $message);
+            return $this->redirectToRoute('app_homepage');
+        }
+
+
+
+        return $this->render('admin/confirm_received_fund.html.twig', [
             'userInfo' => $this->getUser(),
             'form' => $form->createView(),
             'post' => $post

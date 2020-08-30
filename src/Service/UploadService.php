@@ -15,6 +15,7 @@ use App\Repository\RequestStatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Sluggable\Util\Urlizer;
 use League\Flysystem\FilesystemInterface;
+use PhpParser\Comment\Doc;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
@@ -25,6 +26,8 @@ class UploadService
     const Organisation_document_Upload_Download_Path = '/user/documents_request/';
     const Organisation_document_path = 'uploads/user/documents_request/';
     const Post_Proof_Transfer_Fund = '/post/';
+    const Proof_transfert = '/proof_transfer/';
+    const Proof_received = '/proof_received/';
 
     private $filesystem;
     private $em;
@@ -155,13 +158,21 @@ class UploadService
         $this->filesystem->delete(self::Organisation_document_Upload_Download_Path.'/'.$userID.'/'.$documentName);
     }
 
-    public function uploadProofOfTransferFund(UploadedFile $uploadedFile, Post $post){
-        $destination = self::Post_Proof_Transfer_Fund.$post->getId();
+    public function uploadPrivateProofBank(UploadedFile $uploadedFile, Post $post,int $documentType){
+        $proofOfTransfer = DocumentType::Proof_Of_Transfer_Fund;
+        $proofOfReceived = DocumentType::Proof_Of_Received_Fund;
+
+        if($documentType = $proofOfTransfer){
+            $destination = self::Post_Proof_Transfer_Fund.$post->getId().self::Proof_transfert;
+        }elseif ($documentType = $proofOfReceived){
+            $destination = self::Post_Proof_Transfer_Fund.$post->getId().self::Proof_received;
+        }
+
         $origineFilename = pathinfo($uploadedFile->getClientOriginalName(),PATHINFO_FILENAME);
         $newFilename = Urlizer::urlize($origineFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
 
         $stream = fopen($uploadedFile->getPathname(), 'r');
-        $result = $this->privateUploadsFilesystem->writeStream($destination.'/'.$newFilename,$stream);
+        $result = $this->privateUploadsFilesystem->writeStream($destination.$newFilename,$stream);
         if ($result === false) {
             throw new \Exception(sprintf('Could not write uploaded file "%s"', $newFilename));
         }

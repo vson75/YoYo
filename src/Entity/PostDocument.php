@@ -128,7 +128,6 @@ class PostDocument
     }
 
     public function getProofOfTransfer(){
-
-        return UploadService::Post_Proof_Transfer_Fund.$this->getPost()->getId().'/'.$this->getFilename();
+        return UploadService::Post_Proof_Transfer_Fund.$this->getPost()->getId().UploadService::Proof_transfert.$this->getFilename();
     }
 }
