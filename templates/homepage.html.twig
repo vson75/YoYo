@@ -67,12 +67,15 @@
                         {% else %}
                             <img class="card-img-top" src="{{ post.imagePath|imagine_filter('card_thumbnail_homepage')}}" alt="">
                     {% endif %}
+
                         {% if leftDays >= 0 %}
                             {% if leftDays >10 %}
                                 <div class="dayCountdownWhite">J-{{ leftDays }}</div>
                             {% else %}
                                 <div class="dayCountdownRed">J-{{ leftDays }}</div>
                             {% endif %}
+                        {% elseif leftDays == -1 %}
+                            <div class="dayCountdownRed">{% trans %}Ngày cuối{% endtrans %}</div>
                         {% else %}
                             <div class="dayCountdownRed">{% trans %}Hết hạn{% endtrans %}</div>
                          {% endif %}
@@ -130,7 +133,7 @@
         {# check if postFinishCollect is not empty #}
         {% if postFinishCollect is not empty %}
         <hr>
-        <h3 style="text-align: center">{% trans %}Danh sách dự án đã đóng quyên góp{% endtrans %}</h3>
+        <h3 style="text-align: center">{% trans %}Danh sách dự án đã hoàn thành{% endtrans %}</h3>
         <div class="row">
             {% for post in postFinishCollect %}
                 <div class="col-lg-3 col-md-6 mb-4">
@@ -148,8 +151,8 @@
                                 <div class="dayCountdownRed">{% trans %}Đóng quyên góp{% endtrans %}</div>
                             {% elseif  post.status.id == status['POST_TRANSFERT_FUND'] %}
                                 <div class="dayCountdownRed">{% trans %}Đang chuyển khoản{% endtrans %}</div>
-                            {% elseif post.status.id == status['POST_FUND_RECEIVED'] %}
-                                <div class="dayCountdownRed">{% trans %}Đã chuyển tới dự án{% endtrans %}</div>
+                            {% elseif post.status.id == status['POST_IN_PROGRESS'] %}
+                                <div class="dayCountdownRed">{% trans %}Dự án đã nhận tiền{% endtrans %}</div>
                             {% endif%}
 
 

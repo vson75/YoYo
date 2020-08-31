@@ -571,8 +571,6 @@ class AdminController extends AbstractController
                 'id' => DocumentType::Proof_Of_Transfer_Fund
             ]);
             //upload proof of transfer in private document
-            $uploadService->uploadPrivateProofBank($form['proofOfTransaction']->getData(),$post,DocumentType::Proof_Of_Transfer_Fund);
-
             // get the filename of the uploaded document (because the upload method return the newFilename)
             $filename = $uploadService->uploadPrivateProofBank($form['proofOfTransaction']->getData(),$post, DocumentType::Proof_Of_Transfer_Fund);
             //query find DocumentType with ID
@@ -633,8 +631,12 @@ class AdminController extends AbstractController
                 $docType = $em->getRepository(DocumentType::class)->findOneBy([
                     'id' => DocumentType::Proof_Of_Received_Fund
                 ]);
+
+                $PostProjectInProgress = $em->getRepository(PostStatus::class)->findOneBy([
+                    'id' => PostStatus::POST_IN_PROGRESS
+                ]);
                 //upload proof of transfer in private document
-                $uploadService->uploadPrivateProofBank($form['proofOfReveived']->getData(),$post,DocumentType::Proof_Of_Received_Fund);
+                //$uploadService->uploadPrivateProofBank($form['proofOfReveived']->getData(),$post,DocumentType::Proof_Of_Received_Fund);
 
                 // get the filename of the uploaded document (because the upload method return the newFilename)
                 $filename = $uploadService->uploadPrivateProofBank($form['proofOfReveived']->getData(),$post, DocumentType::Proof_Of_Received_Fund);
@@ -651,6 +653,11 @@ class AdminController extends AbstractController
                     ->setDepositeDate(new \DateTime('now'));
 
                 $em->persist($proofTransfer);
+                $em->flush();
+
+                // change post status
+                $post->setStatus($PostProjectInProgress);
+                $em->persist($post);
                 $em->flush();
 
                 $message = $this->translator->trans('message.admin.confirmReceivedFund');

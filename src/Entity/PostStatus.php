@@ -18,10 +18,10 @@ class PostStatus
     public const POST_COLLECTING = 4;
     public const POST_FINISH_COLLECTING = 5;
     public const POST_TRANSFERT_FUND = 6;
-    public const POST_FUND_RECEIVED = 7;
-    public const POST_IN_PROGRESS = 8;
-    public const POST_CLOSE = 9;
-    public const POST_STOP = 10;
+    // public const POST_FUND_RECEIVED = 7;
+    public const POST_IN_PROGRESS = 7;
+    public const POST_CLOSE = 8;
+    public const POST_STOP = 9;
 
 
     /**

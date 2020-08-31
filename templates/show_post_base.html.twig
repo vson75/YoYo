@@ -278,7 +278,8 @@
                 {% endif %}
 
 
-                {% if postInfo.status.id == statusArray['POST_DRAFT'] or postInfo.status.id == statusArray['POST_WAITING_INFO'] %}
+                <!-- Check by status in order to sho the action -->
+                {% if postInfo.status.id == statusArray['POST_DRAFT'] or postInfo.status.id == statusArray['POST_WAITING_VALIDATION'] %}
                     {% if userInfo == postInfo.user %}
                     <div id="btn-transaction" onclick="location.href='{{ path('app_submit_post', {uniquekey: postInfo.uniquekey}) }}'">
                         <span>{% trans %} Gửi dự án cho ban quản trị {% endtrans %}</span>
@@ -291,30 +292,38 @@
                     </div>
                     {% endif %}
 
-                {% elseif postInfo.status.id != statusArray['POST_WAITING_VALIDATION'] and postInfo.status.id != statusArray['POST_STOP'] %}
+                {% elseif postInfo.status.id == statusArray['POST_WAITING_INFO'] %}
+                    {% if userInfo == postInfo.user %}
+                        <div id="btn-modify">
+                            <span>{% trans %}Dự án đang chờ được duyệt{% endtrans %}</span>
+                        </div>
+                    {% endif %}
+                {% elseif postInfo.status.id == statusArray['POST_COLLECTING'] %}
+                    <!-- check if the post is expired -->
 
-                {% if datediff >= 0 %}
+                        {% if datediff >= 0 %}
 
-                <div id="btn-transaction" onclick="location.href='{{ path('app_payment', {uniquekey: postInfo.uniquekey}) }}'">
-                    <span>{% trans %}Quyên góp{% endtrans %}</span>
+                            <div id="btn-transaction" onclick="location.href='{{ path('app_payment', {uniquekey: postInfo.uniquekey}) }}'">
+                                <span>{% trans %}Quyên góp{% endtrans %}</span>
+                            </div>
+                            <!-- share button facebook. example here : https://developers.facebook.com/docs/plugins/share-button/  and https://codepen.io/kjkta/pen/rxawKL -->
+                            <div id="fb-share-button">
+                                <svg viewBox="0 0 12 12" preserveAspectRatio="xMidYMid meet">
+                                    <path class="svg-icon-path" d="M9.1,0.1V2H8C7.6,2,7.3,2.1,7.1,2.3C7,2.4,6.9,2.7,6.9,3v1.4H9L8.8,6.5H6.9V12H4.7V6.5H2.9V4.4h1.8V2.8 c0-0.9,0.3-1.6,0.7-2.1C6,0.2,6.6,0,7.5,0C8.2,0,8.7,0,9.1,0.1z"></path>
+                                </svg>
+                                <span>{% trans %}Chia sẻ qua facebook{% endtrans %}</span>
+                            </div>
+                        {% else %}
+                            <button id="btn-expirePost" disabled>
+                                <span>{% trans %}Hết hạn quyên góp{% endtrans %}</span>
+                            </button>
 
-                </div>
+                        {% endif %}
+                {% else  %}
 
-
-                <!-- share button facebook. example here : https://developers.facebook.com/docs/plugins/share-button/  and https://codepen.io/kjkta/pen/rxawKL -->
-                <div id="fb-share-button">
-                    <svg viewBox="0 0 12 12" preserveAspectRatio="xMidYMid meet">
-                        <path class="svg-icon-path" d="M9.1,0.1V2H8C7.6,2,7.3,2.1,7.1,2.3C7,2.4,6.9,2.7,6.9,3v1.4H9L8.8,6.5H6.9V12H4.7V6.5H2.9V4.4h1.8V2.8 c0-0.9,0.3-1.6,0.7-2.1C6,0.2,6.6,0,7.5,0C8.2,0,8.7,0,9.1,0.1z"></path>
-                    </svg>
-                    <span>{% trans %}Chia sẻ qua facebook{% endtrans %}</span>
-                </div>
-
-                 {% else %}
                      <button id="btn-expirePost" disabled>
-                         <span>{% trans %}Hết hạn quyên góp{% endtrans %}</span>
+                         <span>{% trans %}Đóng quyên góp{% endtrans %}</span>
                      </button>
-
-                 {% endif %}
 
                 {% endif %}
 

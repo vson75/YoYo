@@ -162,9 +162,9 @@ class UploadService
         $proofOfTransfer = DocumentType::Proof_Of_Transfer_Fund;
         $proofOfReceived = DocumentType::Proof_Of_Received_Fund;
 
-        if($documentType = $proofOfTransfer){
+        if($documentType == $proofOfTransfer){
             $destination = self::Post_Proof_Transfer_Fund.$post->getId().self::Proof_transfert;
-        }elseif ($documentType = $proofOfReceived){
+        }elseif ($documentType == $proofOfReceived){
             $destination = self::Post_Proof_Transfer_Fund.$post->getId().self::Proof_received;
         }
 

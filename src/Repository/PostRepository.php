@@ -42,9 +42,6 @@ class PostRepository extends ServiceEntityRepository
     public function findPostByNewest()
     {
         $status_Collecting = PostStatus::POST_COLLECTING;
-        $status_finish_collect = PostStatus::POST_FINISH_COLLECTING;
-        $status_transfert_fund = PostStatus::POST_TRANSFERT_FUND;
-
          return   $this->publishedAtIsNotNull()
             ->andWhere('p.status = '.$status_Collecting.' ')
             ->orderBy('p.id', 'DESC')
@@ -55,11 +52,12 @@ class PostRepository extends ServiceEntityRepository
     }
 
     public function findPostFinishCollect(){
-        $status_finish_collect = PostStatus::POST_FINISH_COLLECTING;
-        $status_transfert_fund = PostStatus::POST_TRANSFERT_FUND;
+        $finish_collect = PostStatus::POST_FINISH_COLLECTING;
+        $transfert_fund = PostStatus::POST_TRANSFERT_FUND;
+        $in_progress = PostStatus::POST_IN_PROGRESS;
 
         return   $this->publishedAtIsNotNull()
-            ->andWhere('p.status = '.$status_finish_collect.' or p.status = '.$status_transfert_fund.'')
+            ->andWhere('p.status = '.$finish_collect.' or p.status = '.$transfert_fund.' or p.status = '.$in_progress.' ')
             ->orderBy('p.id', 'DESC')
             ->setMaxResults(4)
             ->getQuery()
@@ -72,12 +70,13 @@ class PostRepository extends ServiceEntityRepository
         $status_Collecting = PostStatus::POST_COLLECTING;
         $status_finish_collect = PostStatus::POST_FINISH_COLLECTING;
         $status_transfert_fund = PostStatus::POST_TRANSFERT_FUND;
+        $in_progress = PostStatus::POST_IN_PROGRESS;
 
         $qb= $this->publishedAtIsNotNull();
         if($collecting){
             $qb->andWhere('p.status = '.$status_Collecting.' ');
         }else{
-            $qb->andWhere('p.status = '.$status_finish_collect.' or p.status = '.$status_transfert_fund.'');
+            $qb->andWhere('p.status = '.$status_finish_collect.' or p.status = '.$status_transfert_fund.' or p.status = '.$in_progress.' ');
         }
         return   $qb->andWhere('fav.user = :user')
                     ->andWhere('fav.isFavorite = 1')
