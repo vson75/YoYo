@@ -347,22 +347,25 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
     /**
      * @Route("/download/user/document/{id}", name="app_download_user_document",methods={"GET"})
      */
-    public function DownloadUserDocument(RequestOrganisationDocument $requestOrganisationDocument, UploadService $uploadService, EntityManagerInterface $em){
+    public function DownloadUserDocument(RequestOrganisationDocument $requestOrganisationDocument, UploadService $uploadService){
 
 
         if($requestOrganisationDocument->getUser() == $this->getUser() || in_array("ROLE_ADMIN",$this->getUser()->getRoles())){
             $response = new StreamedResponse(function() use ($requestOrganisationDocument, $uploadService) {
                 $outputStream = fopen('php://output', 'wb');
-                $fileStream = $uploadService->readStream($requestOrganisationDocument->getUploadsDownloadDocumentPath(), true);
+                $fileStream = $uploadService->readStream($requestOrganisationDocument->getDownloadDocumentPath(), true);
                 stream_copy_to_stream($fileStream, $outputStream);
             });
+
             $response->headers->set('Content-Type', $requestOrganisationDocument->getMimeType());
+
 
             // Forced download instead of show in the new table
             $disposition = HeaderUtils::makeDisposition(
                 HeaderUtils::DISPOSITION_ATTACHMENT,
                 $requestOrganisationDocument->getOriginalFilename()
             );
+
             $response->headers->set('Content-Disposition', $disposition);
 
             return $response;

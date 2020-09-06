@@ -595,7 +595,7 @@ class AdminController extends AbstractController
             $proofTransfer = new PostDocument();
             $proofTransfer->setFilename($filename)
                 ->setPost($post)
-                ->setOriginalFilename(pathinfo($form['proofOfTransaction']->getData()->getClientOriginalName(),PATHINFO_FILENAME))
+                ->setOriginalFilename($form['proofOfTransaction']->getData()->getClientOriginalName())
                 ->setDocumentType($docType)
                 ->setMimeType($form['proofOfTransaction']->getData()->getMimeType() ?? 'application/octet-stream')
                 ->setDepositeDate(new \DateTime('now'));

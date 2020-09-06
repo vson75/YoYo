@@ -30,8 +30,10 @@ use Gedmo\Sluggable\Util\Urlizer;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
@@ -848,7 +850,7 @@ class PostController extends AbstractController
                     $proofTransfer = new PostDocument();
                     $proofTransfer->setFilename($filename)
                         ->setPost($post)
-                        ->setOriginalFilename(pathinfo($form['proofOfReveived']->getData()->getClientOriginalName(), PATHINFO_FILENAME))
+                        ->setOriginalFilename($form['proofOfReveived']->getData()->getClientOriginalName())
                         ->setDocumentType($docType)
                         ->setMimeType($form['proofOfReveived']->getData()->getMimeType() ?? 'application/octet-stream')
                         ->setDepositeDate(new \DateTime('now'));
@@ -883,6 +885,33 @@ class PostController extends AbstractController
             'form' => $form->createView(),
             'post' => $post
         ]);
+    }
+
+
+    /**
+     * @Route("/download/post_document/{id}", name="app_download_post_document",methods={"GET"})
+     */
+    public function DownloadPostDocument(PostDocument $postDocument, UploadService $uploadService){
+
+            //dd($postDocument->getDocumentPath());
+            $response = new StreamedResponse(function() use ($postDocument, $uploadService) {
+                $outputStream = fopen('php://output', 'wb');
+                $fileStream = $uploadService->readStream($postDocument->getDownloadProofReceivedPath(), true);
+
+                stream_copy_to_stream($fileStream, $outputStream);
+            });
+            $response->headers->set('Content-Type', $postDocument->getMimeType());
+       // dd($response);
+
+            // Forced download instead of show in the new table
+        $disposition = HeaderUtils::makeDisposition(
+            HeaderUtils::DISPOSITION_ATTACHMENT,
+            $postDocument->getOriginalFilename()
+        );
+
+            $response->headers->set('Content-Disposition', $disposition);
+        //dd($response);
+            return $response;
     }
 
 

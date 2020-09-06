@@ -64,7 +64,6 @@ var ProofReceived = document.getElementById("ProofReceived");
 
     if(img != null){
         img.onclick = function(){
-            console.log("2323");
             modal.style.display = "block";
             modalImg.src = this.src;
         }

@@ -33,9 +33,10 @@ class UploadService
     //const to upload proof received
     const Proof_received = '/proof_received/';
 
-    //const to download proof received
+    //const to upload proof received
     const Proof_received_document_path = 'uploads/post/';
-
+    //const to download proof received
+    const Proof_received_download_path = '/post/';
 
 
     private $publicUploadFilesystem;

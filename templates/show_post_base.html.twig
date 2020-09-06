@@ -390,9 +390,16 @@
                             <h5>{{ receivedFundDate[0].date|date('d/m/Y') }}</h5>
                             <p>{% trans %}Chủ dự án đã nhận được tiền! Cảm ơn các bạn.{% endtrans %}
                                 <br>
-                                {% trans %}Biên lai nhận tiền {% endtrans %}<img id="ProofReceived" class="OrganisationDocument" src="{{ asset(proofOfReceivedFundDocument.DocumentPath)}}">
+                                {# check the MimeType of the document. If this is an image, show the image, if not, show only the link to download it#}
+                                {% if 'image/' in proofOfReceivedFundDocument.mimeType %}
+                                        {% trans %}Bạn có thể xem biên lai nhận tiền dưới đây{% endtrans %}
+                                        <p>
+                                            <img id="ProofReceived" class="OrganisationDocument" src="{{ asset(proofOfReceivedFundDocument.getProofReceivedPath)}}">
+                                        </p>
+                                    {% else %}
+                                        {% trans %}Bạn có thể tải biên lai nhận tiền {% endtrans %} <a href="{{ path('app_download_post_document',{id: proofOfReceivedFundDocument.id}) }}">{% trans %}tại đây{% endtrans %}</a>
+                                {% endif %}
                             </p>
-
                         </div>
                     </div>
                 {% endif %}

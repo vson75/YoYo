@@ -154,8 +154,13 @@ class PostDocument
         return $this;
     }
 
-    public function getDocumentPath(): string
+    public function getProofReceivedPath(): string
     {
         return UploadService::Proof_received_document_path.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
+    }
+
+    public function getDownloadProofReceivedPath():string
+    {
+        return UploadService::Proof_received_download_path.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
     }
 }

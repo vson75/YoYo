@@ -155,7 +155,7 @@ class RequestOrganisationDocument
         return UploadService::Organisation_document_path.$this->getUser()->getId().'/'.$this->getFilename();
     }
 
-    public function getUploadsDownloadDocumentPath(): string
+    public function getDownloadDocumentPath(): string
     {
         return UploadService::Organisation_document_Upload_Download_Path.$this->getUser()->getId().'/'.$this->getFilename();
     }
