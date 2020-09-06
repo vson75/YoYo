@@ -50,6 +50,11 @@ class PostDocument
      */
     private $depositeDate;
 
+    /**
+     * @ORM\OneToOne(targetEntity=PostDateHistoric::class, mappedBy="postDocument", cascade={"persist", "remove"})
+     */
+    private $postDateHistoric;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -129,5 +134,28 @@ class PostDocument
 
     public function getProofOfTransfer(){
         return UploadService::Post_Proof_Transfer_Fund.$this->getPost()->getId().UploadService::Proof_transfert.$this->getFilename();
+    }
+
+    public function getPostDateHistoric(): ?PostDateHistoric
+    {
+        return $this->postDateHistoric;
+    }
+
+    public function setPostDateHistoric(?PostDateHistoric $postDateHistoric): self
+    {
+        $this->postDateHistoric = $postDateHistoric;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newPostDocument = null === $postDateHistoric ? null : $this;
+        if ($postDateHistoric->getPostDocument() !== $newPostDocument) {
+            $postDateHistoric->setPostDocument($newPostDocument);
+        }
+
+        return $this;
+    }
+
+    public function getDocumentPath(): string
+    {
+        return UploadService::Proof_received_document_path.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
     }
 }

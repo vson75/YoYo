@@ -6,14 +6,16 @@ var start_checked = document.getElementById("start_checked");
 var path = window.location.pathname;
 var uniquekey = path.replace("/post/","");
 
+if(fbButton != null){
+    fbButton.addEventListener('click', function() {
+        window.open('https://www.facebook.com/sharer/sharer.php?u=' + url,
+            'facebook-share-dialog',
+            'width=800,height=600'
+        );
+        return false;
+    });
+}
 
-fbButton.addEventListener('click', function() {
-    window.open('https://www.facebook.com/sharer/sharer.php?u=' + url,
-        'facebook-share-dialog',
-        'width=800,height=600'
-    );
-    return false;
-});
 
 
 function checkfavorite(){
@@ -51,19 +53,35 @@ var img = document.getElementById("myImg");
 var arrayAwards = document.querySelectorAll('*[id^="award"]');
 var modalImg = document.getElementById("img01");
 
-img.onclick = function(){
-    modal.style.display = "block";
-    modalImg.src = this.src;
-}
-var a;
-var awards = [];
-for (a=1; a< arrayAwards.length+1; a++){
-    awards[a-1] = document.getElementById("award"+a);
-    awards[a-1].onclick = function(){
-        modal.style.display = "block";
-        modalImg.src = this.src;
+var ProofReceived = document.getElementById("ProofReceived");
+
+    if(ProofReceived != null){
+        ProofReceived.onclick = function(){
+            modal.style.display = "block";
+            modalImg.src = this.src;
+        }
     }
-}
+
+    if(img != null){
+        img.onclick = function(){
+            console.log("2323");
+            modal.style.display = "block";
+            modalImg.src = this.src;
+        }
+    }
+
+    if(arrayAwards.length !== 0){
+        var a;
+        var awards = [];
+        for (a=1; a< arrayAwards.length+1; a++){
+            awards[a-1] = document.getElementById("award"+a);
+            awards[a-1].onclick = function(){
+                modal.style.display = "block";
+                modalImg.src = this.src;
+            }
+        }
+    }
+
 
 
 // Get the <span> element that closes the modal

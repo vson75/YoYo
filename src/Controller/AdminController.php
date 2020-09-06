@@ -7,6 +7,8 @@ use App\Entity\DocumentType;
 use App\Entity\Favorite;
 use App\Entity\ParameterType;
 use App\Entity\Post;
+use App\Entity\PostDateHistoric;
+use App\Entity\PostDateType;
 use App\Entity\PostDocument;
 use App\Entity\PostSearch;
 use App\Entity\PostStatus;
@@ -29,6 +31,7 @@ use App\Repository\RequestStatusRepository;
 use App\Repository\TransactionRepository;
 use App\Repository\UserRepository;
 use App\Service\Mailer;
+use App\Service\PostDateHistoricService;
 use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Entity;
@@ -49,10 +52,12 @@ class AdminController extends AbstractController
 {
 
     private $translator;
+    private $postDateHistoric;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, PostDateHistoricService $postDateHistoric)
     {
         $this->translator = $translator;
+        $this->postDateHistoric = $postDateHistoric;
     }
     /**
      * @Route("/admin/overview", name="app_admin_overview")
@@ -154,16 +159,17 @@ class AdminController extends AbstractController
        // dd($action);
         $repo_status = $em->getRepository(PostStatus::class);
 
-        if($action = 'stopPost'){
+        if($action == 'stopPost'){
             $status = $repo_status->findOneBy([
                 'id' => PostStatus::POST_STOP
             ]);
             $title = $this->translator->trans('template.StopPost.StopPost');
-        }elseif ($action = 'stopFund'){
+        }elseif ($action == 'stopFund'){
             $status = $repo_status->findOneBy([
                 'id' => PostStatus::POST_FINISH_COLLECTING
             ]);
             $title = $this->translator->trans('template.StopPost.StopFund');
+
         }
 
         if($form->isSubmitted() && $form->isValid()){
@@ -171,11 +177,17 @@ class AdminController extends AbstractController
             $post = $repo->findOneBy([
                 'uniquekey' => $uniquekey,
             ]);
+
+            // update post status
             $post->setStatus($status);
 
             $em->persist($post);
             $em->flush();
 
+            // update date historic
+            if($action == 'stopFund'){
+                $this->postDateHistoric->InsertNewPostDateHistorical($post, $this->getUser(), PostDateType::Date_end_collect_fund, null);
+            }
             $context = $form['Raison']->getData();
             // dd(htmlspecialchars_decode($context));
 
@@ -207,16 +219,18 @@ class AdminController extends AbstractController
             'uniquekey' => $uniquekey,
         ]);
         // dd(PostStatus::POST_STOP);
+
+        //change the post status
         $repo_status = $em->getRepository(PostStatus::class);
         $status = $repo_status->findOneBy([
             'id' => PostStatus::POST_COLLECTING
         ]);
-        $post->setStatus($status)
-             ->setUserValidator($this->getUser())
-             ->setDateValidation(new \DateTime('now'));
-
+        $post->setStatus($status);
         $em->flush();
 
+        //update the date in historic Post
+
+        $this->postDateHistoric->InsertNewPostDateHistorical($post,$this->getUser(),PostDateType::Date_start_collect_fund, null);
 
         $this->addFlash('success', 'Post status changed');
         return $this->redirectToRoute('show_post', [
@@ -563,6 +577,7 @@ class AdminController extends AbstractController
         $post = $repo->findOneBy([
             'uniquekey' => $uniquekey
         ]);
+
         $form = $this->createForm(ConfirmTransferFundType::class);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
@@ -572,7 +587,7 @@ class AdminController extends AbstractController
             ]);
             //upload proof of transfer in private document
             // get the filename of the uploaded document (because the upload method return the newFilename)
-            $filename = $uploadService->uploadPrivateProofBank($form['proofOfTransaction']->getData(),$post, DocumentType::Proof_Of_Transfer_Fund);
+            $filename = $uploadService->uploadPrivateProofOfTransfert($form['proofOfTransaction']->getData(),$post);
             //query find DocumentType with ID
 
 
@@ -588,18 +603,24 @@ class AdminController extends AbstractController
             $em->persist($proofTransfer);
             $em->flush();
 
+            //update the date in historic Post
+            $this->postDateHistoric->InsertNewPostDateHistorical($post,$this->getUser(), PostDateType::Date_transfer_fund_to_author, $proofTransfer);
+
+            // Change the Status of the Post
+            $statusTransferFund = $em->getRepository(PostStatus::class)->findOneBy([
+                'id' => PostStatus::POST_TRANSFERT_FUND
+            ]);
+            //dd($statusTransferFund);
+            $post->setStatus($statusTransferFund);
+            $em->persist($post);
+            $em->flush();
+
             // Send mail to the Author and attach the Proof of transfer in the mail
             $privatePath = $this->getParameter('private_upload_file');
             $path = $privatePath.$proofTransfer->getProofOfTransfer();
             //dd($proofTransfer->getMimeType());
             $mailer->AlertAuthorAfterTransferFund($post->getUser(),$post,$path);
 
-
-            // Change the Status of the Post
-            $statusTransferFund = $em->getRepository(PostStatus::class)->findOneBy([
-                'id' => PostStatus::POST_TRANSFERT_FUND
-            ]);
-            $post->setStatus($statusTransferFund);
 
             //return in the List of waiting transfer
             $message = $this->translator->trans('message.admin.confirmTransferFund');
@@ -614,72 +635,5 @@ class AdminController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/admin/confirm_received_fund/{uniquekey}", name="app_admin_confirmReceivedFund")
-     */
-    public function confirmReceivedFund($uniquekey, EntityManagerInterface $em, Post $post, Request $request, UploadService $uploadService){
-        $repo = $em->getRepository(Post::class);
-        $post = $repo->findOneBy([
-            'uniquekey' => $uniquekey
-        ]);
-        
-        $form = $this->createForm(ReceivedFundType::class);
-        $form->handleRequest($request);
-        
-        if(!is_null($post)){
-            if($form->isSubmitted() && $form->isValid()){
-                $docType = $em->getRepository(DocumentType::class)->findOneBy([
-                    'id' => DocumentType::Proof_Of_Received_Fund
-                ]);
-
-                $PostProjectInProgress = $em->getRepository(PostStatus::class)->findOneBy([
-                    'id' => PostStatus::POST_IN_PROGRESS
-                ]);
-                //upload proof of transfer in private document
-                //$uploadService->uploadPrivateProofBank($form['proofOfReveived']->getData(),$post,DocumentType::Proof_Of_Received_Fund);
-
-                // get the filename of the uploaded document (because the upload method return the newFilename)
-                $filename = $uploadService->uploadPrivateProofBank($form['proofOfReveived']->getData(),$post, DocumentType::Proof_Of_Received_Fund);
-                //query find DocumentType with ID
-
-
-                // create new line in DB for the document
-                $proofTransfer = new PostDocument();
-                $proofTransfer->setFilename($filename)
-                    ->setPost($post)
-                    ->setOriginalFilename(pathinfo($form['proofOfReveived']->getData()->getClientOriginalName(),PATHINFO_FILENAME))
-                    ->setDocumentType($docType)
-                    ->setMimeType($form['proofOfReveived']->getData()->getMimeType() ?? 'application/octet-stream')
-                    ->setDepositeDate(new \DateTime('now'));
-
-                $em->persist($proofTransfer);
-                $em->flush();
-
-                // change post status
-                $post->setStatus($PostProjectInProgress);
-                $em->persist($post);
-                $em->flush();
-
-                $message = $this->translator->trans('message.admin.confirmReceivedFund');
-                $this->addFlash('success', $message);
-                return $this->redirectToRoute('show_post', [
-                    'uniquekey' => $uniquekey
-                ]);
-
-            }
-        }else{
-            $message = $this->translator->trans('message.global.postNotExiste');
-            $this->addFlash('success', $message);
-            return $this->redirectToRoute('app_homepage');
-        }
-
-
-
-        return $this->render('admin/confirm_received_fund.html.twig', [
-            'userInfo' => $this->getUser(),
-            'form' => $form->createView(),
-            'post' => $post
-        ]);
-    }
 
 }

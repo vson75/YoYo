@@ -8,6 +8,9 @@ use App\Entity\{AdminParameter,
     DocumentType,
     Favorite,
     Post,
+    PostDateHistoric,
+    PostDateType,
+    PostDocument,
     PostStatus,
     PostTranslation,
     RequestOrganisationDocument,
@@ -15,7 +18,8 @@ use App\Entity\{AdminParameter,
     Transaction,
     User,
     WebsiteLanguage};
-use App\Form\{CommentFormType, ExtendPostType, PostFormType, PaymentType, TranslationPostType};
+use App\Service\PostDateHistoricService;
+use App\Form\{CommentFormType, ExtendPostType, PostFormType, PaymentType, ReceivedFundType, TranslationPostType};
 use App\Repository\PostRepository;
 use App\Repository\TransactionRepository;
 use App\Service\Mailer;
@@ -109,6 +113,7 @@ class PostController extends AbstractController
             'id' => WebsiteLanguage::lang_fr
         ]);
 
+        //find the translation of the post. If the post is not translated, use the original version.
         $repoPostTranslation = $em->getRepository(PostTranslation::class);
         $postTranslateEN = $repoPostTranslation->findOneBy([
            'post' => $postInfo,
@@ -170,9 +175,12 @@ class PostController extends AbstractController
                 'uniquekey' => $uniquekey,
             ]);
         }
+
+        //get the postStatus const in order to check by status in front
         $postStatus = new \ReflectionClass('App\Entity\PostStatus');
         $statusArray = $postStatus->getConstants();
 
+        // save or unsave favorite post
         $userFavorite = $em->getRepository(Favorite::class)->findOneBy([
             'user' => $this->getUser(),
             'post' => $postInfo
@@ -183,6 +191,7 @@ class PostController extends AbstractController
             $favorite = $userFavorite->getisFavorite();
         }
 
+        // show the information of the Organisation
         $userEmail = $postInfo->getUser()->getEmail();
         $repository = $em->getRepository(User::class);
         $userInfo = $repository->findOneBy(['email' => $userEmail]);
@@ -190,10 +199,23 @@ class PostController extends AbstractController
             'user' => $userInfo
         ]);
 
+        //show document of the organisation
         $certificate = $em->getRepository(RequestOrganisationDocument::class)->findLastDocumentByUserIdAndTypeDoc($userInfo, DocumentType::Certificate_organisation);
 
         $awards = $em->getRepository(RequestOrganisationDocument::class)->findAllDocumentByUserId($userInfo, DocumentType::Awards_justification);
       //  dd($certificate->getDocumentPath());
+
+        //get Post Date historic for the timeLine
+        $postDateRepo = $em->getRepository(PostDateHistoric::class);
+
+        $postStartCollectDate = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_start_collect_fund);
+        $postEndCollectDate = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_end_collect_fund);
+        $postReceivedFundDate = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_author_received_fund);
+
+        //get Document of the Post
+        $postDocumentRepo = $em->getRepository(PostDocument::class);
+        $ProofOfReceivedFund = $postDocumentRepo->findLastestDocumentByPostAndType($postInfo,DocumentType::Proof_Of_Received_Fund);
+
 
         return $this->render('post/show_post.html.twig',[
                 'postInfo' => $postInfo,
@@ -212,7 +234,11 @@ class PostController extends AbstractController
                 'userFavorite' => $favorite,
                 'organisationInfo' => $organisationInfo,
                 'certificate' => $certificate,
-                'awards' => $awards
+                'awards' => $awards,
+                'startCollectDate' => $postStartCollectDate,
+                'endCollectDate' => $postEndCollectDate,
+                'receivedFundDate' => $postReceivedFundDate,
+                'proofOfReceivedFundDocument' => $ProofOfReceivedFund,
             ]
         );
     }
@@ -678,9 +704,9 @@ class PostController extends AbstractController
 
     /**
      * @param EntityManagerInterface $em
-     * @Route("/transfert_fund/post/{uniquekey}", name="app_transfert_fund")
+     * @Route("/stop_collect/post/{uniquekey}", name="app_stop_collect_post")
      */
-    public function transfertFundPost(EntityManagerInterface $em, $uniquekey){
+    public function StopCollectFund(EntityManagerInterface $em, $uniquekey, PostDateHistoricService $postDateHistoric){
         $repository = $em->getRepository(Post::class);
         $postInfo = $repository->findOneBy([
             'uniquekey'=> $uniquekey
@@ -692,11 +718,13 @@ class PostController extends AbstractController
         if($this->getUser() == $postInfo->getUser()){
             $repo = $em->getRepository(PostStatus::class);
             $postStep = $repo->findOneBy([
-                'id' => PostStatus::POST_TRANSFERT_FUND
+                'id' => PostStatus::POST_FINISH_COLLECTING
             ]);
             $postInfo->setStatus($postStep);
             $em->persist($postInfo);
             $em->flush();
+
+            $postDateHistoric->InsertNewPostDateHistorical($postInfo,$this->getUser(),PostDateType::Date_end_collect_fund, null);
 
             $message = $this->translator->trans('message.post.StartedTransfertFund');
             $this->addFlash("success", $message);
@@ -774,6 +802,86 @@ class PostController extends AbstractController
             'userInfo' => $this->getUser(),
             'postInfo' => $post,
             'form' => $form->createView()
+        ]);
+    }
+
+
+    /**
+     * @Route("/confirm_received_fund/{uniquekey}", name="app_confirmReceivedFund")
+     */
+    public function confirmReceivedFund($uniquekey, EntityManagerInterface $em, Post $post, Request $request, UploadService $uploadService, PostDateHistoricService $postDateHistoric){
+        $repo = $em->getRepository(Post::class);
+        $post = $repo->findOneBy([
+            'uniquekey' => $uniquekey
+        ]);
+
+        $form = $this->createForm(ReceivedFundType::class);
+        $form->handleRequest($request);
+
+        if(!is_null($post)) {
+            //check if the current user is a author of the post
+
+            if ($post->getUser() != $this->getUser() && $this->security->isGranted('ROLE_ADMIN') == false ) {
+                $message = $this->translator->trans('message.post.notAuthor');
+                $this->addFlash('echec', $message);
+                return $this->redirectToRoute('show_post', [
+                    'uniquekey' => $uniquekey
+                ]);
+            } else {
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $docType = $em->getRepository(DocumentType::class)->findOneBy([
+                        'id' => DocumentType::Proof_Of_Received_Fund
+                    ]);
+
+                    $PostProjectInProgress = $em->getRepository(PostStatus::class)->findOneBy([
+                        'id' => PostStatus::POST_IN_PROGRESS
+                    ]);
+                    //upload proof of transfer in private document
+                    //$uploadService->uploadPrivateProofBank($form['proofOfReveived']->getData(),$post,DocumentType::Proof_Of_Received_Fund);
+
+                    // get the filename of the uploaded document (because the upload method return the newFilename)
+                    $filename = $uploadService->uploadProofOfReceivedBank($form['proofOfReveived']->getData(), $post);
+                    //query find DocumentType with ID
+
+
+                    // create new line in DB for the document
+                    $proofTransfer = new PostDocument();
+                    $proofTransfer->setFilename($filename)
+                        ->setPost($post)
+                        ->setOriginalFilename(pathinfo($form['proofOfReveived']->getData()->getClientOriginalName(), PATHINFO_FILENAME))
+                        ->setDocumentType($docType)
+                        ->setMimeType($form['proofOfReveived']->getData()->getMimeType() ?? 'application/octet-stream')
+                        ->setDepositeDate(new \DateTime('now'));
+
+                    $em->persist($proofTransfer);
+                    $em->flush();
+
+                    // change post status
+                    $post->setStatus($PostProjectInProgress);
+                    $em->persist($post);
+                    $em->flush();
+
+                    //update the date in historic Post
+                    $postDateHistoric->InsertNewPostDateHistorical($post, $this->getUser(), PostDateType::Date_author_received_fund, $proofTransfer);
+
+                    $message = $this->translator->trans('message.admin.confirmReceivedFund');
+                    $this->addFlash('success', $message);
+                    return $this->redirectToRoute('show_post', [
+                        'uniquekey' => $uniquekey
+                    ]);
+
+                }
+            }
+        }else {
+            $message = $this->translator->trans('message.global.postNotExiste');
+            $this->addFlash('success', $message);
+            return $this->redirectToRoute('app_homepage');
+        }
+
+        return $this->render('admin/confirm_received_fund.html.twig', [
+            'userInfo' => $this->getUser(),
+            'form' => $form->createView(),
+            'post' => $post
         ]);
     }
 

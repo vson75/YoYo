@@ -2,12 +2,15 @@
 
 namespace App\Command;
 
+use App\Entity\PostDateHistoric;
+use App\Entity\PostDateType;
 use App\Entity\PostStatus;
 use App\Entity\User;
 use App\Repository\PostRepository;
 use App\Repository\TransactionRepository;
 use App\Repository\UserRepository;
 use App\Service\Mailer;
+use App\Service\PostDateHistoricService;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -31,14 +34,16 @@ class TransfertFundAfterExpiredCommand extends Command
     private $mailer;
     private $em;
     private $transactionRepository;
+    private $postDateHistoric;
 
-    public function __construct(PostRepository $postRepository, Mailer $mailer, EntityManagerInterface $em, TransactionRepository $transactionRepository)
+    public function __construct(PostRepository $postRepository, Mailer $mailer, EntityManagerInterface $em, TransactionRepository $transactionRepository, PostDateHistoricService $postDateHistoric)
     {
         parent::__construct(null);
         $this->postRepository = $postRepository;
         $this->mailer = $mailer;
         $this->em = $em;
         $this->transactionRepository = $transactionRepository;
+        $this->postDateHistoric = $postDateHistoric;
 
     }
 
@@ -54,13 +59,17 @@ class TransfertFundAfterExpiredCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         // find Expired project after 1 day finishAt
-        $expiredPost = $this->postRepository->findAllExpiredDate();
+        $expiredPosts = $this->postRepository->findAllExpiredDate();
+
+        //admin user
+        $userRepo = $this->em->getRepository(User::class);
+        $admin = $userRepo->findAdminUserByASC();
 
         $output->writeln([
             '============'
         ]);
 
-        foreach ($expiredPost as $expiredPost){
+        foreach ($expiredPosts as $expiredPost){
 
             $userId = $expiredPost->getUser();
 
@@ -82,7 +91,8 @@ class TransfertFundAfterExpiredCommand extends Command
                 $this->em->persist($expiredPost);
                 $this->em->flush();
 
-
+                //update the date in historic Post
+                $this->postDateHistoric->InsertNewPostDateHistorical($expiredPost,$admin, PostDateType::Date_end_collect_fund, null);
                 //create excel
                 $excelFile = new Spreadsheet();
                 $sheet = $excelFile->getActiveSheet();

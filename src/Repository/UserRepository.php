@@ -75,6 +75,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ;
     }
 
+    public function findAdminUserByASC(){
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles LIKE :roleAdmin')
+            ->setParameter('roleAdmin', '%ROLE_ADMIN%')
+            ->groupBy('u.id')
+            ->orderBy('u.id','ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
 
     /*
     public function findOneBySomeField($value): ?User

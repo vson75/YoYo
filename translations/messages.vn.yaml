@@ -134,6 +134,7 @@ message:
     contactUsOK: Email đã gửi thành công. Cảm ơn bạn
     postNotExiste: Dự án của bạn không tồn tại trong hệ thống của chúng tôi. Vui lòng kiểm tra lại thông tin của dự án.
 
+
 email:
   subject:
     changePassword: Thay đổi mật khẩu
@@ -170,6 +171,6 @@ email:
 
 template:
   StopPost:
-    StopPost: Ngừng dự án
-    StopFund: Tạm ngừng quyên góp của dự án
+    StopPost: Dừng dự án
+    StopFund: Đóng quyên góp
 

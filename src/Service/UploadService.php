@@ -23,13 +23,22 @@ class UploadService
 {
     const Post_image = '/post/image';
     const User_icon = '/user/icon';
+    // const to upload document Organisation
     const Organisation_document_Upload_Download_Path = '/user/documents_request/';
+    //const to download document Organisation
     const Organisation_document_path = 'uploads/user/documents_request/';
+
     const Post_Proof_Transfer_Fund = '/post/';
     const Proof_transfert = '/proof_transfer/';
+    //const to upload proof received
     const Proof_received = '/proof_received/';
 
-    private $filesystem;
+    //const to download proof received
+    const Proof_received_document_path = 'uploads/post/';
+
+
+
+    private $publicUploadFilesystem;
     private $em;
     private $publicAssetBaseUrl;
     private $privateUploadsFilesystem;
@@ -38,7 +47,7 @@ class UploadService
     public function __construct(EntityManagerInterface $em, FilesystemInterface $publicUploadsFilesystem,string $uploadedAssetsBaseUrl, FilesystemInterface $privateUploadsFilesystem, RequestStatusRepository $requestStatusRepository)
     {
         $this->em = $em;
-        $this->filesystem = $publicUploadsFilesystem;
+        $this->publicUploadFilesystem = $publicUploadsFilesystem;
         $this->publicAssetBaseUrl = $uploadedAssetsBaseUrl;
         $this->privateUploadsFilesystem = $privateUploadsFilesystem;
         $this->requestStatusRepository = $requestStatusRepository;
@@ -51,7 +60,7 @@ class UploadService
         $newFilename = Urlizer::urlize($origineFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
 
         $stream = fopen($uploadedFile->getPathname(), 'r');
-        $result = $this->filesystem->writeStream($destination.'/'.$newFilename,$stream);
+        $result = $this->publicUploadFilesystem->writeStream($destination.'/'.$newFilename,$stream);
 
         if ($result === false) {
             throw new \Exception(sprintf('Could not write uploaded file "%s"', $newFilename));
@@ -61,7 +70,7 @@ class UploadService
             fclose($stream);
         }
         if ($existingFilename) {
-            $this->filesystem->delete(self::Post_image.'/'.$existingFilename);
+            $this->publicUploadFilesystem->delete(self::Post_image.'/'.$existingFilename);
         }
         return $newFilename;
     }
@@ -73,7 +82,7 @@ class UploadService
         $newFilename = Urlizer::urlize($origineFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
 
         $stream = fopen($uploadedFile->getPathname(), 'r');
-        $result = $this->filesystem->writeStream($destination.'/'.$newFilename,$stream);
+        $result = $this->publicUploadFilesystem->writeStream($destination.'/'.$newFilename,$stream);
 
         if ($result === false) {
             throw new \Exception(sprintf('Could not write uploaded file "%s"', $newFilename));
@@ -83,7 +92,7 @@ class UploadService
             fclose($stream);
         }
         if ($existingFilename) {
-            $this->filesystem->delete(self::User_icon.'/'.$userID.'/'.$existingFilename);
+            $this->publicUploadFilesystem->delete(self::User_icon.'/'.$userID.'/'.$existingFilename);
         }
         return $newFilename;
     }
@@ -95,7 +104,7 @@ class UploadService
         $newFilename = $documentType.'-'.Urlizer::urlize($origineFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
 
         $stream = fopen($uploadedFile->getPathname(), 'r');
-        $result = $this->filesystem->writeStream($destination.'/'.$newFilename,$stream);
+        $result = $this->publicUploadFilesystem->writeStream($destination.'/'.$newFilename,$stream);
         if ($result === false) {
             throw new \Exception(sprintf('Could not write uploaded file "%s"', $newFilename));
         }
@@ -105,7 +114,7 @@ class UploadService
         }
         // Delete old document except Awards_justification
         if($documentType != DocumentType::Awards_justification && $existingFilename){
-            $this->filesystem->delete(self::Organisation_document_Upload_Download_Path.'/'.$userID.'/'.$existingFilename);
+            $this->publicUploadFilesystem->delete(self::Organisation_document_Upload_Download_Path.'/'.$userID.'/'.$existingFilename);
         }
 
         return $newFilename;
@@ -145,7 +154,7 @@ class UploadService
 
     public function readStream(string $path,bool $isPublic){
 
-        $filesystem = $isPublic ? $this->filesystem : $this->privateUploadsFilesystem;
+        $filesystem = $isPublic ? $this->publicUploadFilesystem : $this->privateUploadsFilesystem;
        // dd($filesystem);
         $resource = $filesystem->readStream($path);
         if ($resource === false) {
@@ -155,24 +164,41 @@ class UploadService
     }
 
     public function deleteDocument($documentName,$userID){
-        $this->filesystem->delete(self::Organisation_document_Upload_Download_Path.'/'.$userID.'/'.$documentName);
+        $this->publicUploadFilesystem->delete(self::Organisation_document_Upload_Download_Path.'/'.$userID.'/'.$documentName);
     }
 
-    public function uploadPrivateProofBank(UploadedFile $uploadedFile, Post $post,int $documentType){
-        $proofOfTransfer = DocumentType::Proof_Of_Transfer_Fund;
-        $proofOfReceived = DocumentType::Proof_Of_Received_Fund;
 
-        if($documentType == $proofOfTransfer){
-            $destination = self::Post_Proof_Transfer_Fund.$post->getId().self::Proof_transfert;
-        }elseif ($documentType == $proofOfReceived){
-            $destination = self::Post_Proof_Transfer_Fund.$post->getId().self::Proof_received;
-        }
+    public function uploadPrivateProofOfTransfert(UploadedFile $uploadedFile, Post $post){
+
+        $destination = self::Post_Proof_Transfer_Fund.$post->getId().self::Proof_transfert;
+
 
         $origineFilename = pathinfo($uploadedFile->getClientOriginalName(),PATHINFO_FILENAME);
         $newFilename = Urlizer::urlize($origineFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
 
         $stream = fopen($uploadedFile->getPathname(), 'r');
         $result = $this->privateUploadsFilesystem->writeStream($destination.$newFilename,$stream);
+        if ($result === false) {
+            throw new \Exception(sprintf('Could not write uploaded file "%s"', $newFilename));
+        }
+
+        if (is_resource($stream)) {
+            fclose($stream);
+        }
+
+        return $newFilename;
+
+    }
+
+
+    public function uploadProofOfReceivedBank(UploadedFile $uploadedFile, Post $post){
+
+        $destination = self::Post_Proof_Transfer_Fund.$post->getId().self::Proof_received;
+        $origineFilename = pathinfo($uploadedFile->getClientOriginalName(),PATHINFO_FILENAME);
+        $newFilename = Urlizer::urlize($origineFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
+
+        $stream = fopen($uploadedFile->getPathname(), 'r');
+        $result = $this->publicUploadFilesystem->writeStream($destination.$newFilename,$stream);
         if ($result === false) {
             throw new \Exception(sprintf('Could not write uploaded file "%s"', $newFilename));
         }

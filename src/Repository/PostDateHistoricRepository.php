@@ -2,40 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\DocumentType;
 use App\Entity\Post;
-use App\Entity\PostDocument;
+use App\Entity\PostDateHistoric;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method PostDocument|null find($id, $lockMode = null, $lockVersion = null)
- * @method PostDocument|null findOneBy(array $criteria, array $orderBy = null)
- * @method PostDocument[]    findAll()
- * @method PostDocument[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method PostDateHistoric|null find($id, $lockMode = null, $lockVersion = null)
+ * @method PostDateHistoric|null findOneBy(array $criteria, array $orderBy = null)
+ * @method PostDateHistoric[]    findAll()
+ * @method PostDateHistoric[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PostDocumentRepository extends ServiceEntityRepository
+class PostDateHistoricRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, PostDocument::class);
+        parent::__construct($registry, PostDateHistoric::class);
     }
 
-    public function findLastestDocumentByPostAndType(Post $post, $documentType)
+
+    public function findPostDateHistoricByPost(Post $post, $postDateType)
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.post = :val and p.documentType =:docType')
-            ->setParameter('val', $post)
-            ->setParameter('docType', $documentType)
+            ->andWhere('p.post = :post and p.postDateType = :postDateType')
+            ->setParameter('post', $post)
+            ->setParameter('postDateType', $postDateType)
             ->orderBy('p.id', 'DESC')
-            ->setMaxResults(1)
+            ->setMaxResults(5)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
             ;
     }
-
     // /**
-    //  * @return PostDocument[] Returns an array of PostDocument objects
+    //  * @return PostDateHistoric[] Returns an array of PostDateHistoric objects
     //  */
     /*
     public function findByExampleField($value)
@@ -52,7 +51,7 @@ class PostDocumentRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?PostDocument
+    public function findOneBySomeField($value): ?PostDateHistoric
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.exampleField = :val')

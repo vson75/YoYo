@@ -31,7 +31,7 @@ form:
 message:
   post:
     translateOK: Bài viết đã được dịch thành công
-    notAuthor: Bạn không phải là tác giả của dự án này. Bạn không có quyền sửa đổi dự án
+    notAuthor: Bạn không phải là tác giả của dự án này. Bạn không có quyền truy cập vào chức năng này
     thankToCreatePost: Cảm ơn bạn đã tạo chủ để này. Bạn có thể gửi ngay dự án cho chúng tôi để chúng tôi kiểm duyệt
     confirmSentPost: Dự án của bạn đã được gửi tới ban quản trị. Chúng tôi sẽ kiểm duyệt dự án của bạn trước khi cho phép đăng lên trang của chúng tôi
     PostCannotSent: Dự án của bạn không được phép gửi tới chúng tôi
