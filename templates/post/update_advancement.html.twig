@@ -1,0 +1,81 @@
+{% extends 'content_base.html.twig' %}
+
+{% block title %}
+    {% trans %}Cập nhật thông tin dự án{% endtrans %}
+{% endblock %}
+
+
+{% block content_body %}
+    <div>
+        <h1 style="text-align: center; margin-top: 1rem;">
+            {% trans %}Cập nhật thông tin dự án {% endtrans %}
+        </h1>
+    </div>
+
+    <div>
+        {{ form_start(form) }}
+        
+        {{ form_row(form.objectEmail)}}
+        {{ form_row(form.email) }}
+
+        <div class="row" id="image_1">
+            <div class="col-5">
+                {{ form_row(form.image1) }}
+            </div>
+            <div class="col-5">
+                <a onclick="addImageInput()"><i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+
+        <div class="row" id="image_2" style="display: none;">
+            <div class="col-5">
+                {{ form_row(form.image2) }}
+            </div>    
+        </div>
+
+        <div class="row" id="image_3" style="display: none;">
+            <div class="col-5">
+                {{ form_row(form.image3) }}
+            </div>    
+        </div>
+        <div class="row" id="image_4" style="display: none;">
+            <div class="col-5">
+                {{ form_row(form.image4) }}
+            </div> 
+        </div>
+        <div class="row" id="image_5" style="display: none;">
+            <div class="col-5">
+                {{ form_row(form.image5) }}
+            </div> 
+        </div>
+        
+        
+            
+        <button class="btn btn-primary" style="float: center" type="submit">{% trans %}Gửi thông tin cập nhật dự án {% endtrans %}</button>
+        {{ form_end(form) }}
+    </div>
+
+
+{% endblock %}
+
+
+{% block javascripts %}
+{{ parent() }}
+
+    <script>
+        function addImageInput() {
+            var i;
+            for (i = 2; i < 6; i++) {
+                var Id = 'image_'+i;
+                var last = i-1;
+                var inputId = 'update_advancement_image'+i;
+                var x = document.getElementById(Id);
+                if (x.style.display === "none") {
+                    x.style.display = "flex";
+                    document.getElementById(inputId).required = true;
+                    break;
+                }
+            }
+        }
+    </script>
+{% endblock %}

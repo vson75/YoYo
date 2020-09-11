@@ -71,6 +71,11 @@
                         <span>{% trans %}Đã nhận tiền{% endtrans %}</span>
                     </div>
                 {% endif %}
+                {% if postInfo.status.id == statusArray['POST_IN_PROGRESS'] %}
+                    <div class="btn btn-primary btn-admin" onclick="location.href='{{ path('app_update_advancement', {uniquekey: postInfo.uniquekey}) }}'">
+                        <span>{% trans %}Cập nhật tiến độ{% endtrans %}</span>
+                    </div>
+                {% endif %}
             </div>
     {% endif %}
     <!-- content div -->
@@ -245,6 +250,7 @@
 
                         {% for c in comment %}
                             {% if c.isDeleted == false %}
+                            {% set upload_directory = "uploads/user/icon/#{c.user.Id}/" %}
                                 <!-- Single Comment -->
                                 <div class="media mb-4">
                                     {% if  c.user.imagePath == upload_directory %}

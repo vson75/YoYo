@@ -19,7 +19,13 @@ use App\Entity\{AdminParameter,
     User,
     WebsiteLanguage};
 use App\Service\PostDateHistoricService;
-use App\Form\{CommentFormType, ExtendPostType, PostFormType, PaymentType, ReceivedFundType, TranslationPostType};
+use App\Form\{CommentFormType,
+    ExtendPostType,
+    PostFormType,
+    PaymentType,
+    ReceivedFundType,
+    TranslationPostType,
+    UpdateAdvancementType};
 use App\Repository\PostRepository;
 use App\Repository\TransactionRepository;
 use App\Service\Mailer;
@@ -875,7 +881,7 @@ class PostController extends AbstractController
                 }
             }
         }else {
-            $message = $this->translator->trans('message.global.postNotExiste');
+            $message = $this->translator->trans('message.post.NotExiste');
             $this->addFlash('success', $message);
             return $this->redirectToRoute('app_homepage');
         }
@@ -912,6 +918,38 @@ class PostController extends AbstractController
             $response->headers->set('Content-Disposition', $disposition);
         //dd($response);
             return $response;
+    }
+
+    /**
+     * @Route("/update/advancement/{uniquekey}", name="app_update_advancement")
+     */
+    public function updateAdvancementOfProject($uniquekey ,Post $post, EntityManagerInterface $em, Request $request){
+        $post = $em->getRepository(Post::class)->findOneBy([
+            'uniquekey' => $uniquekey
+        ]);
+        if(is_null($post)){
+            $message = $this->translator->trans('message.post.NotExiste');
+            $this->addFlash('echec', $message);
+        }elseif( $this->getUser() == $post->getUser() || $this->getUser() == $this->security->isGranted('ROLE_ADMIN') ){
+
+            $form = $this->createForm(UpdateAdvancementType::class);
+            $form->handleRequest($request);
+
+            if($form->isSubmitted() && $form->isValid()){
+
+                return $this->redirectToRoute("show_post");
+            }
+
+        }else{
+            $message = $this->translator->trans('message.post.notAuthor');
+            $this->addFlash('echec', $message);
+        }
+
+        return $this->render('post/update_advancement.html.twig', [
+            'userInfo' => $this->getUser(),
+            'form' => $form->createView(),
+        ]);
+
     }
 
 

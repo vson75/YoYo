@@ -41,6 +41,14 @@ form:
   ResetPassword:
     Email: Email của bạn
 
+  UpdateAdvancement:
+    imageLabel: Ảnh cập nhật
+    email: Nội dung email
+    emailPlaceholder: Nội dung mail cập nhật tin tức sẽ được gửi tới những người quyên góp
+    image1Help: Tối đa 5 ảnh đính kèm
+    subject: Tiêu đề email
+    subjectPlaceholder: Cập nhật thông tin dự án ABC....
+
 
   PostSearch:
     PostTitlePlaceholder: Tên dự án
@@ -104,6 +112,7 @@ message:
       PaymentInvalid: Dữ liệu  ngân hàng của bạn không chính xác
       extendPostSuccess: Dự án của bạn đã gia hạn thành công
       StartedTransfertFund: Chúng tôi sẽ bắt đầu quá trình chuyển khoản. Bạn sẽ nhận được các thông tin chi tiết cho mỗi lần chuyển khoản cũng như danh sách đã ủng hộ cho dự án của bạn.
+      NotExiste: Dự án của bạn không tồn tại trong hệ thống của chúng tôi. Vui lòng kiểm tra lại thông tin của dự án.
 
   organisation:
       notAuthor: Bạn không phải là người của tổ chức này. Bạn không thể thay đổi các thông tin của tổ chức
@@ -132,7 +141,6 @@ message:
 
   global:
     contactUsOK: Email đã gửi thành công. Cảm ơn bạn
-    postNotExiste: Dự án của bạn không tồn tại trong hệ thống của chúng tôi. Vui lòng kiểm tra lại thông tin của dự án.
 
 
 email:
