@@ -194,4 +194,25 @@ class Mailer
         $this->mailer->send($email);
     }
 
+    public function sendMailInTableEmails(User $user, Post $post,?array $pj, $object, $content){
+        $email = (new TemplatedEmail())
+            ->from($this->admin_email)
+            ->to($user->getEmail())
+            ->subject($object)
+            ->htmlTemplate('email/UpdateInfoPostInProgress.html.twig');
+            if(!empty($pj)){
+                for ($i=0; $i < count($pj); $i++) { 
+                    $email->attachFromPath($pj[$i]);
+                }
+            
+            }
+            $email->context([
+                'post_uniqueKey'=> $post->getUniquekey(),
+                'post_name' => $post->getTitle(),
+                'email_content' => $content
+            ]);
+
+        $this->mailer->send($email);
+    }
+
 }

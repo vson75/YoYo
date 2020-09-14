@@ -21,8 +21,8 @@
                 <h1 class="text-center">{% trans %}Dự án: {% endtrans %} {{ post_name }} {% trans %} đã tới hạn chót.{% endtrans %}</h1>
 
                 <div class="block">
-                    {% trans %}Xin chảo bạn.
-                    Tới thời điểm hiện tại, bạn đã quyên góp được: {% endtrans %} {{ collected_amount }} / {{ target_amount }} € {% trans %}cho dự án {% endtrans %}{{ post_name }} {% trans %}tại YoYo.{% endtrans %}
+                    {% trans %}Xin chảo bạn.{% endtrans %} <br>
+                    {% trans %}Tới thời điểm hiện tại, bạn đã quyên góp được: {% endtrans %} {{ collected_amount }} / {{ target_amount }} € {% trans %}cho dự án {% endtrans %}{{ post_name }} {% trans %}tại YoYo.{% endtrans %}
                 </div>
 
                 {% if collected_amount < target_amount %}
@@ -48,7 +48,7 @@
                         <a href="{{ url('show_post', {uniquekey: post_uniqueKey}) }}" class="btn">{% trans %}Xem dự án{% endtrans %}</a>
                     </p>
                     <div class="block">
-                       {% trans%} Chúng tôi sẽ bắt đầu quá trình chuyển tiền cho dự án của bạn. Bạn sẽ nhận được thông tin chi tiết về các khoản đóng góp.{% endtrans %}
+                       {% trans %} Chúng tôi sẽ bắt đầu quá trình chuyển tiền cho dự án của bạn. Bạn sẽ nhận được thông tin chi tiết về các khoản đóng góp.{% endtrans %}
                     </div>
                 {% endif %}
                 <div class="block">

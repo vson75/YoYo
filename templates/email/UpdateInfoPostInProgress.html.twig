@@ -1,0 +1,48 @@
+{% apply inline_css(source('@styles/email.css')) %}
+    <!doctype html>
+    <html lang="vn">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Spartan&display=swap">
+        <title>{% trans %}Cập nhật thông tin dự án {% endtrans %}{{ post_name }}</title>
+    </head>
+    <body>
+    <div class="body">
+        <div class="container">
+            <div class="header text-center">
+                <a href="{{ url('app_homepage') }}">
+                    <img src="{{ absolute_url(asset('images/logo.png')) }}" class="logo" alt="Logo">
+                </a>
+            </div>
+
+            <div class="content">
+                <h1 class="text-center">{% trans %}Cập nhật thông tin dự án: {% endtrans %} {{ post_name }}</h1>
+
+                <div class="block">
+                     {{ email_content|raw }}
+                </div>
+
+                    <div class="block">
+                        {% trans %}Trong file đính kèm là danh sách chi tiết các đóng góp cho dự án của bạn.{% endtrans %}
+                    </div>
+                    <p class="block text-center">
+                        <a href="{{ url('show_post', {uniquekey: post_uniqueKey}) }}" class="btn">{% trans %}Xem dự án{% endtrans %}</a>
+                    </p>
+            </div>
+            <div class="footer">
+                <p class="block">
+                    {% trans %}Thân,{% endtrans %}
+                    <br><br>
+                    Yoyo
+                </p>
+                <p class="block bottom text-center">
+                    {% trans %}Dự án của Viet Son NGUYEN {% endtrans %}
+                </p>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
+{% endapply %}

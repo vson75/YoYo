@@ -28,15 +28,15 @@ class UploadService
     //const to download document Organisation
     const Organisation_document_path = 'uploads/user/documents_request/';
 
-    const Post_Proof_Transfer_Fund = '/post/';
+    const Post_Path = '/post/';
     const Proof_transfert = '/proof_transfer/';
     //const to upload proof received
     const Proof_received = '/proof_received/';
 
+    const Proof_project_in_progress = '/proof_project_in_progress/';
+
     //const to upload proof received
     const Proof_received_document_path = 'uploads/post/';
-    //const to download proof received
-    const Proof_received_download_path = '/post/';
 
 
     private $publicUploadFilesystem;
@@ -171,7 +171,7 @@ class UploadService
 
     public function uploadPrivateProofOfTransfert(UploadedFile $uploadedFile, Post $post){
 
-        $destination = self::Post_Proof_Transfer_Fund.$post->getId().self::Proof_transfert;
+        $destination = self::Post_Path.$post->getId().self::Proof_transfert;
 
 
         $origineFilename = pathinfo($uploadedFile->getClientOriginalName(),PATHINFO_FILENAME);
@@ -192,9 +192,14 @@ class UploadService
     }
 
 
-    public function uploadProofOfReceivedBank(UploadedFile $uploadedFile, Post $post){
+    public function uploadProofOfProject(UploadedFile $uploadedFile, Post $post,int $DocType ){
 
-        $destination = self::Post_Proof_Transfer_Fund.$post->getId().self::Proof_received;
+        if($DocType === DocumentType::Proof_Of_Received_Fund ){
+            $destination = self::Post_Path.$post->getId().self::Proof_received;
+        }elseif($DocType === DocumentType::Proof_Of_Project_In_Progress){
+            $destination = self::Post_Path.$post->getId().self::Proof_project_in_progress;
+        }
+        
         $origineFilename = pathinfo($uploadedFile->getClientOriginalName(),PATHINFO_FILENAME);
         $newFilename = Urlizer::urlize($origineFilename).'-'.uniqid().'.'.$uploadedFile->guessExtension();
 
@@ -211,5 +216,6 @@ class UploadService
         return $newFilename;
 
     }
+
 
 }

@@ -6,6 +6,8 @@ namespace App\Controller;
 
 use App\Entity\{AdminParameter,
     DocumentType,
+    EmailContent,
+    Emails,
     Favorite,
     Post,
     PostDateHistoric,
@@ -848,7 +850,7 @@ class PostController extends AbstractController
                     //$uploadService->uploadPrivateProofBank($form['proofOfReveived']->getData(),$post,DocumentType::Proof_Of_Received_Fund);
 
                     // get the filename of the uploaded document (because the upload method return the newFilename)
-                    $filename = $uploadService->uploadProofOfReceivedBank($form['proofOfReveived']->getData(), $post);
+                    $filename = $uploadService->uploadProofOfProject($form['proofOfReveived']->getData(), $post, DocumentType::Proof_Of_Received_Fund);
                     //query find DocumentType with ID
 
 
@@ -923,7 +925,7 @@ class PostController extends AbstractController
     /**
      * @Route("/update/advancement/{uniquekey}", name="app_update_advancement")
      */
-    public function updateAdvancementOfProject($uniquekey ,Post $post, EntityManagerInterface $em, Request $request){
+    public function updateAdvancementOfProject($uniquekey ,Post $post, EntityManagerInterface $em, Request $request, UploadService $uploadService, Mailer $mailer){
         $post = $em->getRepository(Post::class)->findOneBy([
             'uniquekey' => $uniquekey
         ]);
@@ -937,7 +939,87 @@ class PostController extends AbstractController
 
             if($form->isSubmitted() && $form->isValid()){
 
-                return $this->redirectToRoute("show_post");
+                // create new Email content
+                $emailContent = new EmailContent();
+                $emailContent   ->setObject($form['objectEmail']->getData())
+                                ->setContent($form['email']->getData())
+                                ->setPost($post);
+                $em->persist($emailContent);
+                $em->flush();
+
+                //get DocType Proof Of Project in progress
+                $docType = $em->getRepository(DocumentType::class)->findOneBy([
+                    'id' => DocumentType::Proof_Of_Project_In_Progress
+                ]);
+
+                //All document array key start with "image". So get the search key "image"
+                $search = "image";
+                $search_length = strlen($search);
+                
+                // For each key value in data form, check if have the key "image". If Yes, get data content
+                foreach ($form->getData() as $key => $value) {
+                
+                if (substr($key, 0, $search_length) == $search) {
+
+                if(!is_null($form[$key]->getData())){
+                    $filename = $uploadService->uploadProofOfProject($form[$key]->getData(), $post, DocumentType::Proof_Of_Project_In_Progress);
+                    $postDoc = new PostDocument();
+                        $postDoc->setFilename($filename)
+                                ->setPost($post)
+                                ->setOriginalFilename($form[$key]->getData()->getClientOriginalName())
+                                ->setMimeType($form[$key]->getData()->getMimeType() ?? 'application/octet-stream')
+                                ->setDepositeDate(new \DateTime('now'))
+                                ->setEmailContent($emailContent)
+                                ->setDocumentType($docType)
+                                ;
+                    $em->persist($postDoc);
+                    $em->flush();
+                    }else{
+                        break;
+                    }
+                    }
+                }
+
+                
+                // get list contributor
+                $listUser = $em->getRepository(Transaction::class)->findDistinctDonatorByPost($post);
+                // For each contributor, send an email
+                for ($i=0; $i < count($listUser); $i++) { 
+                    
+                    $user = $em->getRepository(User::class)->findOneBy([
+                        'id' => $listUser[$i][1]
+                    ]);
+                    //dd($user->getEmail());
+                    $email = new Emails();
+                    $email  ->setEmailContent($emailContent)
+                            ->setUserRecipient($user);
+                    $em->persist($email);
+                    $em->flush();
+
+                    // Test send mail with multiple attachement
+                    $postDocumentAttached = $em->getRepository(PostDocument::class)->findBy([
+                        'EmailContent' => $emailContent
+                    ]);
+                    
+                    $privatePath = $this->getParameter('public_upload_file');
+                    for ($i=0; $i < count($postDocumentAttached); $i++) { 
+                        # code...
+                        $path[$i] = $privatePath.$postDocumentAttached[$i]->getProofOFProjectInProgressPath();
+                        
+                    }
+                    dump($path);
+                    $mailer->sendMailInTableEmails($user,$post,$path, $emailContent->getObject(), $emailContent->getContent());
+                    die();
+                    // finish the test
+                    
+                }
+                
+                // for each contributor, put the Email content and PJ 
+                
+                
+                return $this->redirectToRoute("show_post", [
+                    'uniquekey' => $uniquekey
+                ]);
             }
 
         }else{

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Post;
 use App\Entity\Transaction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -131,6 +132,18 @@ class TransactionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
             ;
+    }
+
+    public function getDistinctUserInvestByPost(Post $post)
+    {
+        return $this->createQueryBuilder('t')
+        ->select('Distinct(t.user)')
+        ->andWhere('t.post = :val')
+        ->setParameter('val', $post)
+        ->orderBy('t.id', 'ASC')
+        ->getQuery()
+        ->getResult()
+    ;
     }
 
 

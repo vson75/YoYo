@@ -55,6 +55,11 @@ class PostDocument
      */
     private $postDateHistoric;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=EmailContent::class, inversedBy="postDocuments")
+     */
+    private $EmailContent;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -133,7 +138,7 @@ class PostDocument
     }
 
     public function getProofOfTransfer(){
-        return UploadService::Post_Proof_Transfer_Fund.$this->getPost()->getId().UploadService::Proof_transfert.$this->getFilename();
+        return UploadService::Post_Path.$this->getPost()->getId().UploadService::Proof_transfert.$this->getFilename();
     }
 
     public function getPostDateHistoric(): ?PostDateHistoric
@@ -156,11 +161,28 @@ class PostDocument
 
     public function getProofReceivedPath(): string
     {
-        return UploadService::Proof_received_document_path.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
+        return UploadService::Post_Path.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
     }
 
     public function getDownloadProofReceivedPath():string
     {
-        return UploadService::Proof_received_download_path.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
+        return UploadService::Post_Path.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
+    }
+
+    public function getProofOFProjectInProgressPath(): string
+    {
+        return UploadService::Post_Path.$this->getPost()->getId().UploadService::Proof_project_in_progress.$this->getFilename();
+    }
+
+    public function getEmailContent(): ?EmailContent
+    {
+        return $this->EmailContent;
+    }
+
+    public function setEmailContent(?EmailContent $EmailContent): self
+    {
+        $this->EmailContent = $EmailContent;
+
+        return $this;
     }
 }

@@ -162,6 +162,7 @@ email:
     finish: đã kết thúc
     WarningUserPostFinish: Giai đoạn quyên góp cho dự án
     AlertAuthorAfterTransferFund: Xác nhận chuyển khoản cho dự án
+    UpdatePostInfo: Cập nhật thông tin của dự án
 
   title:
     ThanktoFund: quyên góp dự án
