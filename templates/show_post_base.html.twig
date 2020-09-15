@@ -410,12 +410,21 @@
                     </div>
                 {% endif %}
 
-                <div class="timelinebox right">
-                    <div class="content">
-                        <h5>2015</h5>
-                        <p>Lorem ipsum dolor sit amet, quo ei simul congue exerci, ad nec admodum perfecto mnesarchum, vim ea mazim fierent detracto. Ea quis iuvaret expetendis his, te elit voluptua dignissim per, habeo iusto primis ea eam.</p>
-                    </div>
-                </div>
+                {% if updateInfoDate is not empty %}
+                    {% for upDateInfo in updateInfoDate %}
+                    <div class="timelinebox right">
+                        <div class="content">
+                            <h5>{{ upDateInfo[0].date|date('d/m/Y') }}</h5>
+                            <p>{% trans %}cập nhật thông tin từ dự án cùng với 1 số hình ảnh{% endtrans %}</p>
+                            {% for update in upDateInfo %}
+
+                                <img id="updateInfo{{loop.index}}" class="OrganisationDocument" src="{{ asset(update.postDocument.getProofOFProjectInProgressPath)}}">
+                            {% endfor %}
+                        </div>
+                    </div>           
+                    {% endfor %}
+
+                {% endif %}
 
             </div>
 

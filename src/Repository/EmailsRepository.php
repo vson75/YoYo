@@ -24,7 +24,7 @@ class EmailsRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('e')
         ->andWhere('e.sentDate IS NULL')
         ->orderBy('e.id', 'ASC')
-        ->setMaxResults(10)
+        ->setMaxResults(5)
         ->getQuery()
         ->getResult()
     ;

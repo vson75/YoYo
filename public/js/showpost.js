@@ -54,6 +54,7 @@ var arrayAwards = document.querySelectorAll('*[id^="award"]');
 var modalImg = document.getElementById("img01");
 
 var ProofReceived = document.getElementById("ProofReceived");
+var ArrayUpdateInfo = document.querySelectorAll('*[id^="updateInfo"]');
 
     if(ProofReceived != null){
         ProofReceived.onclick = function(){
@@ -75,6 +76,18 @@ var ProofReceived = document.getElementById("ProofReceived");
         for (a=1; a< arrayAwards.length+1; a++){
             awards[a-1] = document.getElementById("award"+a);
             awards[a-1].onclick = function(){
+                modal.style.display = "block";
+                modalImg.src = this.src;
+            }
+        }
+    }
+
+    if(ArrayUpdateInfo.length !== 0){
+        var a;
+        var UpdateInfo = [];
+        for (a=1; a< ArrayUpdateInfo.length+1; a++){
+            ArrayUpdateInfo[a-1] = document.getElementById("updateInfo"+a);
+            ArrayUpdateInfo[a-1].onclick = function(){
                 modal.style.display = "block";
                 modalImg.src = this.src;
             }

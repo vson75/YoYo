@@ -171,7 +171,7 @@ class PostDocument
 
     public function getProofOFProjectInProgressPath(): string
     {
-        return UploadService::Post_Path.$this->getPost()->getId().UploadService::Proof_project_in_progress.$this->getFilename();
+        return UploadService::Proof_received_document_path.$this->getPost()->getId().UploadService::Proof_project_in_progress.$this->getFilename();
     }
 
     public function getEmailContent(): ?EmailContent

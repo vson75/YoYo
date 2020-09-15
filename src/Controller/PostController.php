@@ -33,6 +33,7 @@ use App\Repository\TransactionRepository;
 use App\Service\Mailer;
 use App\Service\MarkdownHelper;
 use App\Service\UploadService;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Sluggable\Util\Urlizer;
 use Psr\Log\LoggerInterface;
@@ -218,9 +219,18 @@ class PostController extends AbstractController
         //get Post Date historic for the timeLine
         $postDateRepo = $em->getRepository(PostDateHistoric::class);
 
-        $postStartCollectDate = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_start_collect_fund);
-        $postEndCollectDate = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_end_collect_fund);
-        $postReceivedFundDate = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_author_received_fund);
+        $DateStartCollect = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_start_collect_fund, null);
+        $DateEndCollect = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_end_collect_fund, null);
+        $DateReceivedFund = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_author_received_fund, null);
+        $ArrayDateUpDateInfo = $postDateRepo->selectDistinctByDate($postInfo, PostDateType::Date_update_info_project_in_progress);
+        
+        if(!empty($ArrayDateUpDateInfo)){
+            for ($i=0; $i < count($ArrayDateUpDateInfo) ; $i++) { 
+                $DateUpdateInfo[$i] = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_update_info_project_in_progress,$ArrayDateUpDateInfo[$i]['date']);     
+            }
+        }else{
+            $DateUpdateInfo = [];
+        }
 
         //get Document of the Post
         $postDocumentRepo = $em->getRepository(PostDocument::class);
@@ -245,10 +255,11 @@ class PostController extends AbstractController
                 'organisationInfo' => $organisationInfo,
                 'certificate' => $certificate,
                 'awards' => $awards,
-                'startCollectDate' => $postStartCollectDate,
-                'endCollectDate' => $postEndCollectDate,
-                'receivedFundDate' => $postReceivedFundDate,
-                'proofOfReceivedFundDocument' => $ProofOfReceivedFund,
+                'startCollectDate' => $DateStartCollect,
+                'endCollectDate' => $DateEndCollect,
+                'receivedFundDate' => $DateReceivedFund,
+                'updateInfoDate' => $DateUpdateInfo,
+                'proofOfReceivedFundDocument' => $ProofOfReceivedFund
             ]
         );
     }
@@ -960,19 +971,38 @@ class PostController extends AbstractController
                 foreach ($form->getData() as $key => $value) {
                 
                 if (substr($key, 0, $search_length) == $search) {
+                
 
+                // For each image, INSERT data in Post_Document and PostDateHistoric
                 if(!is_null($form[$key]->getData())){
+                    // Upload the image in our repertory
                     $filename = $uploadService->uploadProofOfProject($form[$key]->getData(), $post, DocumentType::Proof_Of_Project_In_Progress);
-                    $postDoc = new PostDocument();
-                        $postDoc->setFilename($filename)
-                                ->setPost($post)
-                                ->setOriginalFilename($form[$key]->getData()->getClientOriginalName())
-                                ->setMimeType($form[$key]->getData()->getMimeType() ?? 'application/octet-stream')
-                                ->setDepositeDate(new \DateTime('now'))
-                                ->setEmailContent($emailContent)
-                                ->setDocumentType($docType)
-                                ;
-                    $em->persist($postDoc);
+
+                    //INSERT New data with the filename
+                    $postDocument = new PostDocument();
+                    $postDocument   ->setFilename($filename)
+                                    ->setPost($post)
+                                    ->setOriginalFilename($form[$key]->getData()->getClientOriginalName())
+                                    ->setMimeType($form[$key]->getData()->getMimeType() ?? 'application/octet-stream')
+                                    ->setDepositeDate(new \DateTime('now'))
+                                    ->setEmailContent($emailContent)
+                                    ->setDocumentType($docType);
+
+                    $em->persist($postDocument);
+                    $em->flush();
+
+                    // Add new data in PostDateHistoric
+                    $postDateType = $em->getRepository(PostDateType::class)->findOneBy([
+                        'id' => PostDateType::Date_update_info_project_in_progress
+                    ]);
+
+                    $postDateHistoric = new PostDateHistoric();
+                    $postDateHistoric   ->setDate(new DateTime('now'))
+                                        ->setPost($post)
+                                        ->setUser($this->getUser())
+                                        ->setPostDateType($postDateType)
+                                        ->setPostDocument($postDocument);
+                    $em->persist($postDateHistoric);
                     $em->flush();
                     }else{
                         break;
@@ -980,10 +1010,9 @@ class PostController extends AbstractController
                     }
                 }
 
-                
                 // get list contributor
                 $listUser = $em->getRepository(Transaction::class)->findDistinctDonatorByPost($post);
-                // For each contributor, send an email
+                // For each contributor, put the data into the table Emails
                 for ($i=0; $i < count($listUser); $i++) { 
                     
                     $user = $em->getRepository(User::class)->findOneBy([
@@ -995,27 +1024,7 @@ class PostController extends AbstractController
                             ->setUserRecipient($user);
                     $em->persist($email);
                     $em->flush();
-
-                    // Test send mail with multiple attachement
-                    $postDocumentAttached = $em->getRepository(PostDocument::class)->findBy([
-                        'EmailContent' => $emailContent
-                    ]);
-                    
-                    $privatePath = $this->getParameter('public_upload_file');
-                    for ($i=0; $i < count($postDocumentAttached); $i++) { 
-                        # code...
-                        $path[$i] = $privatePath.$postDocumentAttached[$i]->getProofOFProjectInProgressPath();
-                        
-                    }
-                    dump($path);
-                    $mailer->sendMailInTableEmails($user,$post,$path, $emailContent->getObject(), $emailContent->getContent());
-                    die();
-                    // finish the test
-                    
                 }
-                
-                // for each contributor, put the Email content and PJ 
-                
                 
                 return $this->redirectToRoute("show_post", [
                     'uniquekey' => $uniquekey

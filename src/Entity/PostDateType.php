@@ -14,7 +14,7 @@ class PostDateType
     public const Date_end_collect_fund = 2;
     public const Date_transfer_fund_to_author = 3;
     public const Date_author_received_fund = 4;
-    public const Date_update_info_project_after_received_fund = 5;
+    public const Date_update_info_project_in_progress = 5;
 
 
     /**
