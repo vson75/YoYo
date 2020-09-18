@@ -36,7 +36,7 @@ class UploadService
     const Proof_project_in_progress = '/proof_project_in_progress/';
 
     //const to upload proof received
-    const Proof_received_document_path = 'uploads/post/';
+    const Public_document_path_show_twig = 'uploads/post/';
 
 
     private $publicUploadFilesystem;

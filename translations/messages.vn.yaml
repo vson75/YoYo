@@ -183,3 +183,7 @@ template:
     StopPost: Dừng dự án
     StopFund: Đóng quyên góp
 
+  UpdateAdvancement:
+    titleUpdate: Gửi thông tin cập nhật tiến độ dự án cho tất cả người quyên góp cho dự án
+    titleClose: Gửi thông tin kết thúc dự án cho tất cả người quyên góp cho dự án
+

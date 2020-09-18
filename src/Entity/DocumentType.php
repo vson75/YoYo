@@ -21,6 +21,7 @@ class DocumentType
     public const Proof_Of_Transfer_Fund = 6;
     public const Proof_Of_Received_Fund = 7;
     public const Proof_Of_Project_In_Progress = 8;
+    public const Proof_Close_Project = 9;
 
 
 

@@ -219,23 +219,21 @@ class PostController extends AbstractController
         //get Post Date historic for the timeLine
         $postDateRepo = $em->getRepository(PostDateHistoric::class);
 
-        $DateStartCollect = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_start_collect_fund, null);
-        $DateEndCollect = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_end_collect_fund, null);
-        $DateReceivedFund = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_author_received_fund, null);
-        $ArrayDateUpDateInfo = $postDateRepo->selectDistinctByDate($postInfo, PostDateType::Date_update_info_project_in_progress);
+        $Date_Start_Collect = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_start_collect_fund, null);
+        $Date_End_Collect = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_end_collect_fund, null);
+        $Date_Received_Fund = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_author_received_fund, null);
+        $Array_Date_UpDateInfo = $postDateRepo->selectDistinctByDate($postInfo, PostDateType::Date_update_info_project_in_progress);
+        $Date_Finish_Project = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_close_project, null);
         
-        if(!empty($ArrayDateUpDateInfo)){
-            for ($i=0; $i < count($ArrayDateUpDateInfo) ; $i++) { 
-                $DateUpdateInfo[$i] = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_update_info_project_in_progress,$ArrayDateUpDateInfo[$i]['date']);     
+        //dd($DateReceivedFund);
+       // dd($Array_Date_UpDateInfo);
+        if(!empty($Array_Date_UpDateInfo)){
+            for ($i=0; $i < count($Array_Date_UpDateInfo) ; $i++) { 
+                $Date_Update_Info[$i] = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_update_info_project_in_progress,$Array_Date_UpDateInfo[$i]['date']);     
             }
         }else{
-            $DateUpdateInfo = [];
+            $Date_Update_Info = [];
         }
-
-        //get Document of the Post
-        $postDocumentRepo = $em->getRepository(PostDocument::class);
-        $ProofOfReceivedFund = $postDocumentRepo->findLastestDocumentByPostAndType($postInfo,DocumentType::Proof_Of_Received_Fund);
-
 
         return $this->render('post/show_post.html.twig',[
                 'postInfo' => $postInfo,
@@ -255,11 +253,11 @@ class PostController extends AbstractController
                 'organisationInfo' => $organisationInfo,
                 'certificate' => $certificate,
                 'awards' => $awards,
-                'startCollectDate' => $DateStartCollect,
-                'endCollectDate' => $DateEndCollect,
-                'receivedFundDate' => $DateReceivedFund,
-                'updateInfoDate' => $DateUpdateInfo,
-                'proofOfReceivedFundDocument' => $ProofOfReceivedFund
+                'startCollectDate' => $Date_Start_Collect,
+                'endCollectDate' => $Date_End_Collect,
+                'receivedFundDate' => $Date_Received_Fund,
+                'updateInfoDate' => $Date_Update_Info,
+                'DateCloseProject' => $Date_Finish_Project
             ]
         );
     }
@@ -934,9 +932,9 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("/update/advancement/{uniquekey}", name="app_update_advancement")
+     * @Route("/update/advancement/{choice<update|close>}/{uniquekey}", name="app_update_advancement")
      */
-    public function updateAdvancementOfProject($uniquekey ,Post $post, EntityManagerInterface $em, Request $request, UploadService $uploadService, Mailer $mailer){
+    public function updateAdvancementOfProject($choice ,$uniquekey ,Post $post, EntityManagerInterface $em, Request $request, UploadService $uploadService, Mailer $mailer){
         $post = $em->getRepository(Post::class)->findOneBy([
             'uniquekey' => $uniquekey
         ]);
@@ -958,59 +956,8 @@ class PostController extends AbstractController
                 $em->persist($emailContent);
                 $em->flush();
 
-                //get DocType Proof Of Project in progress
-                $docType = $em->getRepository(DocumentType::class)->findOneBy([
-                    'id' => DocumentType::Proof_Of_Project_In_Progress
-                ]);
 
-                //All document array key start with "image". So get the search key "image"
-                $search = "image";
-                $search_length = strlen($search);
-                
-                // For each key value in data form, check if have the key "image". If Yes, get data content
-                foreach ($form->getData() as $key => $value) {
-                
-                if (substr($key, 0, $search_length) == $search) {
-                
-
-                // For each image, INSERT data in Post_Document and PostDateHistoric
-                if(!is_null($form[$key]->getData())){
-                    // Upload the image in our repertory
-                    $filename = $uploadService->uploadProofOfProject($form[$key]->getData(), $post, DocumentType::Proof_Of_Project_In_Progress);
-
-                    //INSERT New data with the filename
-                    $postDocument = new PostDocument();
-                    $postDocument   ->setFilename($filename)
-                                    ->setPost($post)
-                                    ->setOriginalFilename($form[$key]->getData()->getClientOriginalName())
-                                    ->setMimeType($form[$key]->getData()->getMimeType() ?? 'application/octet-stream')
-                                    ->setDepositeDate(new \DateTime('now'))
-                                    ->setEmailContent($emailContent)
-                                    ->setDocumentType($docType);
-
-                    $em->persist($postDocument);
-                    $em->flush();
-
-                    // Add new data in PostDateHistoric
-                    $postDateType = $em->getRepository(PostDateType::class)->findOneBy([
-                        'id' => PostDateType::Date_update_info_project_in_progress
-                    ]);
-
-                    $postDateHistoric = new PostDateHistoric();
-                    $postDateHistoric   ->setDate(new DateTime('now'))
-                                        ->setPost($post)
-                                        ->setUser($this->getUser())
-                                        ->setPostDateType($postDateType)
-                                        ->setPostDocument($postDocument);
-                    $em->persist($postDateHistoric);
-                    $em->flush();
-                    }else{
-                        break;
-                    }
-                    }
-                }
-
-                // get list contributor
+                // get list contributor and  for each recipient create a line data in Email table
                 $listUser = $em->getRepository(Transaction::class)->findDistinctDonatorByPost($post);
                 // For each contributor, put the data into the table Emails
                 for ($i=0; $i < count($listUser); $i++) { 
@@ -1025,6 +972,72 @@ class PostController extends AbstractController
                     $em->persist($email);
                     $em->flush();
                 }
+
+                //get DocType Proof Of Project in progress
+                if($choice === 'update'){
+                    $docType = $em->getRepository(DocumentType::class)->findOneBy([
+                        'id' => DocumentType::Proof_Of_Project_In_Progress
+                    ]);
+
+                    $postDateType = $em->getRepository(PostDateType::class)->findOneBy([
+                        'id' => PostDateType::Date_update_info_project_in_progress
+                    ]);
+                }elseif($choice === 'close'){
+                    $docType = $em->getRepository(DocumentType::class)->findOneBy([
+                        'id' => DocumentType::Proof_Close_Project
+                    ]);
+
+                    $postDateType = $em->getRepository(PostDateType::class)->findOneBy([
+                        'id' => PostDateType::Date_close_project
+                    ]);
+                }
+
+                //All document array key start with "image". So get the search key "image"
+                $search = "image";
+                $search_length = strlen($search);
+                
+                // For each key value in data form, check if have the key "image". If Yes, get data content
+                foreach ($form->getData() as $key => $value) {
+                
+                    if (substr($key, 0, $search_length) == $search) {
+                    
+
+                    // For each image, INSERT data in Post_Document and PostDateHistoric
+                        if(!is_null($form[$key]->getData())){
+                            // Upload the image in our repertory
+                            if($choice === 'update'){
+                                $filename = $uploadService->uploadProofOfProject($form[$key]->getData(), $post, DocumentType::Proof_Of_Project_In_Progress);
+                            }elseif($choice === 'close'){
+                                $filename = $uploadService->uploadProofOfProject($form[$key]->getData(), $post, DocumentType::Proof_Close_Project);
+                            }
+                            
+                            //INSERT New data with the filename
+                            $postDocument = new PostDocument();
+                            $postDocument   ->setFilename($filename)
+                                            ->setPost($post)
+                                            ->setOriginalFilename($form[$key]->getData()->getClientOriginalName())
+                                            ->setMimeType($form[$key]->getData()->getMimeType() ?? 'application/octet-stream')
+                                            ->setDepositeDate(new \DateTime('now'))
+                                            ->setEmailContent($emailContent)
+                                            ->setDocumentType($docType);
+
+                            $em->persist($postDocument);
+                            $em->flush();
+
+                            // Add new data in PostDateHistoric
+                            $postDateHistoric = new PostDateHistoric();
+                            $postDateHistoric   ->setDate(new DateTime('now'))
+                                                ->setPost($post)
+                                                ->setUser($this->getUser())
+                                                ->setPostDateType($postDateType)
+                                                ->setPostDocument($postDocument);
+                            $em->persist($postDateHistoric);
+                            $em->flush();
+                            }else{
+                                break;
+                            }
+                    }
+                }
                 
                 return $this->redirectToRoute("show_post", [
                     'uniquekey' => $uniquekey
@@ -1036,9 +1049,17 @@ class PostController extends AbstractController
             $this->addFlash('echec', $message);
         }
 
+        if($choice === 'update'){
+            $title = $this->translator->trans('template.UpdateAdvancement.titleUpdate');
+        }elseif($choice === 'close'){
+            $title = $this->translator->trans('template.UpdateAdvancement.titleClose');
+        }
+        
+
         return $this->render('post/update_advancement.html.twig', [
             'userInfo' => $this->getUser(),
             'form' => $form->createView(),
+            'title' =>$title
         ]);
 
     }

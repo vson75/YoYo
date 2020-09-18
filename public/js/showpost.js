@@ -86,8 +86,10 @@ var ArrayUpdateInfo = document.querySelectorAll('*[id^="updateInfo"]');
         var a;
         var UpdateInfo = [];
         for (a=1; a< ArrayUpdateInfo.length+1; a++){
-            ArrayUpdateInfo[a-1] = document.getElementById("updateInfo"+a);
+            ArrayUpdateInfo[a-1] = document.querySelectorAll('*[id^="updateInfo"]');
+            //console.log(ArrayUpdateInfo[a-1]);
             ArrayUpdateInfo[a-1].onclick = function(){
+                console.log(ArrayUpdateInfo[a-1]);
                 modal.style.display = "block";
                 modalImg.src = this.src;
             }

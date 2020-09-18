@@ -161,17 +161,17 @@ class PostDocument
 
     public function getProofReceivedPath(): string
     {
-        return UploadService::Post_Path.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
+        return UploadService::Public_document_path_show_twig.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
     }
 
     public function getDownloadProofReceivedPath():string
     {
-        return UploadService::Post_Path.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
+        return UploadService::Public_document_path_show_twig.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
     }
 
     public function getProofOFProjectInProgressPath(): string
     {
-        return UploadService::Proof_received_document_path.$this->getPost()->getId().UploadService::Proof_project_in_progress.$this->getFilename();
+        return UploadService::Public_document_path_show_twig.$this->getPost()->getId().UploadService::Proof_project_in_progress.$this->getFilename();
     }
 
     public function getEmailContent(): ?EmailContent

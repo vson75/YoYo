@@ -72,8 +72,11 @@
                     </div>
                 {% endif %}
                 {% if postInfo.status.id == statusArray['POST_IN_PROGRESS'] %}
-                    <div class="btn btn-primary btn-admin" onclick="location.href='{{ path('app_update_advancement', {uniquekey: postInfo.uniquekey}) }}'">
+                    <div class="btn btn-update-post btn-admin" onclick="location.href='{{ path('app_update_advancement', {uniquekey: postInfo.uniquekey, choice: 'update'}) }}'">
                         <span>{% trans %}Cập nhật tiến độ{% endtrans %}</span>
+                    </div>
+                    <div class="btn btn-close-post btn-admin" onclick="location.href='{{ path('app_update_advancement', {uniquekey: postInfo.uniquekey, choice: 'close'}) }}'">
+                        <span>{% trans %}Kết thúc dự án{% endtrans %}</span>
                     </div>
                 {% endif %}
             </div>
@@ -397,10 +400,10 @@
                             <p>{% trans %}Chủ dự án đã nhận được tiền! Cảm ơn các bạn.{% endtrans %}
                                 <br>
                                 {# check the MimeType of the document. If this is an image, show the image, if not, show only the link to download it#}
-                                {% if 'image/' in proofOfReceivedFundDocument.mimeType %}
+                                {% if 'image/' in receivedFundDate[0].postDocument.mimeType %}
                                         {% trans %}Bạn có thể xem biên lai nhận tiền dưới đây{% endtrans %}
                                         <p>
-                                            <img id="ProofReceived" class="OrganisationDocument" src="{{ asset(proofOfReceivedFundDocument.getProofReceivedPath)}}">
+                                            <img id="ProofReceived" class="OrganisationDocument" src="{{ asset(receivedFundDate[0].postDocument.getProofReceivedPath)}}">
                                         </p>
                                     {% else %}
                                         {% trans %}Bạn có thể tải biên lai nhận tiền {% endtrans %} <a href="{{ path('app_download_post_document',{id: proofOfReceivedFundDocument.id}) }}">{% trans %}tại đây{% endtrans %}</a>
@@ -411,14 +414,13 @@
                 {% endif %}
 
                 {% if updateInfoDate is not empty %}
-                    {% for upDateInfo in updateInfoDate %}
+                    {% for updateInfo in updateInfoDate %}
                     <div class="timelinebox right">
                         <div class="content">
-                            <h5>{{ upDateInfo[0].date|date('d/m/Y') }}</h5>
+                            <h5>{{ updateInfo[0].date|date('d/m/Y') }}</h5>
                             <p>{% trans %}cập nhật thông tin từ dự án cùng với 1 số hình ảnh{% endtrans %}</p>
-                            {% for update in upDateInfo %}
-
-                                <img id="updateInfo{{loop.index}}" class="OrganisationDocument" src="{{ asset(update.postDocument.getProofOFProjectInProgressPath)}}">
+                            {% for update in updateInfo %}
+                                <img id="updateInfo{{update.id}}{{loop.index}}" class="OrganisationDocument" src="{{ asset(update.postDocument.getProofOFProjectInProgressPath)}}">
                             {% endfor %}
                         </div>
                     </div>           
