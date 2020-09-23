@@ -43,11 +43,6 @@ class Post
     private $imageFilename;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $numberParticipant = 0;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post", fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"createdAt" = "DESC"})
      */
@@ -182,18 +177,6 @@ class Post
     public function setImageFilename(?string $imageFilename): self
     {
         $this->imageFilename = $imageFilename;
-
-        return $this;
-    }
-
-    public function getNumberParticipant(): ?int
-    {
-        return $this->numberParticipant;
-    }
-
-    public function setNumberParticipant(int $numberParticipant): self
-    {
-        $this->numberParticipant = $numberParticipant;
 
         return $this;
     }

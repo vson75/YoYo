@@ -159,19 +159,24 @@ class PostDocument
         return $this;
     }
 
-    public function getProofReceivedPath(): string
+    public function getProofReceivedPathForTwig(): string
     {
-        return UploadService::Public_document_path_show_twig.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
+        return UploadService::Public_post_document_path_show_twig.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
     }
 
-    public function getDownloadProofReceivedPath():string
+    public function getProofReceivedPathForDownload(): string
     {
-        return UploadService::Public_document_path_show_twig.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
+        return UploadService::Post_Path.$this->getPost()->getId().UploadService::Proof_received.$this->getFilename();
+    }
+    // use "/post/"
+    public function getProofOFProjectInProgressForDownload(): string
+    {
+        return UploadService::Post_Path.$this->getPost()->getId().UploadService::Proof_project_in_progress.$this->getFilename();
     }
 
-    public function getProofOFProjectInProgressPath(): string
+    public function getProofOFProjectInProgressForTwig(): string
     {
-        return UploadService::Public_document_path_show_twig.$this->getPost()->getId().UploadService::Proof_project_in_progress.$this->getFilename();
+        return UploadService::Public_post_document_path_show_twig.$this->getPost()->getId().UploadService::Proof_project_in_progress.$this->getFilename();
     }
 
     public function getEmailContent(): ?EmailContent

@@ -138,7 +138,7 @@ class PostRepository extends ServiceEntityRepository
 
         $date_now = new \DateTime("now");
         //add 1 day after the finish At
-        $date_now = $date_now->modify('+1 day');
+        $date_now = $date_now->modify('-1 day');
         $date_now = $date_now->format("yy-m-d");
 
 

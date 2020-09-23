@@ -93,7 +93,7 @@ class TransactionRepository extends ServiceEntityRepository
 
     public function getDistinctPostFinancedByUser($val){
         return $this->createQueryBuilder('t')
-            ->select('DISTINCT DATE(t.post)')
+            ->select('DISTINCT IDENTITY(t.post)')
             ->andWhere('t.user = :val')
             ->setParameter('val', $val)
             ->getQuery()

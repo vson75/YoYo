@@ -11,6 +11,7 @@ use App\Repository\TransactionRepository;
 use App\Repository\UserRepository;
 use App\Service\Mailer;
 use App\Service\PostDateHistoricService;
+use App\Service\SpreadsheetService;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
@@ -35,8 +36,9 @@ class TransfertFundAfterExpiredCommand extends Command
     private $em;
     private $transactionRepository;
     private $postDateHistoric;
+    private $spreadsheetService;
 
-    public function __construct(PostRepository $postRepository, Mailer $mailer, EntityManagerInterface $em, TransactionRepository $transactionRepository, PostDateHistoricService $postDateHistoric)
+    public function __construct(PostRepository $postRepository, Mailer $mailer, EntityManagerInterface $em, TransactionRepository $transactionRepository, PostDateHistoricService $postDateHistoric, SpreadsheetService $spreadsheetService)
     {
         parent::__construct(null);
         $this->postRepository = $postRepository;
@@ -44,6 +46,7 @@ class TransfertFundAfterExpiredCommand extends Command
         $this->em = $em;
         $this->transactionRepository = $transactionRepository;
         $this->postDateHistoric = $postDateHistoric;
+        $this->spreadsheetService = $spreadsheetService;
 
     }
 
@@ -94,119 +97,15 @@ class TransfertFundAfterExpiredCommand extends Command
                 //update the date in historic Post
                 $this->postDateHistoric->InsertNewPostDateHistorical($expiredPost,$admin, PostDateType::Date_end_collect_fund, null);
                 //create excel
-                $excelFile = new Spreadsheet();
-                $sheet = $excelFile->getActiveSheet();
+                
+                $excel_summary_file = $this->spreadsheetService->CreateSummaryDonateByPost($expiredPost);
 
-                //style of Header and content
-                $styleArrayHeader = [
-                    'font' => [
-                        'bold' => true,
-                    ],
-                    'alignment' => [
-                        'horizontal' => Alignment::HORIZONTAL_CENTER
-                    ],
-                    'borders' => [
-                        'top' => [
-                            'borderStyle' => Border::BORDER_THICK
-                        ],
-                        'right' => [
-                            'borderStyle' => Border::BORDER_THICK
-                        ],
-                        'bottom' => [
-                            'borderStyle' => Border::BORDER_THICK
-                        ],
-                        'left' => [
-                            'borderStyle' => Border::BORDER_THICK
-                        ],
-                    ]
-                ];
+                $this->mailer->sendMailToAuthorWhenFinishedCollectingPost($userId,$expiredPost,$excel_summary_file);
 
-                $styleArrayContent = [
-                    'alignment' => [
-                        'horizontal' => Alignment::HORIZONTAL_LEFT
-                    ],
-                    'borders' => [
-                        'right' => [
-                            'borderStyle' => Border::BORDER_THIN
-                        ],
-                        'bottom' => [
-                            'borderStyle' => Border::BORDER_THIN
-                        ],
-                        'left' => [
-                            'borderStyle' => Border::BORDER_THIN
-                        ],
-                    ]
-                ];
-
-                //put value
-
-                $sheet->setCellValue('A1', 'Summary of donation');
-                $sheet->setCellValue('A2', 'Project: '.$expiredPost->getTitle());
-                   // $sheet->getActiveSheet()->getFont()->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_RED);
-                $sheet->setCellValue('A4', 'Last and first name of the donation');
-
-                $sheet->setCellValue('B4', 'Amount');
-                $sheet->setCellValue('C4', 'Date of transaction');
-
-                $sheet->setCellValue('A5','Anonymous donation');
-                $sheet->setCellValue('B5',$expiredPost->getTransactionAnonymousSum());
-
-                // apply style
-                $sheet->getStyle('A4')->applyFromArray($styleArrayHeader);
-                $sheet->getStyle('B4')->applyFromArray($styleArrayHeader);
-                $sheet->getStyle('C4')->applyFromArray($styleArrayHeader);
-
-                $sheet->getStyle('A5')->applyFromArray($styleArrayContent);
-                $sheet->getStyle('B5')->applyFromArray($styleArrayContent);
-                $sheet->getStyle('C5')->applyFromArray($styleArrayContent);
-
-                $sheet->getStyle('A2')->getAlignment()->setWrapText(true);
-
-                $sheet->getStyle('A1')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB(Color::COLOR_GREEN);
-                $sheet->getColumnDimension('A')->setAutoSize(true);
-                $sheet->getColumnDimension('B')->setAutoSize(true);
-                $sheet->getColumnDimension('C')->setAutoSize(true);
-
-
-                $arrayTransaction = $this->transactionRepository->getNotAnonymousByPost($expiredPost);
-
-
-                for ($i=0; $i < count($arrayTransaction); $i++) {
-                    $col = $i + 6;
-
-                    $donatorInfo = $arrayTransaction[$i]->getUser()->getFirstname().' '.$arrayTransaction[$i]->getUser()->getLastname();
-                    $sheet->setCellValue('A'.$col, $donatorInfo);
-                    $sheet->setCellValue('B'.$col, $arrayTransaction[$i]->getAmount());
-                    $sheet->setCellValue('C'.$col, $arrayTransaction[$i]->getTransfertAt());
-
-                    $sheet->getStyle('A'.$col)->applyFromArray($styleArrayContent);
-                    $sheet->getStyle('B'.$col)->applyFromArray($styleArrayContent);
-                    $sheet->getStyle('C'.$col)->applyFromArray($styleArrayContent);
-
-                }
-
-                $lastcol = count($arrayTransaction) + 7;
-                $sheet->setCellValue('A'.$lastcol, 'Total');
-                $sheet->setCellValue('B'.$lastcol, round($this->transactionRepository->getTotalAmountbyPost($expiredPost),2));
-                // send email recap with detail of each transaction
-
-
-                $sheet->setTitle("Detail of donation");
-
-                // Create your Office 2007 Excel (XLSX Format)
-                $writer = new Xlsx($excelFile);
-
-                // Create a Temporary file in the system
-                $fileName = 'Public/tempFile/Summary_Fund_Collected.xlsx';
-                // Create the excel file in the tmp directory of the system
-                $writer->save($fileName);
-
-                $this->mailer->sendMailToAuthorWhenFinishedPost($userId,$expiredPost,$fileName);
-
-                // get list distinct of the donator :
+                // get list distinct of the donator  and send mail to annonce that we are finish the "collect step":
 
                 $ArrayUserDonate = $this->transactionRepository->findDistinctDonatorByPost($expiredPost);
-
+                // for each user donate in the post, send Email alert
                 foreach ($ArrayUserDonate as $userId){
                     $output->writeln($userId);
                     $user = $this->em->getRepository(User::class)->findOneBy([
@@ -217,7 +116,7 @@ class TransfertFundAfterExpiredCommand extends Command
                 }
             }else{
 
-                $this->mailer->sendMailToAuthorWhenFinishedPost($userId,$expiredPost,null);
+                $this->mailer->sendMailToAuthorWhenFinishedCollectingPost($userId,$expiredPost,null);
 
             }
 

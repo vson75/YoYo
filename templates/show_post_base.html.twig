@@ -85,7 +85,7 @@
     <div class="row">
 
         <!-- Post Content Column -->
-        <div class="col-md-8 col-xs-8">
+        <div class="col-md-8 col-xs-8" id="post_and_comment_section">
             <div class="showpost">
                 <!-- Preview Image -->
                 <div>
@@ -373,8 +373,8 @@
                 {% endif %}
             {% else %}
 
-
-            <div class="timeline" style="max-height: 1000px;">
+        <div id="timeline_section" style="max-height: 100px; overflow: auto; scrollbar-width: none;">
+            <div class="timeline" >
                 {% if startCollectDate is not empty %}
                     <div class="timelinebox right">
                         <div class="content">
@@ -403,10 +403,10 @@
                                 {% if 'image/' in receivedFundDate[0].postDocument.mimeType %}
                                         {% trans %}Bạn có thể xem biên lai nhận tiền dưới đây{% endtrans %}
                                         <p>
-                                            <img id="ProofReceived" class="OrganisationDocument" src="{{ asset(receivedFundDate[0].postDocument.getProofReceivedPath)}}">
+                                            <img id="ProofReceived" class="OrganisationDocument" src="{{ asset(receivedFundDate[0].postDocument.getProofReceivedPathForTwig)}}">
                                         </p>
                                     {% else %}
-                                        {% trans %}Bạn có thể tải biên lai nhận tiền {% endtrans %} <a href="{{ path('app_download_post_document',{id: proofOfReceivedFundDocument.id}) }}">{% trans %}tại đây{% endtrans %}</a>
+                                        {% trans %}Bạn có thể tải biên lai nhận tiền {% endtrans %} <a href="{{ path('app_download_post_document',{id: receivedFundDate[0].postDocument.id}) }}">{% trans %}tại đây{% endtrans %}</a>
                                 {% endif %}
                             </p>
                         </div>
@@ -420,7 +420,7 @@
                             <h5>{{ updateInfo[0].date|date('d/m/Y') }}</h5>
                             <p>{% trans %}cập nhật thông tin từ dự án cùng với 1 số hình ảnh{% endtrans %}</p>
                             {% for update in updateInfo %}
-                                <img id="updateInfo{{update.id}}{{loop.index}}" class="OrganisationDocument" src="{{ asset(update.postDocument.getProofOFProjectInProgressPath)}}">
+                                <img id="updateInfo{{update.id}}{{loop.index}}" class="OrganisationDocument" src="{{ asset(update.postDocument.getProofOFProjectInProgressForTwig)}}">
                             {% endfor %}
                         </div>
                     </div>           
@@ -429,6 +429,8 @@
                 {% endif %}
 
             </div>
+        </div>
+            
 
             {% endif %}
 
@@ -452,4 +454,12 @@
     {% block javascripts %}
         {{ parent() }}
         <script src="{{ asset('js/showpost.js') }}"></script>
+        <script>
+            // get the height of the left section
+            var section_left = document.getElementById("post_and_comment_section");
+
+            //Set max height for the timeline = max height of the left section
+            var timeline = document.getElementById('timeline_section');
+            timeline.style.maxHeight = section_left.offsetHeight+"px";
+        </script>
     {% endblock %}

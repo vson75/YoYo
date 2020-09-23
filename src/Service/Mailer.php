@@ -72,12 +72,12 @@ class Mailer
         $this->mailer->send($email);
     }
 
-    public function sendMailToAuthorWhenFinishedPost(User $user, Post $post,?string $excelFile){
+    public function sendMailToAuthorWhenFinishedCollectingPost(User $user, Post $post,?string $excelFile){
         $email = (new TemplatedEmail())
             ->from($this->admin_email)
             ->to($user->getEmail())
             ->subject($this->translator->trans('email.subject.FinishPost').' '.$post->getTitle().' '.$this->translator->trans('email.subject.finish'))
-            ->htmlTemplate('email/FinishPost.html.twig');
+            ->htmlTemplate('email/FinishCollectingPost.html.twig');
             if(!is_null($excelFile)){
                 $email->attachFromPath($excelFile);
             }

@@ -32,6 +32,7 @@ use App\Repository\PostRepository;
 use App\Repository\TransactionRepository;
 use App\Service\Mailer;
 use App\Service\MarkdownHelper;
+use App\Service\SpreadsheetService;
 use App\Service\UploadService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -725,7 +726,7 @@ class PostController extends AbstractController
      * @param EntityManagerInterface $em
      * @Route("/stop_collect/post/{uniquekey}", name="app_stop_collect_post")
      */
-    public function StopCollectFund(EntityManagerInterface $em, $uniquekey, PostDateHistoricService $postDateHistoric){
+    public function StopCollectFund(EntityManagerInterface $em, $uniquekey, PostDateHistoricService $postDateHistoric, Mailer $mailer, SpreadsheetService $spreadsheetService){
         $repository = $em->getRepository(Post::class);
         $postInfo = $repository->findOneBy([
             'uniquekey'=> $uniquekey
@@ -744,6 +745,8 @@ class PostController extends AbstractController
             $em->flush();
 
             $postDateHistoric->InsertNewPostDateHistorical($postInfo,$this->getUser(),PostDateType::Date_end_collect_fund, null);
+            $ExcelFileSummary = $spreadsheetService->CreateSummaryDonateByPost($postInfo);
+            $mailer->sendMailToAuthorWhenFinishedCollectingPost($this->getUser(), $postInfo, $ExcelFileSummary); 
 
             $message = $this->translator->trans('message.post.StartedTransfertFund');
             $this->addFlash("success", $message);
@@ -751,7 +754,7 @@ class PostController extends AbstractController
         }else{
             $message = $this->translator->trans('message.post.notAuthor');
             $this->addFlash('echec', $message);
-            return $this->redirectToRoute('app_homepage');
+            return $this->redirectToRoute('show_post',['uniquekey'=>$uniquekey]);
         }
     }
 
@@ -908,12 +911,12 @@ class PostController extends AbstractController
     /**
      * @Route("/download/post_document/{id}", name="app_download_post_document",methods={"GET"})
      */
-    public function DownloadPostDocument(PostDocument $postDocument, UploadService $uploadService){
+    public function DownloadProofReceivedDocument(PostDocument $postDocument, UploadService $uploadService){
 
             //dd($postDocument->getDocumentPath());
             $response = new StreamedResponse(function() use ($postDocument, $uploadService) {
                 $outputStream = fopen('php://output', 'wb');
-                $fileStream = $uploadService->readStream($postDocument->getDownloadProofReceivedPath(), true);
+                $fileStream = $uploadService->readStream($postDocument->getProofReceivedPathForDownload(), true);
 
                 stream_copy_to_stream($fileStream, $outputStream);
             });

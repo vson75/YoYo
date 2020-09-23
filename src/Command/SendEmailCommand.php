@@ -41,46 +41,45 @@ class SendEmailCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $EmailNotSent = $this->em->getRepository(Emails::class)->getEmailNotSend();
         $output->writeln([
-            '============'
-          
+        
+            '============',
+            'count array: '.count($EmailNotSent)
         ]);
+
         if(!empty($EmailNotSent)){
-            for ($i=0; $i < count($EmailNotSent); $i++) { 
-                # code...
-    
-                // Get User recipient, get Email content and get Post link to this mail
-                $email = $EmailNotSent[$i];
-                $emailContent = $email->getEmailContent();
-                $user = $email->getUserRecipient();
-                $post = $emailContent->getPost();
-    
-                $postDocumentAttached = $this->em->getRepository(PostDocument::class)->findBy([
-                    'EmailContent' => $emailContent
-                ]);
-                
-                // Get the list document link to this mail
-                $privatePath = $this->params->get('public_upload_file');
-    
-                for ($i=0; $i < count($postDocumentAttached); $i++) { 
-                    $path[$i] = $privatePath.$postDocumentAttached[$i]->getProofOFProjectInProgressPath();
-                }
-                
-                // Send mail
-                $this->mailer->sendMailInTableEmails($user,$post,$path, $emailContent->getObject(), $emailContent->getContent());
-    
-                // Update Send Date in Emails table
-                $email->setSentDate(new DateTime('now'));
-                $this->em->persist($email);
-                $this->em->flush();
-    
-    
+            for ($i=0; $i < count($EmailNotSent); $i++)
+            { 
+
+                    // Get User recipient, get Email content and get Post link to this mail
+                    $email = $EmailNotSent[$i];
+
+                    $emailContent = $email->getEmailContent();
+                    $user = $email->getUserRecipient();
+                    $post = $emailContent->getPost();
+        
+                    $postDocumentAttached = $this->em->getRepository(PostDocument::class)->findBy([
+                        'EmailContent' => $emailContent
+                    ]);
+                    
+                    // Get the list document link to this mail
+                    $privatePath = $this->params->get('public_upload_file');
+
+                    for ($k=0; $k < count($postDocumentAttached); $k++) { 
+                        $path[$k] = $privatePath.$postDocumentAttached[$k]->getProofOFProjectInProgressForDownload();
+
+                    }
+                    
+                    // Send mail
+                    $this->mailer->sendMailInTableEmails($user,$post,$path, $emailContent->getObject(), $emailContent->getContent());
+
+                    // Update Send Date in Emails table
+                    $email->setSentDate(new DateTime('now'));
+                    $this->em->persist($email);
+                    $this->em->flush();
             }
         }else{
             $io->success('No email waiting to be send');
         }
-        
-
-
         $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
 
         return 0;

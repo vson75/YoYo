@@ -6,16 +6,14 @@ namespace App\Service;
 
 use App\Entity\DocumentType;
 use App\Entity\Post;
-use App\Entity\PostDocument;
 use App\Entity\RequestOrganisationDocument;
 use App\Entity\RequestStatus;
 use App\Entity\User;
-use App\Entity\UserDocument;
 use App\Repository\RequestStatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Sluggable\Util\Urlizer;
 use League\Flysystem\FilesystemInterface;
-use PhpParser\Comment\Doc;
+
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
@@ -36,7 +34,7 @@ class UploadService
     const Proof_project_in_progress = '/proof_project_in_progress/';
 
     //const to upload proof received
-    const Public_document_path_show_twig = 'uploads/post/';
+    const Public_post_document_path_show_twig = 'uploads/post/';
 
 
     private $publicUploadFilesystem;

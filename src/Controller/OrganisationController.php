@@ -18,6 +18,7 @@ use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
@@ -377,7 +378,7 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
     }
 
     /**
-     * @Route("/delete/userDocument/{id}", name="app_delete_user_document")
+     * @Route("/delete/userDocument/{id}", name="app_delete_user_document", methods={"POST"})
      */
     public function DeleteDocument(RequestOrganisationDocument $requestOrganisationDocument, UploadService $uploadService, EntityManagerInterface $em){
 
@@ -389,9 +390,10 @@ class OrganisationController extends \Symfony\Bundle\FrameworkBundle\Controller\
                 $em->persist($requestOrganisationDocument);
                 $em->flush();
 
-                $message = $this->translator->trans('message.organisation.documentDeleted');
-                $this->addFlash("success", $message);
-                return $this->redirectToRoute('app_my_organisation');
+                return new Response(null, 204);
+                //$message = $this->translator->trans('message.organisation.documentDeleted');
+                //$this->addFlash("success", $message);
+                //return $this->redirectToRoute('app_my_organisation');
         }else{
             $message = $this->translator->trans('message.organisation.notAuthor');
             $this->addFlash("echec",$message);

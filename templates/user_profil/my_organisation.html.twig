@@ -162,6 +162,9 @@
                                             id: bank.id
                                         }) }}"><span class="fas fa-trash-alt"></span></a>
                                     </span>
+                                    <a href="#" class="js-delete-document">
+                                        <span class="fa fa-trash"></span>
+                                    </a>
                                  </div>
                              </div>
                          {% endif %}
@@ -177,7 +180,7 @@
                             </div>
                         {% else %}
                             {% for award in awards %}
-                                <div class="row">
+                                <div class="row js-document">
                                     <div class="col-md-6">
                                         <label>{% trans %}Bằng khen{% endtrans %}</label>
                                     </div>
@@ -187,12 +190,17 @@
                                         <a href="{{ path('app_download_user_document', {
                                             id: award.id
                                         }) }}" class="document">{{ award.originalFilename }}</a>
-                                    </span>
+                                        </span>
                                         <span>
                                         <a href="{{ path('app_delete_user_document',{
                                             id: award.id
                                         }) }}"><span class="fas fa-trash-alt"></span></a>
-                                    </span>
+                                        </span>
+                                        <a href="#" 
+                                        data-url="{{ path('app_delete_user_document', {id: award.id}) }}"
+                                        class="js-delete-document">
+                                            <span class="fa fa-trash"></span>
+                                        </a>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -210,3 +218,14 @@
     </div>
 {% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    
+    <script src="{{ asset('js/my_organisation.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            var jsDocument = $('.js-document');
+            DeleteDocumentApp.initialize(jsDocument);
+        });
+    </script>
+{% endblock %}
