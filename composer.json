@@ -39,6 +39,7 @@
         "symfony/translation": "5.*",
         "symfony/twig-pack": "^1.0",
         "symfony/validator": "5.*",
+        "symfony/webpack-encore-bundle": "^1.7",
         "symfony/yaml": "5.*",
         "twig/cssinliner-extra": "^3.0"
     },
