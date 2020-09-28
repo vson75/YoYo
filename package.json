@@ -1,8 +1,15 @@
 {
     "devDependencies": {
+        "@fortawesome/fontawesome-free": "^5.14.0",
         "@symfony/webpack-encore": "^0.30.0",
+        "bootstrap": "^4.5.2",
         "core-js": "^3.0.0",
+        "font-awesome": "^4.7.0",
+        "jquery": "^3.5.1",
+        "node-sass": "^4.14.1",
+        "popper.js": "^1.16.1",
         "regenerator-runtime": "^0.13.2",
+        "sass-loader": "^10.0.2",
         "webpack-notifier": "^1.6.0"
     },
     "license": "UNLICENSED",
@@ -12,5 +19,8 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
+    },
+    "dependencies": {
+        "stripe": "^8.102.0"
     }
 }

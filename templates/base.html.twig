@@ -5,11 +5,10 @@
 
     <title>{% block title %}{% trans %} Xin chào{% endtrans %} ! {% endblock %}</title>
     {% block stylesheets %}
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Uncomment this style
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Spartan&display=swap">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
-        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-        <script src="https://kit.fontawesome.com/ab7390054a.js" crossorigin="anonymous"></script>
+    -->
+        {{encore_entry_link_tags('app')}}
 
     {% endblock %}
 </head>
@@ -154,21 +153,9 @@
 
 
         {% block javascripts %}
-            <script
-                    src="https://code.jquery.com/jquery-3.4.1.min.js"
-                    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-                    crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-
-            <script>
-                $('.custom-file-input').on('change', function(event) {
-                    var inputFile = event.currentTarget;
-                    $(inputFile).parent()
-                        .find('.custom-file-label')
-                        .html(inputFile.files[0].name);
-                });
-            </script>
+            {{encore_entry_script_tags('app')}}
+            <!-- Add directly the script of stripe by recommand of Stripe. It work in client side-->
+            <script src="https://js.stripe.com/v3/"></script>
         {% endblock %}
     </body>
 

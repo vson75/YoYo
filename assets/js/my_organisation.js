@@ -1,3 +1,8 @@
+
+import $ from 'jquery';
+import '../css/components/_user_profil.scss';
+       
+       
        // déclarer object DeleteDocumentApp
        var DeleteDocumentApp = {
         initialize: function(divDoc){
@@ -38,10 +43,16 @@
         },
 
         handleColMd6Click : function(){
-            console.log("click into div");
+            
         },
 
 
     };
+
+
+    $(document).ready(function(){
+        var jsDocument = $('.js-document');
+        DeleteDocumentApp.initialize(jsDocument);
+        });
 
 

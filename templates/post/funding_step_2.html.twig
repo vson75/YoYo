@@ -2,9 +2,7 @@
 
 {% block stylesheets %}
 {{ parent() }}
-    <script src="https://js.stripe.com/v3/"></script>
-    <link href="{{ asset('css/funding.css') }}" rel="stylesheet">
-
+    {{encore_entry_link_tags('funding_step_2')}}
 {% endblock %}
 
 {% block body %}
@@ -103,21 +101,8 @@
         var token = document.getElementById("token");
         var givingAmount = {{ givingAmount }};
         var stripe_pk_key = '{{ stripe_pk_key }}';
-    //    console.log(givingAmount);
-
-        var IsNotAnonymous = false;
-        $('#anonymous').click(function() {
-            IsNotAnonymous = $('#anonymous').prop('checked');
-        });
-       // console.log(IsNotAnonymous);
-
-
-
     </script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-    <script src="{{ asset('js/stripe.js') }}">
-
-    </script>
+    {{encore_entry_script_tags('funding_step_2')}}
 
 {% endblock %}

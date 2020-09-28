@@ -1,5 +1,14 @@
 // Set your publishable key: remember to change this to your live publishable key in production
 // See your keys here: https://dashboard.stripe.com/account/apikeys
+
+import $ from 'jquery';
+import '../css/components/_funding.scss';
+
+var IsNotAnonymous = false;
+$('#anonymous').click(function() {
+    IsNotAnonymous = $('#anonymous').prop('checked');
+});
+
 var stripe = Stripe(stripe_pk_key);
 var elements = stripe.elements();
 

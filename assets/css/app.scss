@@ -1,0 +1,16 @@
+@import './helper/variables';
+
+// import bootstrap
+@import '~bootstrap';
+// add old version of frontawesome
+@import '~font-awesome';
+// add front awesome V5
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/brands';
+
+@import './layout/main'; 
+@import './layout/footer'; 
+
+
+

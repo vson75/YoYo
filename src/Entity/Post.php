@@ -335,11 +335,9 @@ class Post
          //dd($amount);
             $total =0;
 
-            for ($i=0; $i< count($amount); $i++) {
-               // get Amount After Fees instead of total amount
-                $total += $amount[$i]->getamountAfterFees();
-           //     dd($total);
-
+            foreach ($amount as $value) {
+                # code...
+                $total += $value->getamountAfterFees();
             }
             return $total;
 
@@ -355,12 +353,8 @@ class Post
 
             if($amount[$i]->getUser() === $user){
                 $total += $amount[$i]->getAmount();
-                //dump('amount ID'.$amount[$i]->getId());
-                //dump($this->getId());
-                //dump('amount Total'.$total);
+
             }
-          //  if($amount[$i]->)
-            //var_dump($amount[$i]->getAmount());
 
 
         }

@@ -6,7 +6,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('css/profil.css') }}" rel="stylesheet">
+    {{encore_entry_link_tags('my_organisation')}}
 {% endblock %}
 {% block body %}
     <div class="container emp-profile">
@@ -116,7 +116,7 @@
                             </div>
 
                         {% else %}
-                            <div class="row">
+                            <div class="row js-document">
                                 <div class="col-md-6">
                                     <label>{% trans %}Chứng nhận tổ chức {% endtrans %}</label>
                                 </div>
@@ -127,11 +127,11 @@
                                             id: certificate.id
                                         }) }}" class="document">{{ certificate.originalFilename }}</a>
                                     </span>
-                                    <span>
-                                        <a href="{{ path('app_delete_user_document',{
-                                            id: certificate.id
-                                        }) }}"><span class="fas fa-trash-alt"></span></a>
-                                    </span>
+                                    <a href="#" 
+                                    data-url="{{ path('app_delete_user_document', {id: certificate.id}) }}"
+                                    class="js-delete-document">
+                                        <span class="fa fa-trash"></span>
+                                    </a>
                                 </div>
                             </div>
                         {% endif %}
@@ -146,7 +146,7 @@
                                 </div>
                             </div>
                          {% else %}
-                             <div class="row">
+                             <div class="row js-document">
                                  <div class="col-md-6">
                                      <label>{% trans %}Tài khoản ngân hàng{% endtrans %}</label>
                                  </div>
@@ -157,12 +157,9 @@
                                             id: bank.id
                                         }) }}" class="document">{{ bank.originalFilename }}</a>
                                     </span>
-                                     <span>
-                                        <a href="{{ path('app_delete_user_document', {
-                                            id: bank.id
-                                        }) }}"><span class="fas fa-trash-alt"></span></a>
-                                    </span>
-                                    <a href="#" class="js-delete-document">
+                                    <a href="#" 
+                                    data-url="{{ path('app_delete_user_document', {id: bank.id}) }}"
+                                    class="js-delete-document">
                                         <span class="fa fa-trash"></span>
                                     </a>
                                  </div>
@@ -191,11 +188,6 @@
                                             id: award.id
                                         }) }}" class="document">{{ award.originalFilename }}</a>
                                         </span>
-                                        <span>
-                                        <a href="{{ path('app_delete_user_document',{
-                                            id: award.id
-                                        }) }}"><span class="fas fa-trash-alt"></span></a>
-                                        </span>
                                         <a href="#" 
                                         data-url="{{ path('app_delete_user_document', {id: award.id}) }}"
                                         class="js-delete-document">
@@ -220,12 +212,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    
-    <script src="{{ asset('js/my_organisation.js') }}"></script>
-    <script>
-        $(document).ready(function(){
-            var jsDocument = $('.js-document');
-            DeleteDocumentApp.initialize(jsDocument);
-        });
-    </script>
+    {{encore_entry_script_tags('my_organisation')}}
 {% endblock %}

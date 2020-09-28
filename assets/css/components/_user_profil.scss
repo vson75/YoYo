@@ -1,3 +1,4 @@
+@import '../helper/variables';
 
 .emp-profile{
     padding: 3%;
@@ -96,12 +97,8 @@
     color: black;
 }
 
-.fa-trash-alt{
-    transition: 1s;
-    color: #cd2828;
-}
 
-.fa-trash-alt:hover{
+.fa-trash:hover{
     -o-transform:rotate(360deg);
     -ms-transform:rotate(360deg);
     -moz-transform:rotate(360deg);

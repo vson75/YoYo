@@ -10,6 +10,7 @@
 ###< symfony/framework-bundle ###
 
 /public/uploads/
+/public/tempFile/
 
 ###> liip/imagine-bundle ###
 /public/media/cache/

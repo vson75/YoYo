@@ -4,8 +4,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    {{encore_entry_link_tags('login')}}
 {% endblock %}
 {# link template : https://bootsnipp.com/snippets/GavAo #}
 {% block body %}
@@ -16,7 +15,7 @@
         {% endif %}
         <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> {% trans %}Đăng nhập{% endtrans %}</h1>
         <div class="social-login">
-            <button class="btn facebook-btn social-btn" type="button" onclick="location.href='{{ path('connect_facebook_start') }}'"><span><i class="fab fa-facebook-f"></i> {% trans %} Đăng nhập bằng Facebook{% endtrans %}</span> </button>
+            <button class="btn facebook-btn social-btn" type="button" onclick="location.href='{{ path('connect_facebook_start') }}'"><span><i class="fa fa-facebook-f"></i> {% trans %} Đăng nhập bằng Facebook{% endtrans %}</span> </button>
         </div>
         <p style="text-align:center">{% trans %} Hoặc {% endtrans %} </p>
         <label for="inputEmail" class="sr-only"> {% trans %} Tài khoản Email{% endtrans %}</label>
@@ -31,11 +30,11 @@
             </label>
         </div>
 
-        <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i> {% trans %} Đăng nhập {% endtrans %}</button>
+        <button class="btn btn-success btn-block" type="submit"><i class="fa fa-sign-in-alt"></i> {% trans %} Đăng nhập {% endtrans %}</button>
         <a href="{{ path('app_forgot_password') }}" id="forgot_pswd"> {% trans %}Quên mật khẩu{% endtrans %}</a>
         <hr>
         <!-- <p>Don't have an account!</p>  -->
-        <button class="btn btn-primary btn-block" type="button" id="btn-signup" onclick="location.href='{{ path('app_registration') }}'"><i class="fas fa-user-plus"></i> {% trans %} Đăng ký tài khoản mới {% endtrans %}</button>
+        <button class="btn btn-primary btn-block" type="button" id="btn-signup" onclick="location.href='{{ path('app_registration') }}'"><i class="fa fa-user-plus"></i> {% trans %} Đăng ký tài khoản mới {% endtrans %}</button>
     </form>
 </div>
 {% endblock %}

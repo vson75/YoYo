@@ -16,6 +16,7 @@ class EditDocumentOrganisationType extends AbstractType
         $builder
             ->add('Document0', FileType::class, [
                 'required' => true,
+                'label' => 'form.documentOrganisation.document',
                 'help' => 'form.documentOrganisation.help',
                 'constraints'=>[
                     new File([
@@ -29,6 +30,7 @@ class EditDocumentOrganisationType extends AbstractType
             ->add('Document1', FileType::class, [
                 'required'=>false,
                 'help' => 'form.documentOrganisation.help',
+                'label' => 'form.documentOrganisation.document',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -41,6 +43,7 @@ class EditDocumentOrganisationType extends AbstractType
             ->add('Document2', FileType::class, [
                 'required'=>false,
                 'help' => 'form.documentOrganisation.help',
+                'label' => 'form.documentOrganisation.document',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -53,6 +56,7 @@ class EditDocumentOrganisationType extends AbstractType
             ->add('Document3', FileType::class, [
                 'required'=>false,
                 'help' => 'form.documentOrganisation.help',
+                'label' => 'form.documentOrganisation.document',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -65,6 +69,7 @@ class EditDocumentOrganisationType extends AbstractType
             ->add('Document4', FileType::class, [
                 'required'=>false,
                 'help' => 'form.documentOrganisation.help',
+                'label' => 'form.documentOrganisation.document',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -77,6 +82,7 @@ class EditDocumentOrganisationType extends AbstractType
             ->add('Document5', FileType::class, [
                 'required'=>false,
                 'help' => 'form.documentOrganisation.help',
+                'label' => 'form.documentOrganisation.document',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -89,6 +95,7 @@ class EditDocumentOrganisationType extends AbstractType
             ->add('Document6', FileType::class, [
                 'required'=>false,
                 'help' => 'form.documentOrganisation.help',
+                'label' => 'form.documentOrganisation.document',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -101,6 +108,7 @@ class EditDocumentOrganisationType extends AbstractType
             ->add('Document7', FileType::class, [
                 'required'=>false,
                 'help' => 'form.documentOrganisation.help',
+                'label' => 'form.documentOrganisation.document',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -113,6 +121,7 @@ class EditDocumentOrganisationType extends AbstractType
             ->add('Document8', FileType::class, [
                 'required'=>false,
                 'help' => 'form.documentOrganisation.help',
+                'label' => 'form.documentOrganisation.document',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -127,6 +136,7 @@ class EditDocumentOrganisationType extends AbstractType
             ->add('Document9', FileType::class, [
                 'required'=>false,
                 'help' => 'form.documentOrganisation.help',
+                'label' => 'form.documentOrganisation.document',
                 'constraints'=>[
                     new File([
                         'maxSize' => '2M',
@@ -138,6 +148,7 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('DocType0', ChoiceType::class, [
                 'required' => true,
+                'label' => 'form.documentOrganisation.docType',
                 'choices'  => [
                     'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
                     'form.documentOrganisation.BankAccount' => 'Bank_account_information',
@@ -146,6 +157,7 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('DocType1', ChoiceType::class, [
                 'required' => false,
+                'label' => 'form.documentOrganisation.docType',
                 'choices'  => [
                     'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
                     'form.documentOrganisation.BankAccount' => 'Bank_account_information',
@@ -154,6 +166,7 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('DocType2', ChoiceType::class, [
                 'required' => false,
+                'label' => 'form.documentOrganisation.docType',
                 'choices'  => [
                     'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
                     'form.documentOrganisation.BankAccount' => 'Bank_account_information',
@@ -162,6 +175,7 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('DocType3', ChoiceType::class, [
                 'required' => false,
+                'label' => 'form.documentOrganisation.docType',
                 'choices'  => [
                     'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
                     'form.documentOrganisation.BankAccount' => 'Bank_account_information',
@@ -170,6 +184,7 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('DocType4', ChoiceType::class, [
                 'required' => false,
+                'label' => 'form.documentOrganisation.docType',
                 'choices'  => [
                     'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
                     'form.documentOrganisation.BankAccount' => 'Bank_account_information',
@@ -178,6 +193,7 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('DocType5', ChoiceType::class, [
                 'required' => false,
+                'label' => 'form.documentOrganisation.docType',
                 'choices'  => [
                     'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
                     'form.documentOrganisation.BankAccount' => 'Bank_account_information',
@@ -186,6 +202,7 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('DocType6', ChoiceType::class, [
                 'required' => false,
+                'label' => 'form.documentOrganisation.docType',
                 'choices'  => [
                     'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
                     'form.documentOrganisation.BankAccount' => 'Bank_account_information',
@@ -194,6 +211,7 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('DocType7', ChoiceType::class, [
                 'required' => false,
+                'label' => 'form.documentOrganisation.docType',
                 'choices'  => [
                     'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
                     'form.documentOrganisation.BankAccount' => 'Bank_account_information',
@@ -202,6 +220,7 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('DocType8', ChoiceType::class, [
                 'required' => false,
+                'label' => 'form.documentOrganisation.docType',
                 'choices'  => [
                     'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
                     'form.documentOrganisation.BankAccount' => 'Bank_account_information',
@@ -210,6 +229,7 @@ class EditDocumentOrganisationType extends AbstractType
             ])
             ->add('DocType9', ChoiceType::class, [
                 'required' => false,
+                'label' => 'form.documentOrganisation.docType',
                 'choices'  => [
                     'form.documentOrganisation.CertifOrganisation' => 'Certificate_organisation',
                     'form.documentOrganisation.BankAccount' => 'Bank_account_information',

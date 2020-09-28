@@ -9,6 +9,8 @@ form:
     CertifOrganisation: Giấy chứng nhận tổ chức
     BankAccount: Tài khoản ngân hàng
     Award: Bằng khen
+    document: Tài liệu
+    docType: Dạng tài liệu
 
   CreateOrganisation:
     fileFormat: Dạng file hình ảnh

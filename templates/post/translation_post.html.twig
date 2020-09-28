@@ -6,7 +6,7 @@
 {% block stylesheets %}
 {{ parent() }}
 
-    <link href="{{ asset('css/translation_post.css') }}" rel="stylesheet">
+    {{encore_entry_link_tags('translation_post')}}
 {% endblock %}
 
 {% block body %}

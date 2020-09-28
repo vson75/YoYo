@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import '../css/showPost.scss';
+
 var fbButton = document.getElementById('fb-share-button');
 var url = window.location.href;
 
@@ -104,4 +107,16 @@ var span = document.getElementsByClassName("close")[0];
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
     modal.style.display = "none";
+}
+
+
+
+// get the height of the left section
+var section_left = document.getElementById("post_and_comment_section");
+
+//Set max height for the timeline = max height of the left section
+var timeline = document.getElementById('timeline_section');
+
+if(timeline != null){
+    timeline.style.maxHeight = section_left.offsetHeight+"px";
 }

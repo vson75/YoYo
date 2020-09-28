@@ -24,6 +24,16 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/js/app.js')
+    .addEntry('showpost','./assets/js/showpost.js')
+    .addEntry('funding_step_1', './assets/js/funding_step_1.js')
+    .addEntry('funding_step_2', './assets/js/funding_step_2.js')
+    .addEntry('my_organisation', './assets/js/my_organisation.js')
+    .addEntry('edit_document', './assets/js/edit_organisation_doc.js')
+    .addStyleEntry('admin','./assets/css/components/_admin.scss')
+    .addStyleEntry('homepage','./assets/css/components/_homepage.scss')
+    .addStyleEntry('login','./assets/css/components/_login.scss')
+    .addStyleEntry('translation_post','./assets/css/components/_translation_post.scss')
+    .addStyleEntry('user_chart','./assets/css/components/_userChart.scss')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 
@@ -54,7 +64,7 @@ Encore
     })
 
     // enables Sass/SCSS support
-    //.enableSassLoader()
+    .enableSassLoader()
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
