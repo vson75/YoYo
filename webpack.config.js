@@ -34,6 +34,7 @@ Encore
     .addStyleEntry('login','./assets/css/components/_login.scss')
     .addStyleEntry('translation_post','./assets/css/components/_translation_post.scss')
     .addStyleEntry('user_chart','./assets/css/components/_userChart.scss')
+    .addStyleEntry('email', './assets/css/email.scss')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 

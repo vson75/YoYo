@@ -21,6 +21,9 @@
         "build": "encore production --progress"
     },
     "dependencies": {
-        "stripe": "^8.102.0"
+        "magnific-popup": "^1.1.0",
+        "stripe": "^8.102.0",
+        "swipejs": "^2.2.18",
+        "swiper": "^6.3.2"
     }
 }

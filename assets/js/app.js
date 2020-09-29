@@ -10,6 +10,16 @@ import '../css/app.scss';
 import getTestJS from './components/test';
 import $ from 'jquery';
 import 'bootstrap'; // add functions to jQuery
+import 'magnific-popup';
+
+// import Swiper JS
+import Swiper from 'swiper';
+// import Swiper styles
+import 'swiper/swiper-bundle.css';
+
+const swiper = new Swiper();
+
+
 //global.$ = $; 
  
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.

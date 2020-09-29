@@ -1,0 +1,81 @@
+@import '../css/helper/variables';
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f3f3f3;
+    font-family: Helvetica, Arial, sans-serif;
+}
+h1 {
+    background-color: #264459;
+    color: #ffffff;
+    padding: 30px 0 50px 0;
+    font-weight: normal;
+}
+hr {
+    border: none;
+    border-top: 3px solid #264459;
+    margin: 20px;
+}
+.logo{
+    max-width: 50px;
+    max-height: 50px;
+}
+.container {
+    background-color: #fefefe;
+    width: 580px;
+    margin: 0 auto;
+}
+.bottom {
+    background-color: #efefee;
+}
+.block {
+    margin: 0;
+    padding: 10px 20px 20px 20px;
+}
+.block-button {
+    padding: 10px 20px 20px 20px;
+    margin-left: 14%;
+}
+.logo {
+    width: 100%;
+}
+.text-center {
+    text-align: center;
+}
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #264459;
+    color: #fefefe;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.btn-extend-post {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #74c9a4;
+    color: #fefefe;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+.btn-transfert-fund {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #2566ac;
+    color: #fefefe;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+}

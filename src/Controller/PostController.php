@@ -94,7 +94,7 @@ class PostController extends AbstractController
         $statusArray = $postStatus->getConstants();
 
 
-        return $this->render('homepage.html.twig',[
+        return $this->render('homepage2.html.twig',[
                 'post' => $post,
                 'postFinishCollect' => $postFinishCollect,
                 'status' => $statusArray,

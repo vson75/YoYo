@@ -1,0 +1,214 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{encore_entry_link_tags('homepage')}}
+{% endblock %}
+{% block title %}YoYo{% endblock %}
+{% block body %}
+    <div class="container">
+
+        <!-- Jumbotron Header -->
+        <header class="jumbotron my-4 imgbackground" style="background-image: url('{{ asset('images/nonlavietnam.jpg') }}');">
+
+            <h2 class="display-3">{% trans %} A Warm Welcome! {% endtrans %}</h2>
+            <p class="lead">{% trans %} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat. {% endtrans %}</p>
+
+            {% if userInfo is not null %}
+                {% if is_granted('ROLE_ORGANISATION') or is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-lg">{% trans %} Tạo dự án mới {% endtrans %}</a>
+                {% elseif userInfo.askOrganisation == true  and userInfo.isOrganisation == false %}
+                    <a href="{{ path('app_edit_organisation_info', {'id': userInfo.Id}) }}" class="btn btn-warning btn-lg">{% trans %}Thay đổi thông tin tổ chức{% endtrans %}</a>
+                {% else %}
+                    <a href="{{ path('app_create_organisation') }}" class="btn btn-primary btn-lg">{% trans %} Tạo tài khoản tổ chức{% endtrans %}</a>
+                {% endif %}
+            {% else %}
+                    <a href="{{ path('app_create_organisation') }}" class="btn btn-primary btn-lg">{% trans %} Tạo tài khoản tổ chức{% endtrans %}</a>
+                    <a href="{{ path('app_registration') }}" class="btn btn-info btn-lg">{% trans %}Tạo tài khoản cá nhân{% endtrans %}</a>
+
+            {% endif %}
+
+        </header>
+
+        <!-- Favorite filter-->
+    {% if userInfo is not null %}
+    <div class="favorite">
+        {# check the url to show the icon #}
+        {% set request = app.request.requesturi %}
+
+        {% if request == '/' or request == '/?isFavorite=0' %}
+            <button class="button-favorite" onclick="location.href='?isFavorite=1'">
+                {% trans %}Dự án yêu thích{% endtrans %}
+                <i id="start_empty" class="far fa-star lg"></i>
+            </button>
+        {% else %}
+            <button class="button-favorite" onclick="location.href='?isFavorite=0'">
+                {% trans %}Dự án yêu thích{% endtrans %}
+                <i id="start_checked" class="fas fa-star lg"></i>
+            </button>
+        {% endif %}
+    </div>
+    {% endif %}
+
+
+        {% if post is not empty %}
+        <div class="row">
+            {% for post in post %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card h-100">
+                    {% set finish = post.finishAt %}
+                    {% set now = "now"|date("m/d/Y") %}
+                    {% set diff = date(now).diff(date(finish)) %}
+
+                    {% set leftDays = diff.format("%R%a") - 1 %}
+                    {#if no image#}
+                    <div class="image_thumbnail">
+                    {% if post.imagePath == '/post/image/' %}
+                            <img class="card-img-top" src="{{ post.DefaultImagePath | imagine_filter('card_thumbnail_homepage')}}" alt="">
+                        {% else %}
+                            <img class="card-img-top" src="{{ post.imagePath|imagine_filter('card_thumbnail_homepage')}}" alt="">
+                    {% endif %}
+
+                        {% if leftDays >= 0 %}
+                            {% if leftDays >10 %}
+                                <div class="dayCountdownWhite">J-{{ leftDays }}</div>
+                            {% else %}
+                                <div class="dayCountdownRed">J-{{ leftDays }}</div>
+                            {% endif %}
+                        {% elseif leftDays == -1 %}
+                            <div class="dayCountdownRed">{% trans %}Ngày cuối{% endtrans %}</div>
+                        {% else %}
+                            <div class="dayCountdownRed">{% trans %}Hết hạn{% endtrans %}</div>
+                         {% endif %}
+                    </div>
+
+                    {% set percent_advancement = post.getPercentageAdvancement %}
+
+                    {% set  percent_for_css = 90 -  percent_advancement%}
+
+                    <div class="card-body" style="position: relative;">
+                        <div class="custom_progress" style="top: 0">
+                            <div class="progress">
+
+
+                                {% if post.getTransactionSum == 0 %}
+                                    <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-count" style="right: 90%;">
+                                            0%
+                                        </div>
+                                    </div>
+
+                                {% elseif percent_advancement < 100 %}
+
+                                    <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <span class="progress-count" style="right: {{percent_for_css}}%">
+                                {{percent_advancement|round(0,'floor')}}%
+                            </span>
+                                    </div>
+                                {% else %}
+                                    <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <span class="progress-count" style="right: -1%;">
+                                {{percent_advancement|round(0,'floor')}}%
+                            </span>
+                                    </div>
+                                {% endif %}
+
+
+                            </div>
+                        </div>
+
+                        <h5 class="card-title text-left">{{ post.title }}</h5>
+
+                        {{ post.content|raw }}
+
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}" class="btn btn-primary" style="text-align: left;">{% trans %} Xem chi tiết {% endtrans %}</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+        {% endif %}
+        {# check if postFinishCollect is not empty #}
+        {% if postFinishCollect is not empty %}
+        <hr>
+        <h3 style="text-align: center">{% trans %}Danh sách dự án đã hoàn thành{% endtrans %}</h3>
+        <div class="row">
+            {% for post in postFinishCollect %}
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card h-100">
+
+                        {#if no image#}
+                        <div class="image_thumbnail">
+                            {% if post.imagePath == '/post/image/' %}
+                                <img class="card-img-top" src="{{ post.DefaultImagePath | imagine_filter('card_thumbnail_homepage')}}" alt="">
+                            {% else %}
+                                <img class="card-img-top" src="{{ post.imagePath|imagine_filter('card_thumbnail_homepage')}}" alt="">
+                            {% endif %}
+
+                            {% if post.status.id == status['POST_FINISH_COLLECTING'] %}
+                                <div class="dayCountdownRed">{% trans %}Đóng quyên góp{% endtrans %}</div>
+                            {% elseif  post.status.id == status['POST_TRANSFERT_FUND'] %}
+                                <div class="dayCountdownRed">{% trans %}Đang chuyển khoản{% endtrans %}</div>
+                            {% elseif post.status.id == status['POST_IN_PROGRESS'] %}
+                                <div class="dayCountdownRed">{% trans %}Dự án đã nhận tiền{% endtrans %}</div>
+                            {% endif%}
+
+
+                        </div>
+
+                        {% set percent_advancement = post.getPercentageAdvancement %}
+
+                        {% set  percent_for_css = 90 -  percent_advancement%}
+
+                        <div class="card-body" style="position: relative;">
+                            <div class="custom_progress" style="top: 0">
+                                <div class="progress">
+
+
+                                    {% if post.getTransactionSum == 0 %}
+                                        <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-count" style="right: 90%;">
+                                                0%
+                                            </div>
+                                        </div>
+
+                                    {% elseif percent_advancement < 100 %}
+
+                                        <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <span class="progress-count" style="right: {{percent_for_css}}%">
+                                {{percent_advancement|round(0,'floor')}}%
+                            </span>
+                                        </div>
+                                    {% else %}
+                                        <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <span class="progress-count" style="right: -1%;">
+                                {{percent_advancement|round(0,'floor')}}%
+                            </span>
+                                        </div>
+                                    {% endif %}
+
+
+                                </div>
+                            </div>
+
+                            <h5 class="card-title text-left">{{ post.title }}</h5>
+
+                            {{ post.content|raw }}
+
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}" class="btn btn-primary" style="text-align: left;">{% trans %} Xem chi tiết {% endtrans %}</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+        <!-- /.row -->
+
+    </div>
+{% endblock %}
