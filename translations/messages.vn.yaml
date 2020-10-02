@@ -115,6 +115,7 @@ message:
       extendPostSuccess: Dự án của bạn đã gia hạn thành công
       StartedTransfertFund: Chúng tôi sẽ bắt đầu quá trình chuyển khoản. Bạn sẽ nhận được các thông tin chi tiết cho mỗi lần chuyển khoản cũng như danh sách đã ủng hộ cho dự án của bạn.
       NotExiste: Dự án của bạn không tồn tại trong hệ thống của chúng tôi. Vui lòng kiểm tra lại thông tin của dự án.
+      expriredDate: Xin lỗi bạn, dự án đã đóng quyên góp. Bạn không thể quyên góp thêm cho dự án. 
 
   organisation:
       notAuthor: Bạn không phải là người của tổ chức này. Bạn không thể thay đổi các thông tin của tổ chức

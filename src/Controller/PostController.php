@@ -48,6 +48,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Stripe\{Stripe, PaymentIntent};
+use Symfony\Component\Validator\Constraints\Unique;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PostController extends AbstractController
@@ -525,6 +526,17 @@ class PostController extends AbstractController
         ]);
 
         //dd($postInfo);
+        $date_expired = $postInfo->getFinishAt();
+        $date_now = new DateTime('now');
+        if($date_now > $date_expired){
+            $message = $this->translator->trans('message.post.expriredDate');
+            $this->addFlash('echec', $message);
+            return $this->redirectToRoute('show_post', [
+                'uniquekey' => $postInfo->getUniqueKey()
+                ]);
+        }
+        
+
         if (is_null($postInfo)) {
             throw $this->createNotFoundException('The Post is not exist');
         }

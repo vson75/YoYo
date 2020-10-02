@@ -45,7 +45,7 @@ class PostRepository extends ServiceEntityRepository
          return   $this->publishedAtIsNotNull()
             ->andWhere('p.status = '.$status_Collecting.' ')
             ->orderBy('p.id', 'DESC')
-            ->setMaxResults(8)
+            ->setMaxResults(3)
             ->getQuery()
             ->getResult()
             ;

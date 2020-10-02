@@ -12,19 +12,7 @@ import $ from 'jquery';
 import 'bootstrap'; // add functions to jQuery
 import 'magnific-popup';
 
-// import Swiper JS
-import Swiper from 'swiper';
-// import Swiper styles
-import 'swiper/swiper-bundle.css';
-
-const swiper = new Swiper();
-
-
 //global.$ = $; 
- 
-// Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
-// import $ from 'jquery';
-
 // this code is custom to add input filename in the input field. do not delete
 $('.custom-file-input').on('change', function(event) {
     var inputFile = event.currentTarget;

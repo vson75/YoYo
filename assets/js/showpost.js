@@ -20,7 +20,6 @@ if(fbButton != null){
 }
 
 
-
 function checkfavorite(){
 
     if(start_checked.style.display === "none"){
@@ -92,7 +91,6 @@ var ArrayUpdateInfo = document.querySelectorAll('*[id^="updateInfo"]');
             ArrayUpdateInfo[a-1] = document.querySelectorAll('*[id^="updateInfo"]');
             //console.log(ArrayUpdateInfo[a-1]);
             ArrayUpdateInfo[a-1].onclick = function(){
-                console.log(ArrayUpdateInfo[a-1]);
                 modal.style.display = "block";
                 modalImg.src = this.src;
             }

@@ -30,11 +30,11 @@ Encore
     .addEntry('my_organisation', './assets/js/my_organisation.js')
     .addEntry('edit_document', './assets/js/edit_organisation_doc.js')
     .addStyleEntry('admin','./assets/css/components/_admin.scss')
-    .addStyleEntry('homepage','./assets/css/components/_homepage.scss')
     .addStyleEntry('login','./assets/css/components/_login.scss')
     .addStyleEntry('translation_post','./assets/css/components/_translation_post.scss')
     .addStyleEntry('user_chart','./assets/css/components/_userChart.scss')
     .addStyleEntry('email', './assets/css/email.scss')
+    .addEntry('homepage_new', './assets/js/homepage.js')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 
@@ -44,6 +44,7 @@ Encore
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
     .enableSingleRuntimeChunk()
+    //.disableSingleRuntimeChunk()
 
     /*
      * FEATURE CONFIG

@@ -2,7 +2,6 @@
 import $ from 'jquery';
 import '../css/components/_user_profil.scss';
        
-       
        // déclarer object DeleteDocumentApp
        var DeleteDocumentApp = {
         initialize: function(divDoc){
