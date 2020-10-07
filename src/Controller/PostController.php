@@ -80,6 +80,19 @@ class PostController extends AbstractController
             //show post by newest with status = Finish collect OR Transfering Fund
             $postFinishCollect = $repository->findPostFinishCollect();
         }else{
+
+            // get the list post favorite by user
+            $repo_Favorite = $em->getRepository(Favorite::class);
+            $user_fav_post = $repo_Favorite->getDistinctFavoriteByUser($userInfo->getId());
+       
+            $array_user_fav_post = [];
+            for ($i=0; $i < count($user_fav_post) ; $i++) { 
+                # code...
+                array_push($array_user_fav_post, $user_fav_post[$i][1]);
+            }
+            //dd($array_user_fav_post);
+
+            // if user filter in favorite 
             if(is_null($q) or $q === '0'){
                 $post = $repository->findPostByNewest();
                 $postFinishCollect = $repository->findPostFinishCollect();
@@ -89,17 +102,20 @@ class PostController extends AbstractController
             }
         }
 
-
         //get the list of Status
         $postStatus = new \ReflectionClass('App\Entity\PostStatus');
         $statusArray = $postStatus->getConstants();
 
-
+        //get post in collect
+        $number_post_in_collect = $repository->countDistinctPostByStatus(PostStatus::POST_COLLECTING);
+        
         return $this->render('homepage2.html.twig',[
                 'post' => $post,
                 'postFinishCollect' => $postFinishCollect,
                 'status' => $statusArray,
                 'userInfo'=> $userInfo,
+                'nb_post_in_collect' => $number_post_in_collect,
+                'array_user_fav_post' => $array_user_fav_post,
             ]
         );
     }
@@ -297,7 +313,6 @@ class PostController extends AbstractController
         $logger->info('a new participant has been finance this project');
         //the key to increase nb Participant = nb_Participant (use this key in post.js)
         return $this->json([
-            'nb_Participant'=> $post->getNumberParticipant(),
             'id_post'=>$post->getTitle()
         ]);
     }
@@ -1078,6 +1093,7 @@ class PostController extends AbstractController
         ]);
 
     }
+
 
 
 }

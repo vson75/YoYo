@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Post;
 use App\Entity\PostSearch;
 use App\Entity\PostStatus;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -42,13 +43,18 @@ class PostRepository extends ServiceEntityRepository
     public function findPostByNewest()
     {
         $status_Collecting = PostStatus::POST_COLLECTING;
+        //dd($date_now);
+
          return   $this->publishedAtIsNotNull()
             ->andWhere('p.status = '.$status_Collecting.' ')
+           // ->andWhere('p.finishAt > :date_now')
             ->orderBy('p.id', 'DESC')
-            ->setMaxResults(3)
+           // ->setParameter('date_now', new DateTime('now'))
+            ->setMaxResults(8)
             ->getQuery()
             ->getResult()
             ;
+
     }
 
     public function findPostFinishCollect(){

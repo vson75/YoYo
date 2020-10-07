@@ -2,59 +2,15 @@ import $ from 'jquery';
 // import Swiper JS
 import Swiper from 'swiper';
 // import Swiper styles
-import 'swiper/swiper-bundle.css';
+//import 'swiper/swiper-bundle.css';
 
 import '../css/components/_homepage.scss';
 
-
-
 $(document).ready(function () {
-
     if ($(".preloader").length) {
       $(".preloader").fadeOut();
     }
-    // swiper slider
-
-    const swiperElm = document.querySelectorAll(".thm-swiper__slider");
-
-    swiperElm.forEach(function (swiperelm) {
-      let thmSwiperSlider = new Swiper(swiperelm, {
-        "slidesPerView": 3, 
-        "spaceBetween": 30,
-        "breakpoints": {
-            "0": {
-                "slidesPerView": 1,
-                "spaceBetween": 30
-            },
-            "375": {
-                "slidesPerView": 1,
-                "spaceBetween": 30
-            },
-            "575": {
-                "slidesPerView": 1,
-                "spaceBetween": 30
-            },
-            "768": {
-                "slidesPerView": 1,
-                "spaceBetween": 30
-            },
-            "991": {
-                "slidesPerView": 2,
-                "spaceBetween": 30
-            },
-            "1199": {
-                "slidesPerView": 2,
-                "spaceBetween": 30
-            },
-            "1200": {
-                "slidesPerView": 3,
-                "spaceBetween": 30
-            }
-        }
-      });
-
-    });
-
+ 
     // dynamic radius
     const dynamicRadius = document.querySelectorAll(".dynamic-radius");
     dynamicRadius.forEach(function (btn) {
@@ -64,15 +20,44 @@ $(document).ready(function () {
     });
   });
 
-
-  var shareFB = document.querySelector('[id^="fb-share-"]');
+var shareFB = document.querySelector('[id^="fb-share-"]');
 
   shareFB.addEventListener('click', function(){
     var uniquekey = shareFB.id.replace("fb-share-","");
-    var postURL = window.location.href + "/post/" + uniquekey;
+    console.log(uniquekey);
+    var postURL = window.location.href + "post/" + uniquekey;
     window.open('https://www.facebook.com/sharer/sharer.php?u=' + postURL,
     'facebook-share-dialog',
     'width=800,height=600'
     );
     return false;
   });
+
+
+$('[id^="addFav_"]').on('click', function(e){
+  e.preventDefault();
+  var uniquekey = this.id.replace("addFav_","");
+  //console.log(e.currentTarget);
+  var tagetDiv = $(e.currentTarget);
+  var url = "ajax/add_favorite/"+uniquekey;
+
+  // check if user already add favorite this post
+  if(tagetDiv.attr('class') === 'fas fa-star'){
+    $(e.currentTarget).removeClass('fas fa-star')
+                      .addClass('far fa-star');
+    $.ajax(
+    {
+      url: url+"/0",
+      method: 'POST'
+    });
+  }else{
+
+    $(e.currentTarget).removeClass('far fa-star')
+                      .addClass('fas fa-star');
+    $.ajax(
+    {
+      url: url+"/1",
+      method: 'POST'
+    });
+  }
+});
