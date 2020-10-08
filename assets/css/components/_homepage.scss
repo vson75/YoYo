@@ -523,10 +523,18 @@ display: none;
   color: white;
   font-size: 20px;
   padding: 20px;
-  text-align: center;
+  text-align: right;
   border-top-left-radius: 14px;
   border-top-right-radius: 14px;
+
+  .txt_add_fav{
+    margin-top: 15px;
+    margin-right: 0;
+    font-size: 15px;
+  }
 }
+
+
 
 .card:hover .overlay-img-post{
   opacity: 1;

@@ -227,15 +227,19 @@
                                            
 
                                             {% if userInfo is not null %}
-                                                {% if post.id in array_user_fav_post %}
-                                                    <div class="overlay-img-post" >
-                                                        <i id="addFav_{{post.uniquekey}}" class="fas fa-star"></i>
-                                                    </div>
+                                                    {% if post.id in array_user_fav_post %}
+                                                        <div id="remove_fav_section_{{post.uniquekey}}" class="overlay-img-post" >
+                                                            <div id="txt_remove_fav_{{post.uniquekey}}" class="txt_add_fav">{% trans %}Huỷ thích dự án{% endtrans %}</div>
+                                                            <i id="addFav_{{post.uniquekey}}" class="fas fa-star"></i>
+                                                        </div>
+                                                        {% else %}
+                                                        <div id="add_fav_section_{{post.uniquekey}}" class="overlay-img-post" >
+                                                            <div id="txt_add_fav_{{post.uniquekey}}" class="txt_add_fav">{% trans %}Thích dự án{% endtrans %}</div>
+                                                            <i id="addFav_{{post.uniquekey}}" class="far fa-star"></i>
+                                                        </div>
+                                                    {% endif %}
                                                 {% else %}
-                                                    <div class="overlay-img-post" >
-                                                        <i id="addFav_{{post.uniquekey}}" class="far fa-star"></i>
-                                                    </div>
-                                                {% endif %}
+                                                <div class="overlay-img-post" ></div>
                                             {% endif %}
 
 
@@ -312,56 +316,54 @@
         </div><!-- /.container -->
     </section><!-- /.causes-page -->
 
-    <section class="finish_project pt-120 pb-120">
-        <div class="container">
-            <div class="finish_project__top">
-                <div class="row align-items-center">
-                    <div class="col-md-12 col-lg-7">
-                        <div class="block-title">
-                            <p>Our Volunteers</p>
-                            <h3>Meet those who help <br> others in need.</h3>
-                        </div><!-- /.block-title -->
-                    </div><!-- /.col-md-12 col-lg-6 -->
-                    <div class="col-md-12 col-lg-5">
-                        <p class="finish_project__top-text">Lorem Ipsum is simply dummy text of the printing and typesetting
-                            industry. Have you done google research which works all the time. </p>
-                    </div><!-- /.col-md-12 col-lg-6 -->
-                </div><!-- /.row -->
-            </div><!-- /.finish_project__top -->
-            <div class="card_finish_4_col">
-                {% if postFinishCollect is not empty %}
-                    {% for post in postFinishCollect %}
-                        <div onclick="location.href='{{path('show_post', {uniquekey: post.uniqueKey})}}'">
-                            <div class="card_finish text-center content-bg-1">
-                                <div class="card_finish__image">
-                                    {% if post.imagePath == '/post/image/' %}
-                                        <img class="card-img-top card-img-finish" src="{{ post.DefaultImagePath | imagine_filter('card_thumbnail_homepage')}}" alt="">
-                                    {% else %}
-                                        <img class="card-img-top card-img-finish" src="{{ post.imagePath|imagine_filter('card_thumbnail_homepage')}}" alt="">
-                                    {% endif %}
-
-                                    {% if post.status.id == status['POST_FINISH_COLLECTING'] %}
-                                        <div class="dayCountdownRed">{% trans %}Đóng quyên góp{% endtrans %}</div>
-                                    {% elseif  post.status.id == status['POST_TRANSFERT_FUND'] %}
-                                        <div class="dayCountdownRed">{% trans %}Đang chuyển khoản{% endtrans %}</div>
-                                    {% elseif post.status.id == status['POST_IN_PROGRESS'] %}
-                                        <div class="dayCountdownRed">{% trans %}Dự án đã nhận tiền{% endtrans %}</div>
-                                    {% endif%}
-                                </div><!-- /.team-card__image -->
-                                <div class="content_overlay">{{post.title}}</div>
-                            </div><!-- /.team-card -->
-                        </div><!-- /.wow fadeInLeft -->
-                    {% endfor %}
+    {% if postFinishCollect is not empty %}
+        <section class="finish_project pt-120 pb-120">
+            <div class="container">
+                <div class="finish_project__top">
+                    <div class="row align-items-center">
+                        <div class="col-md-12 col-lg-7">
+                            <div class="block-title">
+                                <p>Our Volunteers</p>
+                                <h3>Meet those who help <br> others in need.</h3>
+                            </div><!-- /.block-title -->
+                        </div><!-- /.col-md-12 col-lg-6 -->
+                        <div class="col-md-12 col-lg-5">
+                            <p class="finish_project__top-text">Lorem Ipsum is simply dummy text of the printing and typesetting
+                                industry. Have you done google research which works all the time. </p>
+                        </div><!-- /.col-md-12 col-lg-6 -->
+                    </div><!-- /.row -->
+                </div><!-- /.finish_project__top -->
+                <div class="card_finish_4_col">
                     
-                {% endif %}
+                        {% for post in postFinishCollect %}
+                            <div onclick="location.href='{{path('show_post', {uniquekey: post.uniqueKey})}}'">
+                                <div class="card_finish text-center content-bg-1">
+                                    <div class="card_finish__image">
+                                        {% if post.imagePath == '/post/image/' %}
+                                            <img class="card-img-top card-img-finish" src="{{ post.DefaultImagePath | imagine_filter('card_thumbnail_homepage')}}" alt="">
+                                        {% else %}
+                                            <img class="card-img-top card-img-finish" src="{{ post.imagePath|imagine_filter('card_thumbnail_homepage')}}" alt="">
+                                        {% endif %}
+
+                                        {% if post.status.id == status['POST_FINISH_COLLECTING'] %}
+                                            <div class="dayCountdownRed">{% trans %}Đóng quyên góp{% endtrans %}</div>
+                                        {% elseif  post.status.id == status['POST_TRANSFERT_FUND'] %}
+                                            <div class="dayCountdownRed">{% trans %}Đang chuyển khoản{% endtrans %}</div>
+                                        {% elseif post.status.id == status['POST_IN_PROGRESS'] %}
+                                            <div class="dayCountdownRed">{% trans %}Dự án đã nhận tiền{% endtrans %}</div>
+                                        {% endif%}
+                                    </div><!-- /.team-card__image -->
+                                    <div class="content_overlay">{{post.title}}</div>
+                                </div><!-- /.team-card -->
+                            </div><!-- /.wow fadeInLeft -->
+                        {% endfor %}
+                        
                 
-
-
-            </div><!-- /.team-4-col -->
-        </div><!-- /.container -->
-    </section><!-- /.team-about -->
-
-        <!-- Jumbotron Header -->
+                </div><!-- /.team-4-col -->
+            </div><!-- /.container -->
+        </section><!-- finish section -->
+    {% endif %}
+        <!--  
         <header class="jumbotron my-4 imgbackground" style="background-image: url('{{ asset('images/nonlavietnam.jpg') }}');">
 
             <h2 class="display-3">{% trans %} A Warm Welcome! {% endtrans %}</h2>
@@ -382,171 +384,7 @@
             {% endif %}
 
         </header>
-
-
-
-
-        {% if post is not empty %}
-        <div class="row">
-            {% for post in post %}
-            {% set finish = post.finishAt %}
-            {% set now = "now"|date("m/d/Y") %}
-            {% set diff = date(now).diff(date(finish)) %}
-
-            {% set leftDays = diff.format("%R%a") - 1 %}
-
-            {% set percent_advancement = post.getPercentageAdvancement %}
-
-            {% set  percent_for_css = 90 -  percent_advancement%}
-            <div class="col-lg-3 col-md-6 mb-4" style="background-color: red; margin-left:3rem;">
-                <div class="container">
-                    <div class="cause-card__inner">
-                        <div class="cause-card__image">
-                            {% if post.imagePath == '/post/image/' %}
-                                <img class="card-img-top" src="{{ post.DefaultImagePath | imagine_filter('card_thumbnail_homepage')}}" alt="">
-                            {% else %}
-                                <img class="card-img-top" src="{{ post.imagePath|imagine_filter('card_thumbnail_homepage')}}" alt="">
-                            {% endif %}
-                            {% if leftDays >= 0 %}
-                            {% if leftDays >10 %}
-                                <div class="dayCountdownWhite">J-{{ leftDays }}</div>
-                            {% else %}
-                                <div class="dayCountdownRed">J-{{ leftDays }}</div>
-                            {% endif %}
-                            {% elseif leftDays == -1 %}
-                                <div class="dayCountdownRed">{% trans %}Ngày cuối{% endtrans %}</div>
-                            {% else %}
-                                <div class="dayCountdownRed">{% trans %}Hết hạn{% endtrans %}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="cause-card__content">
-                            <div class="cause-card__top">
-                                {% if percent_advancement >= 0 and percent_advancement <= 20 %}
-                                    <div class="cause-card__progress low_percent">
-                                        <span style="width: {{percent_advancement|round(1,'floor')}}%; animation-duration: 1500ms;" class="cardProgress">
-                                            <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
-                                        </span>
-                                    </div>                                  
-                                {% elseif percent_advancement > 20 and percent_advancement <= 70 %}
-                                    <div class="cause-card__progress medium_percent">
-                                        <span style="width: {{percent_advancement|round(1,'floor')}}%; animation-duration: 1500ms;" class="cardProgress">
-                                            <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
-                                        </span>
-                                    </div> 
-                                {% else %}
-                                    <div class="cause-card__progress high_percent">
-                                        <span style="width: {{percent_advancement|round(1,'floor')}}%; animation-duration: 1500ms;" class="cardProgress">
-                                            <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
-                                        </span>
-                                    </div>
-                                {% endif %}
-                                
-
-                                <div class="cause-card__goals">
-                                    <p><strong>Raised:</strong> {{post.getTransactionSum|price}}</p>
-                                    <p><strong>Goal:</strong> {{post.targetAmount|price}}</p>
-                                </div><!-- /.cause-card__goals -->
-                            </div>
-                            <div class="card-body">
-                                <h3><a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}">{{post.title}}</a></h3>
-                                {{ post.content|raw }}
-                                
-                            </div>
-                            <div class="cause-card__bottom">
-                                <a href="{{ path('app_payment', {uniquekey: post.uniquekey}) }}" class="thm-btn dynamic-radius">Donate Now</a>
-                                <!-- /.thm-btn dynamic-radius -->
-                                <div id="fb-share-{{post.uniquekey}}" class="cause-card__share" data-uniquekey="{{post.uniquekey}}" aria-label="share postr"><i class="fab fa-facebook-f"></i></div><!-- /.cause-card__share -->
-                            </div><!-- /.cause-card__bottom -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-
-        </div>
-        {% endif %}
-        {# check if postFinishCollect is not empty #}
-        {% if postFinishCollect is not empty %}
-        <hr>
-        <h3 style="text-align: center">{% trans %}Danh sách dự án đã hoàn thành{% endtrans %}</h3>
-        <div class="row">
-            {% for post in postFinishCollect %}
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card h-100">
-
-                        {#if no image#}
-                        <div class="image_thumbnail">
-                            {% if post.imagePath == '/post/image/' %}
-                                <img class="card-img-top" src="{{ post.DefaultImagePath | imagine_filter('card_thumbnail_homepage')}}" alt="">
-                            {% else %}
-                                <img class="card-img-top" src="{{ post.imagePath|imagine_filter('card_thumbnail_homepage')}}" alt="">
-                            {% endif %}
-
-                            {% if post.status.id == status['POST_FINISH_COLLECTING'] %}
-                                <div class="dayCountdownRed">{% trans %}Đóng quyên góp{% endtrans %}</div>
-                            {% elseif  post.status.id == status['POST_TRANSFERT_FUND'] %}
-                                <div class="dayCountdownRed">{% trans %}Đang chuyển khoản{% endtrans %}</div>
-                            {% elseif post.status.id == status['POST_IN_PROGRESS'] %}
-                                <div class="dayCountdownRed">{% trans %}Dự án đã nhận tiền{% endtrans %}</div>
-                            {% endif%}
-
-
-                        </div>
-
-                        {% set percent_advancement = post.getPercentageAdvancement %}
-
-                        {% set  percent_for_css = 90 -  percent_advancement %}
-
-                        <div class="card-body" style="position: relative;">
-                            <div class="custom_progress" style="top: 0">
-                                <div class="progress">
-
-
-                                    {% if post.getTransactionSum == 0 %}
-                                        <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                            <div class="progress-count" style="right: 90%;">
-                                                0%
-                                            </div>
-                                        </div>
-
-                                    {% elseif percent_advancement < 100 %}
-
-                                        <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <span class="progress-count" style="right: {{percent_for_css}}%">
-                                {{percent_advancement|round(0,'floor')}}%
-                            </span>
-                                        </div>
-                                    {% else %}
-                                        <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <span class="progress-count" style="right: -1%;">
-                                {{percent_advancement|round(0,'floor')}}%
-                            </span>
-                                        </div>
-                                    {% endif %}
-
-
-                                </div>
-                            </div>
-
-                            <h5 class="card-title text-left">{{ post.title }}</h5>
-
-                            {{ post.content|raw }}
-
-                        </div>
-                        <div class="card-footer text-center">
-                            <a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}" class="btn btn-primary" style="text-align: left;">{% trans %} Xem chi tiết {% endtrans %}</a>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-
-        </div>
-
-        {% endif %}
-        <!-- /.row -->
-
-    
+    -->
 {% endblock %}
 
 {% block javascripts %}

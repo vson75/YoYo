@@ -71,7 +71,7 @@ class PostController extends AbstractController
         $repository = $em->getRepository(Post::class);
         $userInfo = $this->getUser();
       //  dd($userInfo);
-
+        $array_user_fav_post = [];
         $q = $request->query->get('isFavorite');
       //var_dump($q);
         //show post by newest with the status = Collectinf or filter favorite
@@ -85,7 +85,7 @@ class PostController extends AbstractController
             $repo_Favorite = $em->getRepository(Favorite::class);
             $user_fav_post = $repo_Favorite->getDistinctFavoriteByUser($userInfo->getId());
        
-            $array_user_fav_post = [];
+            
             for ($i=0; $i < count($user_fav_post) ; $i++) { 
                 # code...
                 array_push($array_user_fav_post, $user_fav_post[$i][1]);
