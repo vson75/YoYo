@@ -1,0 +1,465 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ postInfo.title }}{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('showpost')}}
+{% endblock %}
+
+{% block body %}
+
+{% block show_post_content %}
+<div class="container">
+    <!-- Title of projecct -->
+    <div>
+
+
+        {# Test the lang of user. If the post have the translate, use the translate information. If not, use the default lang if the post #}
+        <div class="Headingtitle">
+            {% if app.request.getLocale() == 'en' %}
+                {% if  postTranslateEN is not null %}
+                    <h1 style="text-align: center"><span>{{ postTranslateEN.title }}</span></h1>
+                {% else %}
+                    <h1 style="text-align: center"><span>{{ postInfo.title }}</span></h1>
+                {% endif %}
+            {% elseif app.request.getLocale() == 'fr'  %}
+                {% if  postTranslateFR is not null %}
+                    <h1 style="text-align: center"><span>{{ postTranslateFR.title }}</span></h1>
+                {% else %}
+                    <h1 style="text-align: center"><span>{{ postInfo.title }}</span></h1>
+                {% endif %}
+            {% else %}
+                <div>
+                    <h1 style="text-align: center"><span>{{ postInfo.title }}</span> </h1>
+                </div>
+            {% endif %}
+
+
+        </div>
+    </div>
+
+    {% if is_granted("ROLE_ADMIN") %}
+        <div class="admin-section">
+            {% if postInfo.status.id == statusArray['POST_WAITING_VALIDATION'] %}
+                <div class="btn btn-success btn-admin"
+                     onclick="location.href='{{ path('admin_allow_to_collecting', {uniquekey: postInfo.uniquekey}) }}'">
+                    <span>{% trans %} Cho phép đăng dự án {% endtrans %}</span>
+
+                </div>
+
+                <div class="btn btn-danger btn-admin btn-stop" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopPost'}) }}'">
+                    <span>{% trans %} Tạm ngừng dự án {% endtrans %}</span>
+                </div>
+            {% endif %}
+            {% if postInfo.status.id == statusArray['POST_COLLECTING'] %}
+                <div class="btn btn-warning btn-admin" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopFund'}) }}'">
+                    <span>{% trans %}Đóng quyên góp{% endtrans %}</span>
+                </div>
+
+                <div class="btn btn-danger btn-admin btn-stop" onclick="location.href='{{ path('admin_stop_post', {uniquekey: postInfo.uniquekey, action: 'stopPost'}) }}'">
+                    <span>{% trans %} Dừng dự án {% endtrans %}</span>
+                </div>
+
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if postInfo.user == userInfo or is_granted('ROLE_ADMIN') == true %}
+            <div class="admin-section">
+                {% if postInfo.status.id == statusArray['POST_TRANSFERT_FUND'] %}
+                    <div class="btn btn-primary btn-admin" onclick="location.href='{{ path('app_confirmReceivedFund', {uniquekey: postInfo.uniquekey}) }}'">
+                        <span>{% trans %}Đã nhận tiền{% endtrans %}</span>
+                    </div>
+                {% endif %}
+                {% if postInfo.status.id == statusArray['POST_IN_PROGRESS'] %}
+                    <div class="btn btn-update-post btn-admin" onclick="location.href='{{ path('app_update_advancement', {uniquekey: postInfo.uniquekey, choice: 'update'}) }}'">
+                        <span>{% trans %}Cập nhật tiến độ{% endtrans %}</span>
+                    </div>
+                    <div class="btn btn-close-post btn-admin" onclick="location.href='{{ path('app_update_advancement', {uniquekey: postInfo.uniquekey, choice: 'close'}) }}'">
+                        <span>{% trans %}Kết thúc dự án{% endtrans %}</span>
+                    </div>
+                {% endif %}
+            </div>
+    {% endif %}
+    <!-- content div -->
+    <div class="row">
+
+        <!-- Post Content Column -->
+        <div class="col-md-8 col-xs-8" id="post_and_comment_section">
+            <div class="showpost">
+                <!-- Preview Image -->
+                <div>
+                    {% if postInfo.imagePath == '/post/image/' %}
+                        <img class="img-fluid rounded-custom img-post" src="{{ postInfo.DefaultImagePath | imagine_filter('card_thumbnail_showpost') }}" alt="">
+                    {% else %}
+                        <img class="img-fluid rounded-custom img-post" src="{{ postInfo.imagePath| imagine_filter('card_thumbnail_showpost') }}" alt="">
+                    {% endif %}
+                    <div class="authorInfo rounded-custom">
+                        {% if postInfo.user.requestOrganisationInfo is not null %}
+                            {% trans %}Tạo bởi: {% endtrans %} {{ postInfo.user.requestOrganisationInfo.OrganisationName }}
+                        {% else %}
+                            {% trans %}Tạo bởi: {% endtrans %} {{ postInfo.user.firstname }} {{ postInfo.user.lastname }}
+                        {% endif %}
+                    </div>
+                    {% if is_granted('ROLE_USER') == true %}
+                        {% if userFavorite is null or userFavorite == false %}
+                            <div class="favorite">
+                                <i id="start_empty" class="fa fa-star" style="display: flex" onclick="checkfavorite()"></i>
+                                <i id="start_checked" class="fa fa-star" style="display: none" onclick="uncheckFavorite()"></i>
+                            </div>
+                        {% else %}
+                            <div class="favorite">
+                                <i id="start_empty" class="fa fa-star" style="display: none" onclick="checkfavorite()"></i>
+                                <i id="start_checked" class="fa fa-star" style="display: flex" onclick="uncheckFavorite()"></i>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                {% set percent_advancement = totalAmount/postInfo.targetAmount*100 %}
+                {% set  percent_for_css = 98 -  percent_advancement%}
+
+
+                <div style="position: relative; margin-top: 0;">
+                    <div class="cause-card__progressbar">
+                        <div class="cause-card__top">
+
+
+                            {% if percent_advancement >= 0 and percent_advancement <= 20 %}
+                                <div class="cause-card__progress low_percent">
+                                    <span style="width: {{percent_advancement|round(1,'floor')}}%; animation-duration: 1500ms;" class="cardProgress">
+                                        <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
+                                    </span>
+                                </div>                                  
+                            {% elseif percent_advancement > 20 and percent_advancement <= 70 %}
+                                <div class="cause-card__progress medium_percent">
+                                    <span style="width: {{percent_advancement|round(1,'floor')}}%; animation-duration: 1500ms;" class="cardProgress">
+                                        <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
+                                    </span>
+                                </div> 
+                            {% elseif percent_advancement < 100 %}
+                                <div class="cause-card__progress high_percent">
+                                    <span style="width: {{percent_advancement|round(1,'floor')}}%; animation-duration: 1500ms;" class="cardProgress">
+                                        <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
+                                    </span>
+                                </div>
+                            {% else %}
+                                <div class="cause-card__progress_100_project_page high_percent">
+                                    <span style="width: 100%; animation-duration: 1500ms;" class="cardProgress">
+                                        <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
+                                    </span>
+                                </div>
+                            {% endif %}
+
+                            <div class="cause-card__goals">
+                                <p><strong>{% trans %}Quyên góp:{% endtrans %}</strong> {{ totalAmount|priceExact }} </p>
+                                <p><strong>{% trans %}Mục tiêu:{% endtrans %}</strong> {{ postInfo.targetAmount|priceExact }}</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- Post Content -->
+                <div class="content">
+                    {# Test the lang of user. If the post have the translate, use the translate information. If not, use the default lang if the post #}
+                    {% if app.request.getLocale() == 'en' %}
+                        {% if  postTranslateEN is not null %}
+                            <p>{{ postTranslateEN.content|markdown }}</p>
+                        {% else %}
+                            <p>{{ postInfo.content|markdown }}</p>
+                        {% endif %}
+                    {% elseif app.request.getLocale() == 'fr'  %}
+                        {% if  postTranslateFR is not null %}
+                            <p>{{ postTranslateFR.content|markdown }}</p>
+                        {% else %}
+                            <p>{{ postInfo.content|markdown }}</p>
+                        {% endif %}
+                    {% else %}
+                        <p>{{ postInfo.content|markdown }}</p>
+                    {% endif %}
+
+                </div>
+
+                {% if userInfo == postInfo.user %}
+                    <div id="btn-translate">
+                        <a href="{{ path('app_post_translation', {uniquekey: postInfo.uniquekey, lang: 'en'}) }}"><span>{% trans %}Dịch bài viết{% endtrans %}</span></a>
+                    </div>
+                {% endif %}
+                {% block admin_post %}
+
+
+
+                {% endblock %}
+            </div>
+          
+            <div class="showpost">
+                <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pills-listParticipant-tab" data-toggle="pill" href="#pills-listParticipant" role="tab" aria-controls="pills-listParticipant" aria-selected="true">{% trans %}Danh sách tham gia{% endtrans %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-comment-tab" data-toggle="pill" href="#pills-comment" role="tab" aria-controls="pills-comment" aria-selected="false">{% trans %}Gửi lời động viên{% endtrans %}</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-listParticipant" role="tabpanel" aria-labelledby="pills-listParticipant-tab">
+
+
+                        <div class="col-md-12 row" style="margin: 0.5rem 0 0.5rem; padding: 5px;">
+                            {% if TotalAnonymous is not null %}
+                                <img class="d-flex mr-3 rounded-circle icon-user" style="margin: 0.7rem 0 0.5rem" src="{{ asset('uploads/user icon.png') }}"  alt="">
+                                <div class="media-body">
+                                    <small class="mt-0">{% trans %}Ẩn danh {% endtrans %}</small>
+                                    <br>
+                                    <div  style="white-space: pre-wrap;">{{ TotalAnonymous }} €</div>
+                                </div>
+
+                            {% endif %}
+
+                            {% for donation in ArrayDonation %}
+                                {% set upload_directory = "uploads/user/icon/#{donation.user.Id}/" %}
+
+
+                                <div class="media col-md-4 col-sm-6" style="margin: 0.5rem 0 0.5rem">
+
+                                    {% if  donation.user.imagePath == upload_directory %}
+                                        <img class="d-flex mr-3 rounded-circle icon-user" src="{{ asset('uploads/user/icon/default_icon.png') }}">
+                                    {% else %}
+                                        <img class="d-flex mr-3 rounded-circle icon-user" src="{{ asset(donation.user.imagePath) }}">
+                                    {% endif %}
+                                    <div class="media-body">
+                                        <small class="mt-0">{{ donation.user.firstname }} {{ donation.user.lastname }}</small>
+                                        <br>
+                                        <div  style="white-space: pre-wrap;">{{ donation.amountAfterFees|round(2, 'floor')  }} €</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="tab-pane fade" id="pills-comment" role="tabpanel" aria-labelledby="pills-comment-tab">
+
+                        <div style="margin-top: 1.25rem;margin-bottom: 1.25rem;">
+                            {% if is_granted('ROLE_USER') %}
+                                {{ include('comment/addComment.html.twig') }}
+                            {% else %}
+                                <div style="text-align: center">
+                                    <span>{% trans %}Vui lòng đăng nhập để comment {% endtrans %}</span>
+                                    <br>
+                                    <button onclick="location.href='{{ path('app_login') }}'">{% trans %}Đăng nhập{% endtrans %}</button>
+                                </div>
+
+                            {% endif %}
+                        </div>
+
+                        {% for c in comment %}
+                            {% if c.isDeleted == false %}
+                            {% set upload_directory = "uploads/user/icon/#{c.user.Id}/" %}
+                                <!-- Single Comment -->
+                                <div class="media mb-4">
+                                    {% if  c.user.imagePath == upload_directory %}
+                                        <img class="d-flex mr-3 rounded-circle icon-user" src="{{ asset('uploads/user/icon/default_icon.png') }}">
+                                    {% else %}
+                                        <img class="d-flex mr-3 rounded-circle icon-user" src="{{ asset(c.user.imagePath) }}">
+                                    {% endif %}
+                                    <div class="media-body">
+                                        <small class="mt-0">{{ c.user.firstname }} {{ c.user.lastname }}</small>
+                                        <br>
+                                        <div  style="white-space: pre-wrap;">{{ c.content }}</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+          
+        </div>
+
+        <!-- Sidebar card collect. example: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_profile_card -->
+        <div class="col-md-4 col-xs-4">
+            {% if postInfo.status.id == statusArray['POST_DRAFT'] or postInfo.status.id == statusArray['POST_WAITING_VALIDATION'] or postInfo.status.id == statusArray['POST_WAITING_INFO'] or postInfo.status.id == statusArray['POST_COLLECTING'] %}
+                <div class="card">
+                    {% if totalAmount is null %}
+                        <p><h1>0 € </h1> <span><small> {% trans %} quyên góp được trên {% endtrans %} {{postInfo.targetAmount}} €</small></span></p>
+                    {% else %}
+                        <p><h1>{{ totalAmount|priceExact }} </h1> <span><small>{% trans %}quyên góp được trên{% endtrans %} {{postInfo.targetAmount}} €</small></span></p>
+                    {% endif %}
+
+                    <p> <span><i class="fa fa-user fa-lg"></i></span> <strong>{{ nb_participant }}</strong> {% trans %}người tham gia{% endtrans %}</p>
+
+                    {% if datediff > 0 %}
+
+                        <p><span><i class="fa fa-calendar fa-lg"></i></span> <span>{% trans %}Còn lại {% endtrans %} <strong>{{ datediff|trim('+') }}</strong> {% trans %} ngày{% endtrans %}</span></p>
+                    {% else %}
+                        <p><span><i class="fa fa-calendar fa-lg"></i></span> <span>{% trans %}Còn lại {% endtrans %} <strong>0</strong> {% trans %} ngày{% endtrans %}</span></p>
+                    {% endif %}
+
+
+                    <!-- Check by status in order to sho the action -->
+                    {% if postInfo.status.id == statusArray['POST_DRAFT'] or postInfo.status.id == statusArray['POST_WAITING_INFO'] %}
+                        {% if userInfo == postInfo.user %}
+                            <div id="btn-transaction" onclick="location.href='{{ path('app_submit_post', {uniquekey: postInfo.uniquekey}) }}'">
+                                <span>{% trans %} Gửi dự án cho ban quản trị {% endtrans %}</span>
+
+                            </div>
+
+                            <div id="btn-modify" onclick="location.href='{{ path('app_post_edit', {uniquekey: postInfo.uniquekey}) }}'">
+                                <span>{% trans %}Chỉnh sửa thông tin dự án {% endtrans %}</span>
+
+                            </div>
+                        {% endif %}
+
+                    {% elseif postInfo.status.id == statusArray['POST_WAITING_VALIDATION'] %}
+                        {% if userInfo == postInfo.user %}
+                            <div id="btn-modify">
+                                <span>{% trans %}Dự án đang chờ được duyệt{% endtrans %}</span>
+                            </div>
+                        {% endif %}
+                    {% elseif postInfo.status.id == statusArray['POST_COLLECTING'] %}
+                        <!-- check if the post is expired -->
+
+                        {% if datediff >= 0 %}
+
+                            <div id="btn-transaction" onclick="location.href='{{ path('app_payment', {uniquekey: postInfo.uniquekey}) }}'">
+                                <span>{% trans %}Quyên góp{% endtrans %}</span>
+                            </div>
+                            <!-- share button facebook. example here : https://developers.facebook.com/docs/plugins/share-button/  and https://codepen.io/kjkta/pen/rxawKL -->
+                            <div id="fb-share-button">
+                                <svg viewBox="0 0 12 12" preserveAspectRatio="xMidYMid meet">
+                                    <path class="svg-icon-path" d="M9.1,0.1V2H8C7.6,2,7.3,2.1,7.1,2.3C7,2.4,6.9,2.7,6.9,3v1.4H9L8.8,6.5H6.9V12H4.7V6.5H2.9V4.4h1.8V2.8 c0-0.9,0.3-1.6,0.7-2.1C6,0.2,6.6,0,7.5,0C8.2,0,8.7,0,9.1,0.1z"></path>
+                                </svg>
+                                <span>{% trans %}Chia sẻ qua facebook{% endtrans %}</span>
+                            </div>
+                        {% else %}
+                            <button id="btn-expirePost" disabled>
+                                <span>{% trans %}Hết hạn quyên góp{% endtrans %}</span>
+                            </button>
+
+                        {% endif %}
+                    {% else  %}
+
+                        <button id="btn-expirePost" disabled>
+                            <span>{% trans %}Đóng quyên góp{% endtrans %}</span>
+                        </button>
+
+                    {% endif %}
+
+                </div>
+
+                {# Section document of Organisation. Check if certificate or awards is not empty #}
+
+                {% if certificate is not null or awards is not empty %}
+                    {# Check if we have a echec/success message #}
+
+                    <div class="card-document">
+
+                        {% trans %}Danh sách bằng khen và giấy chứng nhận của tổ chức {% endtrans %}
+
+                        <div style="margin-bottom: 1rem">
+                            {% if certificate is not null %}
+                                <img id="myImg" class="OrganisationDocument" src="{{ asset(certificate.documentPath)}}">
+                            {% endif %}
+
+                            {% if awards is not empty %}
+                                {% for award in awards %}
+
+                                    <img id="award{{ loop.index }}" src="{{ asset(award.documentPath)}}" class="OrganisationDocument">
+                                {% endfor %}
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+                {% endif %}
+            {% else %}
+
+        <div id="timeline_section" style="max-height: 100px; overflow: auto; scrollbar-width: none;">
+            <div class="timeline" >
+                {% if startCollectDate is not empty %}
+                    <div class="timelinebox right">
+                        <div class="content">
+                            <h5>{{ startCollectDate[0].date|date('d/m/Y') }}</h5>
+                            <p>{% trans %}Bắt đầu mở quyên góp cho dự án. Mục tiêu quyên góp được: {% endtrans %} <strong> {{ postInfo.targetAmount }} €</strong> </p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if endCollectDate is not empty %}
+                    <div class="timelinebox right">
+                        <div class="content">
+                            <h5>{{ endCollectDate[0].date|date('d/m/Y') }}</h5>
+                            <p>{% trans %}Đóng quyên góp. Nhờ các bạn chúng tôi đã quyên góp được: {% endtrans %} <strong> {{ totalAmount }} €</strong> </p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if receivedFundDate is not empty %}
+                    <div class="timelinebox right">
+                        <div class="content">
+                            <h5>{{ receivedFundDate[0].date|date('d/m/Y') }}</h5>
+                            <p>{% trans %}Chủ dự án đã nhận được tiền! Cảm ơn các bạn.{% endtrans %}
+                                <br>
+                                {# check the MimeType of the document. If this is an image, show the image, if not, show only the link to download it#}
+                                {% if 'image/' in receivedFundDate[0].postDocument.mimeType %}
+                                        {% trans %}Bạn có thể xem biên lai nhận tiền dưới đây{% endtrans %}
+                                        <p>
+                                            <img id="ProofReceived" class="OrganisationDocument" src="{{ asset(receivedFundDate[0].postDocument.getProofReceivedPathForTwig)}}">
+                                        </p>
+                                    {% else %}
+                                        {% trans %}Bạn có thể tải biên lai nhận tiền {% endtrans %} <a href="{{ path('app_download_post_document',{id: receivedFundDate[0].postDocument.id}) }}">{% trans %}tại đây{% endtrans %}</a>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if updateInfoDate is not empty %}
+                    {% for updateInfo in updateInfoDate %}
+                        <div class="timelinebox right">
+                            <div class="content">
+                                <h5>{{ updateInfo[0].date|date('d/m/Y') }}</h5>
+                                <p>{% trans %}cập nhật thông tin từ dự án cùng với 1 số hình ảnh{% endtrans %}</p>
+                                {% for update in updateInfo %}
+                                    <img id="updateInfo{{update.id}}{{loop.index}}" class="OrganisationDocument" src="{{ asset(update.postDocument.getProofOFProjectInProgressForTwig)}}">
+                                {% endfor %}
+                            </div>
+                        </div>           
+                    {% endfor %}
+
+                {% endif %}
+
+            </div>
+        </div>
+            
+
+            {% endif %}
+
+
+
+        </div>
+
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="img01">
+        <div id="caption"></div>
+    </div>
+{% endblock %}
+
+
+{% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('showpost')}}
+    {% endblock %}

@@ -22,7 +22,8 @@ class AppExtension extends AbstractExtension implements ServiceSubscriberInterfa
     public function getFilters()
     {
         return [
-            new TwigFilter('price', [$this, 'formatPrice']),
+            new TwigFilter('priceRound0', [$this, 'formatPrice']),
+            new TwigFilter('priceExact', [$this, 'PriceExact']),
         ];
     }
 
@@ -34,6 +35,14 @@ class AppExtension extends AbstractExtension implements ServiceSubscriberInterfa
     }
 
     public function formatPrice($number, $decimals = 0, $decPoint = '.', $thousandsSep = ',')
+    {
+        $price = number_format($number, $decimals, $decPoint, $thousandsSep);
+        $price = $price.' €';
+
+        return $price;
+    }
+
+    public function PriceExact($number, $decimals = 2, $decPoint = ',', $thousandsSep = ' ')
     {
         $price = number_format($number, $decimals, $decPoint, $thousandsSep);
         $price = $price.' €';

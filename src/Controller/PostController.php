@@ -253,7 +253,7 @@ class PostController extends AbstractController
             $Date_Update_Info = [];
         }
 
-        return $this->render('post/show_post.html.twig',[
+        return $this->render('show_post_base_2.html.twig',[
                 'postInfo' => $postInfo,
                 'postTranslateEN' => $postTranslateEN,
                 'postTranslateFR' => $postTranslateFR,

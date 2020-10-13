@@ -8,7 +8,27 @@
 
 {% block title %}{% trans %}Trang chủ {% endtrans %}{% endblock %}
 {% block body %}
-    
+<div class="imgbackground" style="background-image: url('{{ asset('build/images/ham rong da nang.jpg') }}');">
+
+    <h2 class="display-3">{% trans %} A Warm Welcome! {% endtrans %}</h2>
+    <p class="lead">{% trans %} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat. {% endtrans %}</p>
+
+    {% if userInfo is not null %}
+        {% if is_granted('ROLE_ORGANISATION') or is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-lg">{% trans %} Tạo dự án mới {% endtrans %}</a>
+        {% elseif userInfo.askOrganisation == true  and userInfo.isOrganisation == false %}
+            <a href="{{ path('app_edit_organisation_info', {'id': userInfo.Id}) }}" class="btn btn-warning btn-lg">{% trans %}Thay đổi thông tin tổ chức{% endtrans %}</a>
+        {% else %}
+            <a href="{{ path('app_create_organisation') }}" class="btn btn-primary btn-lg">{% trans %} Tạo tài khoản tổ chức{% endtrans %}</a>
+        {% endif %}
+    {% else %}
+            <a href="{{ path('app_create_organisation') }}" class="btn btn-primary btn-lg">{% trans %} Tạo tài khoản tổ chức{% endtrans %}</a>
+            <a href="{{ path('app_registration') }}" class="btn btn-info btn-lg">{% trans %}Tạo tài khoản cá nhân{% endtrans %}</a>
+
+    {% endif %}
+
+</div>
+<!-- 
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -17,21 +37,22 @@
         </ol>
         <div class="carousel-inner">
         <div class="carousel-item active">
-            <img class="d-block w-100 " src="{{ asset('images/nonlavietnam.jpg') }}" alt="First slide">
+            <img class="d-block w-100 " src="{{ asset('images/hinh anh canh dong.jpeg') }}" alt="First slide">
+            
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Hinh anh so 1</h5>
                     <p>Dep chua kia</p>
                 </div>
         </div>
         <div class="carousel-item">
-            <img class="d-block w-100" src="{{ asset('images/nuong ray vung cao.jpg') }}" alt="Second slide">
+            <img class="d-block w-100" src="{{ asset('images/canh dong lua.jpg') }}" alt="Second slide">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Hinh anh 2</h5>
                     <p>1 vài dong o day</p>
                 </div>
         </div>
         <div class="carousel-item">
-            <img class="d-block w-100" src="{{ asset('images/thuyen.jpg') }}" alt="Third slide">
+            <img class="d-block w-100" src="{{ asset('images/ham rong da nang.jpg') }}" alt="Third slide">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Hinh anh 3</h5>
                     <p>1 vài dong khac</p>
@@ -48,14 +69,16 @@
         <span class="sr-only">Next</span>
         </a>
     </div>
+-->
+
 
     <section class="video-card-two" >
         <div class="container">
-            <div class="inner-container" style="background-image: url('{{ asset('images/video-bg-1-1.png') }}')";>
+            <div class="inner-container" style="background-image: url('{{ asset('build/images/video-bg-1-1.png') }}')";>
                 <div class="row align-items-center">
                     <div class="col-lg-3">
                         <div class="video-card-two__box">
-                            <img class="img-video" src="{{ asset('images/img-video.jpg') }}" alt="">
+                            <img class="img-video" src="{{ asset('build/images/img-video.jpg') }}" alt="">
                             <a href="https://www.youtube.com/watch?v=-2e_pjdYTZw" class="video-card-two__box-btn video-popup"><i class="fa fa-play"></i></a>
                             <!-- /.video-card-two__box-btn -->
                         </div><!-- /.video-card-two__box -->
@@ -72,7 +95,7 @@
         </div><!-- /.container -->
     </section><!-- /.video-card-two -->
 
-    <section class="service-one pt-120 pb-90" style="background-image: url('{{ asset('images/service-hand-bg-1-1.png') }}');">
+    <section class="service-one pt-120 pb-90" style="background-image: url('{{ asset('build/images/service-hand-bg-1-1.png') }}');">
         <div class="container">
             <div class="block-title">
                 <p><i class="fas fa-heart" style="color: red"></i> Welcome to YoYo</p>
@@ -151,17 +174,17 @@
                 <div class="col-lg-6 ">
                     <div class="about-counter__image clearfix wow fadeInRight" data-wow-duration="1500ms">
                         <div class="about-counter__image-content">
-                            <img src="{{asset('images/about-count-heart-1-1.png')}}" alt="">
+                            <img src="{{asset('build/images/about-count-heart-1-1.png')}}" alt="">
                             <p>We’re here to support you every step of the way.</p>
                         </div><!-- /.about-counter__image-content -->
-                        <img src="{{asset('images/vung cao.jpg')}}" alt="" class="float-left img-about">
+                        <img src="{{asset('build/images/vung cao.jpg')}}" alt="" class="float-left img-about">
                     </div><!-- /.about-counter__image -->
                 </div><!-- /.col-lg-6 -->
             </div><!-- /.row -->
         </div><!-- /.containerr -->
     </section><!-- /.about-counter -->
 
-    <section class="causes-page causes-home pt-120 pb-90" style="background-image: url('{{ asset('images/finish_section.png') }}');">
+    <section class="causes-page causes-home pt-120 pb-90" style="background-image: url('{{ asset('build/images/finish_section.png') }}');">
         <div class="container">
             <div class="row align-items-start align-items-md-center flex-column flex-md-row mb-60">
                 <div class="col-lg-7">
@@ -288,8 +311,8 @@
                                                 
                 
                                                 <div class="cause-card__goals">
-                                                    <p><strong>Raised:</strong> {{post.getTransactionSum|price}}</p>
-                                                    <p><strong>Goal:</strong> {{post.targetAmount|price}}</p>
+                                                    <p><strong>Raised:</strong> {{post.getTransactionSum|priceRound0}}</p>
+                                                    <p><strong>Goal:</strong> {{post.targetAmount|priceRound0}}</p>
                                                 </div><!-- /.cause-card__goals -->
                                             </div>
                                             <div class="card-body">

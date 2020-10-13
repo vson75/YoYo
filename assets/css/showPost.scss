@@ -1,5 +1,5 @@
 @import './helper/variables';
-
+@import './components/cause-card';
 
 .container{
     position: relative;
@@ -44,7 +44,7 @@
 .showpost{
     box-shadow: 2px 3px 9px 4px rgba(0,0,0,0.04);
     background-color: #fff;
-    padding: 1rem 1rem 1rem;
+    //padding: 1rem 1rem 1rem;
     margin-bottom: 1.25rem;
     -webkit-box-shadow: 0 1px 4px rgba(115,115,155,.5);
     position: relative;
@@ -126,6 +126,7 @@
 
 .Headingtitle{
     text-align: center;
+    padding-top: 1rem;
 }
 
 #btn-transaction{
