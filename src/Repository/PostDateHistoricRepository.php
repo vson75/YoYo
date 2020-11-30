@@ -27,7 +27,7 @@ class PostDateHistoricRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'SELECT DISTINCT (pdh.date) FROM 
                 post_date_historic pdh WHERE pdh.post_id = :post and pdh.post_date_type_id = :postDateType
-                Order by pdh.date ASC
+                Order by pdh.date DESC
                 ';
         $stmt = $conn->prepare($sql);
         $stmt->execute([
@@ -49,7 +49,6 @@ class PostDateHistoricRepository extends ServiceEntityRepository
         return $qb ->setParameter('post', $post)
             ->setParameter('postDateType', $postDateType)
             ->orderBy('p.id', 'DESC')
-            ->setMaxResults(7)
             ->getQuery()
             ->getResult()
             ;

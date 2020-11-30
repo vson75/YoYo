@@ -1,13 +1,349 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
     {{ parent() }}
-    {{encore_entry_link_tags('homepage')}}
+    {{encore_entry_link_tags('homepage_new')}}
 {% endblock %}
-{% block title %}YoYo{% endblock %}
-{% block body %}
-    <div class="container">
 
-        <!-- Jumbotron Header -->
+
+
+{% block title %}{% trans %}Trang chủ {% endtrans %}{% endblock %}
+{% block body %}
+<div class="imgbackground" style="background-image: url('{{ asset('build/images/ham rong da nang.jpg') }}');">
+
+    <h2 class="display-3">{% trans %} A Warm Welcome! {% endtrans %}</h2>
+    <p class="lead">{% trans %} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, ipsam, eligendi, in quo sunt possimus non incidunt odit vero aliquid similique quaerat nam nobis illo aspernatur vitae fugiat numquam repellat. {% endtrans %}</p>
+
+    {% if userInfo is not null %}
+        {% if is_granted('ROLE_ORGANISATION') or is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_post_new') }}" class="btn btn-primary btn-lg">{% trans %} Tạo dự án mới {% endtrans %}</a>
+        {% elseif userInfo.askOrganisation == true  and userInfo.isOrganisation == false %}
+            <a href="{{ path('app_edit_organisation_info', {'id': userInfo.Id}) }}" class="btn btn-warning btn-lg">{% trans %}Thay đổi thông tin tổ chức{% endtrans %}</a>
+        {% else %}
+            <a href="{{ path('app_create_organisation') }}" class="btn btn-primary btn-lg">{% trans %} Tạo tài khoản tổ chức{% endtrans %}</a>
+        {% endif %}
+    {% else %}
+            <a href="{{ path('app_create_organisation') }}" class="btn btn-primary btn-lg">{% trans %} Tạo tài khoản tổ chức{% endtrans %}</a>
+            <a href="{{ path('app_registration') }}" class="btn btn-info btn-lg">{% trans %}Tạo tài khoản cá nhân{% endtrans %}</a>
+
+    {% endif %}
+
+</div>
+
+    <section class="video-card-two" >
+        <div class="container">
+            <div class="inner-container" style="background-image: url('{{ asset('build/images/video-bg-1-1.png') }}');">
+                <div class="row align-items-center">
+                    <div class="col-lg-3">
+                        <div class="video-card-two__box">
+                            <img class="img-video" src="{{ asset('build/images/img-video.jpg') }}" alt="">
+                            <a href="https://www.youtube.com/watch?v=-2e_pjdYTZw" class="video-card-two__box-btn video-popup"><i class="fa fa-play"></i></a>
+                            <!-- /.video-card-two__box-btn -->
+                        </div><!-- /.video-card-two__box -->
+                    </div><!-- /.col-lg-3 -->
+                    <div class="col-lg-4">
+                        <h3>We’re worldwide non-profit charity ogranization.</h3>
+                    </div><!-- /.col-lg-4 -->
+                    <div class="col-lg-5">
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Have you done google
+                            research which works all the time. </p>
+                    </div><!-- /.col-lg-5 -->
+                </div><!-- /.row -->
+            </div><!-- /.inner-container -->
+        </div><!-- /.container -->
+    </section><!-- /.video-card-two -->
+
+    <section class="service-one pt-120 pb-90" style="background-image: url('{{ asset('build/images/service-hand-bg-1-1.png') }}');">
+        <div class="container">
+            <div class="block-title">
+                <p><i class="fas fa-heart" style="color: red"></i> Welcome to YoYo</p>
+                <h3>We believe that we can save <br> more lifes with you.</h3>
+            </div><!-- /.block-title -->
+            <div class="row">
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-one__box">
+                        <div class="service-one__icon background-secondary">
+                            <div class="service-one__icon-inner">
+                                <i class="fas fa-tint"></i>
+                            </div><!-- /.service-one__icon-inner -->
+                        </div><!-- /.service-one__icon -->
+                        <h3>Water</h3>
+                        <p>Lorem ipsum is simply free text available in the market wesbites.</p>
+                    </div><!-- /.service-one__box -->
+                </div><!-- /.col-md-6 col-lg-3 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-one__box">
+                        <div class="service-one__icon background-base">
+                            <div class="service-one__icon-inner">
+                                <i class="fas fa-hamburger"></i>
+                            </div><!-- /.service-one__icon-inner -->
+                        </div><!-- /.service-one__icon -->
+                        <h3>Food</h3>
+                        <p>Lorem ipsum is simply free text available in the market wesbites.</p>
+                    </div><!-- /.service-one__box -->
+                </div><!-- /.col-md-6 col-lg-3 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-one__box ">
+                        <div class="service-one__icon background-primary">
+                            <div class="service-one__icon-inner">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div><!-- /.service-one__icon-inner -->
+                        </div><!-- /.service-one__icon -->
+                        <h3>Education</h3>
+                        <p>Lorem ipsum is simply free text available in the market wesbites.</p>
+                    </div><!-- /.service-one__box -->
+                </div><!-- /.col-md-6 col-lg-3 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="service-one__box">
+                        <div class="service-one__icon background-special">
+                            <div class="service-one__icon-inner">
+                                <i class="fas fa-stethoscope"></i>
+                            </div><!-- /.service-one__icon-inner -->
+                        </div><!-- /.service-one__icon -->
+                        <h3>Medical</h3>
+                        <p>Lorem ipsum is simply free text available in the market wesbites.</p>
+                    </div><!-- /.service-one__box -->
+                </div><!-- /.col-md-6 col-lg-3 -->
+            </div><!-- /.row -->
+        </div><!-- /.container -->
+    </section><!-- /.service-one -->
+
+    <section class="about-counter pt-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="block-title">
+                        <p><i class="fas fa-heart" style="color: red"></i>  Help People Now</p>
+                        <h3>Charity for the people <br>you care about.</h3>
+                    </div><!-- /.block-title -->
+                    <p class="about-counter__text">Lorem Ipsum is simply dummy text of the printing and <br> typesetting
+                        industry. Have you done google
+                        research which <br> works all the time. </p>
+                    <ul class="list-unstyled ul-list-one">
+                        <li><i class="fas fa-check" style="color: red;"></i>Nsectetur cing elit.</li>
+                        <li><i class="fas fa-check" style="color: red;"></i>Suspe ndisse suscipit sagittis leo.</li>
+                        <li><i class="fas fa-check" style="color: red;"></i>Entum estibulum dignissim posuere.</li>
+                    </ul><!-- /.list-unstyled list-style-one -->
+                    <div class="about-counter__count">
+                        <h3 class="odometer" data-count="8860">{{nb_post_in_collect}}</h3>
+                        <p>Donation campaigns <br> are running</p>
+                    </div><!-- /.about-counter__count -->
+                </div><!-- /.col-lg-6 -->
+                <div class="col-lg-6 ">
+                    <div class="about-counter__image clearfix wow fadeInRight" data-wow-duration="1500ms">
+                        <div class="about-counter__image-content">
+                            <img src="{{asset('build/images/about-count-heart-1-1.png')}}" alt="">
+                            <p>We’re here to support you every step of the way.</p>
+                        </div><!-- /.about-counter__image-content -->
+                        <img src="{{asset('build/images/vung cao.jpg')}}" alt="" class="float-left img-about">
+                    </div><!-- /.about-counter__image -->
+                </div><!-- /.col-lg-6 -->
+            </div><!-- /.row -->
+        </div><!-- /.containerr -->
+    </section><!-- /.about-counter -->
+
+    <section class="causes-page causes-home pt-120 pb-90" style="background-image: url('{{ asset('build/images/finish_section.png') }}');">
+        <div class="container">
+            <div class="row align-items-start align-items-md-center flex-column flex-md-row mb-60">
+                <div class="col-lg-7">
+                    <div class="block-title">
+                        <p><i class="fas fa-heart" style="color: red"></i>Popular Causes</p>
+                        <h3>Donate to charity causes <br> around the world.</h3>
+
+                    </div><!-- /.block-title -->
+                    <!-- Favorite filter-->
+                    {% if userInfo is not null %}
+                    <div class="favorite">
+                        {# check the url to show the icon #}
+                        {% set request = app.request.requesturi %}
+
+                        {% if request == '/' or request == '/?isFavorite=0' %}
+                            <button class="button-favorite" onclick="location.href='?isFavorite=1'">
+                                {% trans %}Dự án yêu thích{% endtrans %}
+                                <i id="start_empty" class="far fa-star lg"></i>
+                            </button>
+                        {% else %}
+                            <button class="button-favorite" onclick="location.href='?isFavorite=0'">
+                                {% trans %}Dự án yêu thích{% endtrans %}
+                                <i id="start_checked" class="fas fa-star lg"></i>
+                            </button>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div><!-- /.col-lg-7 -->
+                <div class="col-lg-5 d-flex">
+                    <div class="my-auto">
+                        <p class="block-text pr-10 mb-0">Lorem Ipsum is simply dummy text of the printing and typesetting
+                            industry.
+                            Have
+                            you done google research which works all the time. </p><!-- /.block-text -->
+                    </div><!-- /.my-auto -->
+                </div><!-- /.col-lg-5 -->
+            </div>
+            <!-- 
+                exemple here : https://github.com/nolimits4web/Swiper/blob/master/demos/170-slides-per-column.html
+            -->
+
+                        {% if post is not empty %}
+                        <div class="row">
+                            {% for post in post %}
+                            {% set finish = post.finishAt %}
+                            {% set now = "now"|date("m/d/Y") %}
+                            {% set diff = date(now).diff(date(finish)) %}
+                
+                            {% set leftDays = diff.format("%R%a") - 1 %}
+                
+                            {% set percent_advancement = post.getPercentageAdvancement %}
+                
+                            {% set  percent_for_css = 90 -  percent_advancement %}
+                            <div class="col-lg-4 col-md-6 mb-6">
+                                <div class="card">
+                                    <div class="cause-card__inner">
+                                        <div class="cause-card__image">
+                                            {% if post.imagePath == '/post/image/' %}
+                                                <img class="card-img-top" src="{{ post.DefaultImagePath | imagine_filter('card_thumbnail_homepage')}}" alt="">
+                                            {% else %}
+                                                <img class="card-img-top" src="{{ post.imagePath|imagine_filter('card_thumbnail_homepage')}}" alt="">
+                                            {% endif %}
+                                           
+
+                                            {% if userInfo is not null %}
+                                                    {% if post.id in array_user_fav_post %}
+                                                        <div id="remove_fav_section_{{post.uniquekey}}" class="overlay-img-post" >
+                                                            <div id="txt_remove_fav_{{post.uniquekey}}" class="txt_add_fav">{% trans %}Huỷ thích dự án{% endtrans %}</div>
+                                                            <i id="addFav_{{post.uniquekey}}" class="fas fa-star"></i>
+                                                        </div>
+                                                        {% else %}
+                                                        <div id="add_fav_section_{{post.uniquekey}}" class="overlay-img-post" >
+                                                            <div id="txt_add_fav_{{post.uniquekey}}" class="txt_add_fav">{% trans %}Thích dự án{% endtrans %}</div>
+                                                            <i id="addFav_{{post.uniquekey}}" class="far fa-star"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                {% else %}
+                                                <div class="overlay-img-post" ></div>
+                                            {% endif %}
+
+
+                                            {% if leftDays >= 0 %}
+                                            {% if leftDays >10 %}
+                                                <div class="dayCountdownWhite">J-{{ leftDays }}</div>
+                                            {% else %}
+                                                <div class="dayCountdownRed">J-{{ leftDays }}</div>
+                                            {% endif %}
+                                            {% elseif leftDays == -1 %}
+                                                <div class="dayCountdownRed">{% trans %}Ngày cuối{% endtrans %}</div>
+                                            {% else %}
+                                                <div class="dayCountdownRed">{% trans %}Hết hạn{% endtrans %}</div>
+                                            {% endif %}
+
+
+                                        </div>
+                
+                                        <div class="cause-card__content">
+                                            <div class="cause-card__top">
+                                                {% if percent_advancement >= 0 and percent_advancement <= 20 %}
+                                                    <div class="cause-card__progress low_percent">
+                                                        <span style="width: {{percent_advancement|round(1,'floor')}}%; animation-duration: 1500ms;" class="cardProgress">
+                                                            <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
+                                                        </span>
+                                                    </div>                                  
+                                                {% elseif percent_advancement > 20 and percent_advancement <= 70 %}
+                                                    <div class="cause-card__progress medium_percent">
+                                                        <span style="width: {{percent_advancement|round(1,'floor')}}%; animation-duration: 1500ms;" class="cardProgress">
+                                                            <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
+                                                        </span>
+                                                    </div> 
+                                                {% elseif percent_advancement < 100 %}
+                                                    <div class="cause-card__progress high_percent">
+                                                        <span style="width: {{percent_advancement|round(1,'floor')}}%; animation-duration: 1500ms;" class="cardProgress">
+                                                            <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
+                                                        </span>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="cause-card__progress_100 high_percent">
+                                                        <span style="width: 100%; animation-duration: 1500ms;" class="cardProgress">
+                                                            <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
+                                                        </span>
+                                                    </div>
+                                                {% endif %}
+                                                
+                
+                                                <div class="cause-card__goals">
+                                                    <p><strong>Raised:</strong> {{post.getTransactionSum|priceRound0}}</p>
+                                                    <p><strong>Goal:</strong> {{post.targetAmount|priceRound0}}</p>
+                                                </div><!-- /.cause-card__goals -->
+                                            </div>
+                                            <div class="card-body">
+                                                <h3><a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}">{{post.title}}</a></h3>
+                                                {{ post.content|raw }}
+                                                
+                                            </div>
+                                            <div class="cause-card__bottom">
+                                                <a href="{{ path('app_payment', {uniquekey: post.uniquekey}) }}" class="thm-btn dynamic-radius">Donate Now</a>
+                                                <!-- /.thm-btn dynamic-radius -->
+                                                <div id="fb-share-{{post.uniquekey}}" class="cause-card__share" data-uniquekey="{{post.uniquekey}}" aria-label="share postr"><i class="fab fa-facebook-f"></i></div><!-- /.cause-card__share -->
+                                            </div><!-- /.cause-card__bottom -->
+                                        </div>
+                                    </div>
+                                </div>
+                                    
+                            
+                            </div>
+                            {% endfor %}
+                
+                        </div>
+                        {% endif %}
+
+        </div><!-- /.container -->
+    </section><!-- /.causes-page -->
+
+    {% if postFinishCollect is not empty %}
+        <section class="finish_project pt-120 pb-120">
+            <div class="container">
+                <div class="finish_project__top">
+                    <div class="row align-items-center">
+                        <div class="col-md-12 col-lg-7">
+                            <div class="block-title">
+                                <p>Our Volunteers</p>
+                                <h3>Meet those who help <br> others in need.</h3>
+                            </div><!-- /.block-title -->
+                        </div><!-- /.col-md-12 col-lg-6 -->
+                        <div class="col-md-12 col-lg-5">
+                            <p class="finish_project__top-text">Lorem Ipsum is simply dummy text of the printing and typesetting
+                                industry. Have you done google research which works all the time. </p>
+                        </div><!-- /.col-md-12 col-lg-6 -->
+                    </div><!-- /.row -->
+                </div><!-- /.finish_project__top -->
+                <div class="card_finish_4_col">
+                    
+                        {% for post in postFinishCollect %}
+                            <div onclick="location.href='{{path('show_post', {uniquekey: post.uniqueKey})}}'">
+                                <div class="card_finish text-center content-bg-1">
+                                    <div class="card_finish__image">
+                                        {% if post.imagePath == '/post/image/' %}
+                                            <img class="card-img-top card-img-finish" src="{{ post.DefaultImagePath | imagine_filter('card_thumbnail_homepage')}}" alt="">
+                                        {% else %}
+                                            <img class="card-img-top card-img-finish" src="{{ post.imagePath|imagine_filter('card_thumbnail_homepage')}}" alt="">
+                                        {% endif %}
+
+                                        {% if post.status.id == status['POST_FINISH_COLLECTING'] %}
+                                            <div class="dayCountdownRed">{% trans %}Đóng quyên góp{% endtrans %}</div>
+                                        {% elseif  post.status.id == status['POST_TRANSFERT_FUND'] %}
+                                            <div class="dayCountdownRed">{% trans %}Đang chuyển khoản{% endtrans %}</div>
+                                        {% elseif post.status.id == status['POST_IN_PROGRESS'] %}
+                                            <div class="dayCountdownRed">{% trans %}Dự án đã nhận tiền{% endtrans %}</div>
+                                        {% endif%}
+                                    </div><!-- /.team-card__image -->
+                                    <div class="content_overlay">{{post.title}}</div>
+                                </div><!-- /.team-card -->
+                            </div><!-- /.wow fadeInLeft -->
+                        {% endfor %}
+                        
+                
+                </div><!-- /.team-4-col -->
+            </div><!-- /.container -->
+        </section><!-- finish section -->
+    {% endif %}
+        <!--  
         <header class="jumbotron my-4 imgbackground" style="background-image: url('{{ asset('images/nonlavietnam.jpg') }}');">
 
             <h2 class="display-3">{% trans %} A Warm Welcome! {% endtrans %}</h2>
@@ -28,187 +364,10 @@
             {% endif %}
 
         </header>
+    -->
+{% endblock %}
 
-        <!-- Favorite filter-->
-    {% if userInfo is not null %}
-    <div class="favorite">
-        {# check the url to show the icon #}
-        {% set request = app.request.requesturi %}
-
-        {% if request == '/' or request == '/?isFavorite=0' %}
-            <button class="button-favorite" onclick="location.href='?isFavorite=1'">
-                {% trans %}Dự án yêu thích{% endtrans %}
-                <i id="start_empty" class="far fa-star lg"></i>
-            </button>
-        {% else %}
-            <button class="button-favorite" onclick="location.href='?isFavorite=0'">
-                {% trans %}Dự án yêu thích{% endtrans %}
-                <i id="start_checked" class="fas fa-star lg"></i>
-            </button>
-        {% endif %}
-    </div>
-    {% endif %}
-
-
-        {% if post is not empty %}
-        <div class="row">
-            {% for post in post %}
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card h-100">
-                    {% set finish = post.finishAt %}
-                    {% set now = "now"|date("m/d/Y") %}
-                    {% set diff = date(now).diff(date(finish)) %}
-
-                    {% set leftDays = diff.format("%R%a") - 1 %}
-                    {#if no image#}
-                    <div class="image_thumbnail">
-                    {% if post.imagePath == '/post/image/' %}
-                            <img class="card-img-top" src="{{ post.DefaultImagePath | imagine_filter('card_thumbnail_homepage')}}" alt="">
-                        {% else %}
-                            <img class="card-img-top" src="{{ post.imagePath|imagine_filter('card_thumbnail_homepage')}}" alt="">
-                    {% endif %}
-
-                        {% if leftDays >= 0 %}
-                            {% if leftDays >10 %}
-                                <div class="dayCountdownWhite">J-{{ leftDays }}</div>
-                            {% else %}
-                                <div class="dayCountdownRed">J-{{ leftDays }}</div>
-                            {% endif %}
-                        {% elseif leftDays == -1 %}
-                            <div class="dayCountdownRed">{% trans %}Ngày cuối{% endtrans %}</div>
-                        {% else %}
-                            <div class="dayCountdownRed">{% trans %}Hết hạn{% endtrans %}</div>
-                         {% endif %}
-                    </div>
-
-                    {% set percent_advancement = post.getPercentageAdvancement %}
-
-                    {% set  percent_for_css = 90 -  percent_advancement%}
-
-                    <div class="card-body" style="position: relative;">
-                        <div class="custom_progress" style="top: 0">
-                            <div class="progress">
-
-
-                                {% if post.getTransactionSum == 0 %}
-                                    <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="progress-count" style="right: 90%;">
-                                            0%
-                                        </div>
-                                    </div>
-
-                                {% elseif percent_advancement < 100 %}
-
-                                    <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <span class="progress-count" style="right: {{percent_for_css}}%">
-                                {{percent_advancement|round(0,'floor')}}%
-                            </span>
-                                    </div>
-                                {% else %}
-                                    <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <span class="progress-count" style="right: -1%;">
-                                {{percent_advancement|round(0,'floor')}}%
-                            </span>
-                                    </div>
-                                {% endif %}
-
-
-                            </div>
-                        </div>
-
-                        <h5 class="card-title text-left">{{ post.title }}</h5>
-
-                        {{ post.content|raw }}
-
-                    </div>
-                    <div class="card-footer text-center">
-                        <a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}" class="btn btn-primary" style="text-align: left;">{% trans %} Xem chi tiết {% endtrans %}</a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-
-        </div>
-        {% endif %}
-        {# check if postFinishCollect is not empty #}
-        {% if postFinishCollect is not empty %}
-        <hr>
-        <h3 style="text-align: center">{% trans %}Danh sách dự án đã hoàn thành{% endtrans %}</h3>
-        <div class="row">
-            {% for post in postFinishCollect %}
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card h-100">
-
-                        {#if no image#}
-                        <div class="image_thumbnail">
-                            {% if post.imagePath == '/post/image/' %}
-                                <img class="card-img-top" src="{{ post.DefaultImagePath | imagine_filter('card_thumbnail_homepage')}}" alt="">
-                            {% else %}
-                                <img class="card-img-top" src="{{ post.imagePath|imagine_filter('card_thumbnail_homepage')}}" alt="">
-                            {% endif %}
-
-                            {% if post.status.id == status['POST_FINISH_COLLECTING'] %}
-                                <div class="dayCountdownRed">{% trans %}Đóng quyên góp{% endtrans %}</div>
-                            {% elseif  post.status.id == status['POST_TRANSFERT_FUND'] %}
-                                <div class="dayCountdownRed">{% trans %}Đang chuyển khoản{% endtrans %}</div>
-                            {% elseif post.status.id == status['POST_IN_PROGRESS'] %}
-                                <div class="dayCountdownRed">{% trans %}Dự án đã nhận tiền{% endtrans %}</div>
-                            {% endif%}
-
-
-                        </div>
-
-                        {% set percent_advancement = post.getPercentageAdvancement %}
-
-                        {% set  percent_for_css = 90 -  percent_advancement%}
-
-                        <div class="card-body" style="position: relative;">
-                            <div class="custom_progress" style="top: 0">
-                                <div class="progress">
-
-
-                                    {% if post.getTransactionSum == 0 %}
-                                        <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                            <div class="progress-count" style="right: 90%;">
-                                                0%
-                                            </div>
-                                        </div>
-
-                                    {% elseif percent_advancement < 100 %}
-
-                                        <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <span class="progress-count" style="right: {{percent_for_css}}%">
-                                {{percent_advancement|round(0,'floor')}}%
-                            </span>
-                                        </div>
-                                    {% else %}
-                                        <div class="progress-bar" role="progressbar" style="width: {{percent_advancement|round(1,'floor')}}%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <span class="progress-count" style="right: -1%;">
-                                {{percent_advancement|round(0,'floor')}}%
-                            </span>
-                                        </div>
-                                    {% endif %}
-
-
-                                </div>
-                            </div>
-
-                            <h5 class="card-title text-left">{{ post.title }}</h5>
-
-                            {{ post.content|raw }}
-
-                        </div>
-                        <div class="card-footer text-center">
-                            <a href="{{ path('show_post', {uniquekey: post.uniquekey}) }}" class="btn btn-primary" style="text-align: left;">{% trans %} Xem chi tiết {% endtrans %}</a>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-
-        </div>
-
-        {% endif %}
-        <!-- /.row -->
-
-    </div>
+{% block javascripts %}
+    {{parent()}}
+    {{encore_entry_script_tags('homepage_new')}}
 {% endblock %}

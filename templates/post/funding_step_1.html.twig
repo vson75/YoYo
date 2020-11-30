@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
-
+{% block title %}
+{% trans %}Quyên góp dự án: {% endtrans %} {{ postInfo.title }}
+{% endblock %}
 {% block stylesheets %}
 {{ parent() }}
 
@@ -10,98 +12,131 @@
 
 {% block body %}
 
+    <div class='container funding-section'>
+        <div class='window'>
+            <div class='order-info'>
+                <div class='order-info-content'>
+                    <h2>{{ postInfo.title }}</h2>
+                    <div class='line'></div>
+                    {% set percent_advancement = totalAmount/postInfo.targetAmount*100 %}
+                    {% if postInfo.imagePath == '/post/image/' %}
+                        <img class="img-post-funding" src="{{ postInfo.DefaultImagePath | imagine_filter('card_thumbnail_showpost') }}" alt="">
+                    {% else %}
+                        <img class="img-post-funding" src="{{ postInfo.imagePath| imagine_filter('card_thumbnail_showpost') }}" alt="">
+                    {% endif %}
 
-    <div class="container child" style="margin-top: 7%; margin-bottom: 1%; background-color: white; width: 60%;">
+                    <div class="cause-card__progressbar">
+                        <div class="cause-card__top">
+    
+    
+                            {% if percent_advancement >= 0 and percent_advancement <= 20 %}
+                                <div class="cause-card__progress low_percent">
+                                    <span style="width: {{percent_advancement|round(1,'floor')}}%;" class="cardProgress">
+                                        <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
+                                    </span>
+                                </div>                                  
+                            {% elseif percent_advancement > 20 and percent_advancement <= 70 %}
+                                <div class="cause-card__progress medium_percent">
+                                    <span style="width: {{percent_advancement|round(1,'floor')}}%;" class="cardProgress">
+                                        <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
+                                    </span>
+                                </div> 
+                            {% elseif percent_advancement < 100 %}
+                                <div class="cause-card__progress high_percent">
+                                    <span style="width: {{percent_advancement|round(1,'floor')}}%;" class="cardProgress">
+                                        <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
+                                    </span>
+                            </div>
+                            {% else %}
+                                <div class="cause-card__progress_100_project_page high_percent">
+                                    <span style="width: 100%;" class="cardProgress">
+                                        <b><i>{{percent_advancement|round(1,'floor')}}</i>%</b>
+                                    </span>
+                                </div>
+                            {% endif %}
+    
+                            <div class="cause-card__goals">
+                                <p> {{ totalAmount|priceExact }} </p>
+                                <p>{{ postInfo.targetAmount|priceExact }}</p>
+                            </div>
+    
+                        </div>
+                    </div>
+                </div> <!-- order-info-content -->
+            </div> <!-- order-info -->
+              <div class='credit-info' style="background-image: url('{{ asset('build/images/video-bg-1-1.png') }}');">
+                <div class='credit-info-content'>
+                    <h2>{{ postInfo.title }}</h2>
+                    <div class='line'></div>
 
-                                <!-- Preview Image -->
-                                <H3 style="text-align: center">{% trans %}Đóng góp cho dự án: {% endtrans %} {{ postInfo.title }}</H3>
-                                <hr>
-        <div class="row">
-            <div class="col-md-7 col-xs-7 col-sm-7 col-lg-7">
-                {% if postInfo.imagePath == '/post/image/' %}
+                    {{ form_start(FundingStep1, {action: path('app_finance', {uniquekey: postInfo.uniquekey}) }) }}
+                    <div style="witdh: 100%">   
+                        <div class="row">
+                            <div class="col">
+                                <span>{% trans %}Quyên góp{% endtrans %} </span>
+                            </div>
+                            <div class="col">
+                                {{ form_row(FundingStep1.amount) }}
+                            </div>
+                            <p>
+                                <span>€</span>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {% trans %}Phí quản lý{% endtrans %}
+                            </div>
+                            <div class="col">
+        
+                                <span id="calculate_fees" class="calculate_amount" >-</span>
+                            </div>
+                            <p>
+                                <span>€</span>
+                            </p>
+                        </div>
+                        <div class='line'></div>
+        
+                        <div class="row">
+                            <div class="col">
+                                {% trans %}Tới dự án{% endtrans %}
+                            </div>
+                            <div class="col">
+                                <span id="receive_amount" class="calculate_amount">-</span>
+                            </div>
+                            <p>
+                                <span>€</span>
+                            </p>
+                        </div>
+    
+                     
+                        <div class="row">
+                            <div class="col">
+                                {% trans %}Ủng hộ thêm trang web{% endtrans %}
+                            </div>
+                            <div class="col">
+        
+                                {{ form_row(FundingStep1.giveForSite) }}
+                            </div>
+                            <p>
+                                <span>€</span>
+                            </p>
+                        </div>
+                    </div>
+                        
                         <div>
-                            <img class="img_funding" src="{{ postInfo.DefaultImagePath | imagine_filter('card_imagePost_FundingStep') }}" alt="" >
+                            <button class="btn btn-funding" type="submit">
+                                <span>{% trans %}Quyên góp {% endtrans %}</span>
+                            </button>
                         </div>
-
-
-                {% else %}
-                <div>
-                    <img class="img_funding" src="{{ postInfo.imagePath| imagine_filter('card_imagePost_FundingStep') }}" alt="" >
+        
+                    {{ form_end(FundingStep1) }}
                 </div>
-                {% endif %}
+      
+              </div>
             </div>
-            <div class="col-md-5 col-xs-5 col-sm-5 col-lg-5">
-                {{ form_start(financeForm, {action: path('app_finance', {uniquekey: postInfo.uniquekey}) }) }}
-
-                <div  class="row">
-                    <div  class="col-md-6 col-xs-6">
-                        <span>{% trans %}Quyên góp{% endtrans %} </span>
-                    </div>
-                    <div  class="col-md-4 col-xs-4">
-                        <div>
-                            {{ form_row(financeForm.amount) }}
-                        </div>
-                    </div>
-                    <div  class="col-md-2 col-xs-2">
-                        <span>€</span>
-                    </div>
-                </div>
-
-                <div  class="row">
-                    <div class="col-md-6 col-xs-6" >
-                        {% trans %}Phí quản lý{% endtrans %}
-                    </div>
-                    <div  class="col-md-4 col-xs-4">
-
-                        <span id="calculate_fees" class="calculate_amount" >-</span>
-                        <hr>
-                    </div>
-                    <div  class="col-md-2 col-xs-2">
-                        <span>€</span>
-                    </div>
-                </div>
-
-                    <div class="row">
-
-                        <div class="col-md-6 col-xs-6" >
-                            {% trans %}Tới dự án{% endtrans %}
-                        </div>
-                        <div  class="col-md-4 col-xs-4">
-                            <span id="receive_amount" class="calculate_amount">-</span>
-                        </div>
-                        <div  class="col-md-2 col-xs-2">
-                            <span>€</span>
-                        </div>
-                    </div>
-                <br>
-                <div class="row">
-
-                    <div class="col-md-6 col-xs-6" >
-                        {% trans %}Ủng hộ thêm trang web{% endtrans %}
-                    </div>
-                    <div class="col-md-4 col-xs-4">
-
-                        {{ form_row(financeForm.giveForSite) }}
-                    </div>
-                    <div  class="col-md-2 col-xs-2">
-                        <span>€</span>
-                    </div>
-                </div>
-
-                <button class="btn" type="submit">
-                            <span>{% trans %}Quyên góp {% endtrans %}</span>
-                </button>
-
-
-                {{ form_end(financeForm) }}
-            </div>
-        </div>
-
-
-        <input type="hidden" value="{{ ManagementFees }}" id="management_fees">
-        <input type="hidden" value="{{ FixedFees }}" id="Fixed_fees">
-    </div>
-
+      </div>
+      <input type="hidden" value="{{ ManagementFees }}" id="management_fees">
+      <input type="hidden" value="{{ FixedFees }}" id="Fixed_fees">
 {% endblock %}
 
 

@@ -3,6 +3,7 @@
 
 import $ from 'jquery';
 import '../css/components/_funding.scss';
+import '../css/components/_cause-card.scss';
 
 var IsNotAnonymous = false;
 $('#anonymous').click(function() {

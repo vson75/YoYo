@@ -19,32 +19,41 @@ if(fbButton != null){
     });
 }
 
+$('[id^="Add_Remove_favorite_"]').on('click', function(e){
+    e.preventDefault();
+    var uniquekey = this.id.replace("Add_Remove_favorite_","");
+    var fav_section = document.getElementById('Favorive_icon');
+    console.log(this.className);
+    var url = "/ajax/add_favorite/"+uniquekey;
 
-function checkfavorite(){
+    var new_icon = document.createElement('i');
+    var id_new_icon = "Add_Remove_favorite_" + uniquekey;
+    var targetIcon = $(e.currentTarget);
+    
+    if(this.className === 'fa fa-star favorite'){
+        targetIcon.removeClass('fa fa-star favorite')
+                .addClass('far fa-star favorite')
 
-    if(start_checked.style.display === "none"){
-        start_checked.style.display = "flex";
-        start_empty.style.display = "none";
+        $.ajax(
+            {
+              url: url+"/0",
+              method: 'POST'
+            });
+    }else{
+        targetIcon.removeClass('far fa-star favorite')
+                .addClass('fa fa-star favorite')
+
+        $.ajax(
+            {
+              url: url+"/1",
+              method: 'POST'
+            });
     }
-    $.ajax({
-        cache: false,
-        url: '/ajax/add_favorite/'+uniquekey+'/1',
-        method: 'POST',
-    })
 
-}
+});
 
-function uncheckFavorite(){
-    if(start_checked.style.display === "flex"){
-        start_checked.style.display = "none";
-        start_empty.style.display = "flex";
-    }
-    $.ajax({
-        cache: false,
-        url: '/ajax/add_favorite/'+uniquekey+'/0',
-        method: 'POST',
-    })
-}
+
+
 
 
 // Get the modal
@@ -86,11 +95,9 @@ var ArrayUpdateInfo = document.querySelectorAll('*[id^="updateInfo"]');
 
     if(ArrayUpdateInfo.length !== 0){
         var a;
-        var UpdateInfo = [];
-        for (a=1; a< ArrayUpdateInfo.length+1; a++){
-            ArrayUpdateInfo[a-1] = document.querySelectorAll('*[id^="updateInfo"]');
-            //console.log(ArrayUpdateInfo[a-1]);
-            ArrayUpdateInfo[a-1].onclick = function(){
+        for (a=0; a< ArrayUpdateInfo.length; a++){
+
+            ArrayUpdateInfo[a].onclick = function(){
                 modal.style.display = "block";
                 modalImg.src = this.src;
             }

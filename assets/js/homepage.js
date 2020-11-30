@@ -49,7 +49,7 @@ $('[id^="addFav_"]').on('click', function(e){
       var old_div = document.getElementById("txt_remove_fav_"+uniquekey);
     // tagetDiv.closest(".txt_add_fav");
       old_div.remove();
-      console.log(target_node);
+      
       var id_new_div = "txt_add_fav_" + uniquekey;
       var new_div = document.createElement('div');
       new_div.setAttribute("id",id_new_div);
@@ -74,7 +74,6 @@ $('[id^="addFav_"]').on('click', function(e){
 
     // tagetDiv.closest(".txt_add_fav");
       old_div.remove();
-      console.log(target_node);
       var id_new_div = "txt_remove_fav_" + uniquekey;
       var new_div = document.createElement('div');
       new_div.setAttribute("id",id_new_div);

@@ -109,7 +109,7 @@ class PostController extends AbstractController
         //get post in collect
         $number_post_in_collect = $repository->countDistinctPostByStatus(PostStatus::POST_COLLECTING);
         
-        return $this->render('homepage2.html.twig',[
+        return $this->render('homepage.html.twig',[
                 'post' => $post,
                 'postFinishCollect' => $postFinishCollect,
                 'status' => $statusArray,
@@ -219,7 +219,7 @@ class PostController extends AbstractController
         }else{
             $favorite = $userFavorite->getisFavorite();
         }
-
+        //dd($favorite);
         // show the information of the Organisation
         $userEmail = $postInfo->getUser()->getEmail();
         $repository = $em->getRepository(User::class);
@@ -244,7 +244,7 @@ class PostController extends AbstractController
         $Date_Finish_Project = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_close_project, null);
         
         //dd($DateReceivedFund);
-       // dd($Array_Date_UpDateInfo);
+        
         if(!empty($Array_Date_UpDateInfo)){
             for ($i=0; $i < count($Array_Date_UpDateInfo) ; $i++) { 
                 $Date_Update_Info[$i] = $postDateRepo->findPostDateHistoricByPost($postInfo, PostDateType::Date_update_info_project_in_progress,$Array_Date_UpDateInfo[$i]['date']);     
@@ -252,8 +252,9 @@ class PostController extends AbstractController
         }else{
             $Date_Update_Info = [];
         }
+        //dd($Date_Update_Info);
 
-        return $this->render('show_post_base_2.html.twig',[
+        return $this->render('show_post_base.html.twig',[
                 'postInfo' => $postInfo,
                 'postTranslateEN' => $postTranslateEN,
                 'postTranslateFR' => $postTranslateFR,
@@ -532,8 +533,8 @@ class PostController extends AbstractController
     public function fundingStep1($uniquekey, Request $request, EntityManagerInterface $em){
 
         $user = $this->getUser();
-        $financeForm = $this->createForm(PaymentType::class);
-        $financeForm->handleRequest($request);
+        $FundingStep1 = $this->createForm(PaymentType::class);
+        $FundingStep1->handleRequest($request);
 
         $repository = $em->getRepository(Post::class);
         $postInfo = $repository->findOneBy([
@@ -543,7 +544,7 @@ class PostController extends AbstractController
         //dd($postInfo);
         $date_expired = $postInfo->getFinishAt();
         $date_now = new DateTime('now');
-        if($date_now > $date_expired){
+        if($date_now->format('d/m/Y') < $date_expired->format('d/m/Y')){
             $message = $this->translator->trans('message.post.expriredDate');
             $this->addFlash('echec', $message);
             return $this->redirectToRoute('show_post', [
@@ -557,14 +558,16 @@ class PostController extends AbstractController
         }
 
         $managementFees = $em->getRepository(AdminParameter::class)->findLastestId();
-
+        $transactionRepository = $em->getRepository(Transaction::class);
+        $totalAmount = round($transactionRepository->getTotalAmountbyPost($postInfo->getId()),2);
 
         return $this->render('post/funding_step_1.html.twig', [
             'userInfo' => $user,
-            'financeForm' => $financeForm->createView(),
+            'FundingStep1' => $FundingStep1->createView(),
             'postInfo' => $postInfo,
             'ManagementFees' => $managementFees->getvariableFees(),
-            'FixedFees' => $managementFees->getFixedFees()
+            'FixedFees' => $managementFees->getFixedFees(),
+            'totalAmount' => $totalAmount
         ]);
     }
 
@@ -586,6 +589,8 @@ class PostController extends AbstractController
             'uniquekey' => $uniquekey,
         ]);
 
+        $transactionRepository = $em->getRepository(Transaction::class);
+        $totalAmount = round($transactionRepository->getTotalAmountbyPost($postInfo->getId()),2);
 
         if ($financeForm->isSubmitted() && $financeForm->isValid()) {
             $donationAmount = $financeForm->getData()['amount'];
@@ -633,7 +638,8 @@ class PostController extends AbstractController
             'postInfo' => $postInfo,
             'donationIncludeFees' => $donationAfterFees,
             'totalFees' => $totalFees,
-            'stripe_pk_key' => $stripe_pk_key
+            'stripe_pk_key' => $stripe_pk_key,
+            'totalAmount' => $totalAmount
         ]);
     }
 
